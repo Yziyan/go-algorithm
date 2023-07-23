@@ -33,16 +33,6 @@ func ReverseList(head *ListNode) *ListNode {
 	return prev
 }
 
-type DoubleListNode struct {
-	v    int64
-	prev *DoubleListNode
-	next *DoubleListNode
-}
-
-func NewDoubleListNode(v int64) *DoubleListNode {
-	return &DoubleListNode{v: v}
-}
-
 func ReverseDoubleList(head *DoubleListNode) *DoubleListNode {
 	if head == nil {
 		return nil

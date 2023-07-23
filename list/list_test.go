@@ -95,3 +95,56 @@ func TestQueue(t *testing.T) {
 		t.Errorf("Expected queue to be empty, got false")
 	}
 }
+
+func TestDeque(t *testing.T) {
+	// 创建一个空的双端队列
+	d := &list.Deque{}
+	// 测试双端队列的大小和空状态
+	if d.Size != 0 {
+		t.Errorf("Expected deque size to be 0, got %d", d.Size)
+	}
+	if d.Head != nil {
+		t.Errorf("Expected deque head to be nil, got %v", d.Head)
+	}
+	if d.Tail != nil {
+		t.Errorf("Expected deque tail to be nil, got %v", d.Tail)
+	}
+	// 从左边添加三个元素
+	d.LPush(1)
+	d.LPush(2)
+	d.LPush(3)
+	// 测试双端队列的大小和空状态
+	if d.Size != 3 {
+		t.Errorf("Expected deque size to be 3, got %d", d.Size)
+	}
+	if d.Head == nil {
+		t.Errorf("Expected deque head to be not nil, got nil")
+	} else if d.Head.V != 3 {
+		t.Errorf("Expected deque head value to be 3, got %d", d.Head.V)
+	}
+	if d.Tail == nil {
+		t.Errorf("Expected deque tail to be not nil, got nil")
+	} else if d.Tail.V != 1 {
+		t.Errorf("Expected deque tail value to be 1, got %d", d.Tail.V)
+	}
+	// 测试双端队列的出队操作
+	if d.LPoll() != 3 {
+		t.Errorf("Expected deque LPoll to return 3, got %d", d.LPoll())
+	}
+	if d.RPoll() != 1 {
+		t.Errorf("Expected deque RPoll to return 1, got %d", d.RPoll())
+	}
+	if d.LPoll() != 2 {
+		t.Errorf("Expected deque LPoll to return 2, got %d", d.LPoll())
+	}
+	// 测试双端队列的大小和空状态
+	if d.Size != 0 {
+		t.Errorf("Expected deque size to be 0, got %d", d.Size)
+	}
+	if d.Head != nil {
+		t.Errorf("Expected deque head to be nil, got %v", d.Head)
+	}
+	if d.Tail != nil {
+		t.Errorf("Expected deque tail to be nil, got %v", d.Tail)
+	}
+}
