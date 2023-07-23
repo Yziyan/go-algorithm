@@ -1,6 +1,6 @@
 // @Author: Ciusyan 2023/7/22
 
-package 链表
+package list
 
 // ListNode 单向链表节点
 type ListNode struct {
