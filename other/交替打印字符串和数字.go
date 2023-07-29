@@ -35,7 +35,7 @@ func printStr(ch chan struct{}, wg *sync.WaitGroup) {
 }
 
 func Print() {
-	ch := make(chan struct{}, 1)
+	ch := make(chan struct{})
 
 	var wg sync.WaitGroup
 	wg.Add(2)

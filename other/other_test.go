@@ -29,3 +29,21 @@ func TestLengthOfLongestSubstring(t *testing.T) {
 
 	other.LengthOfLongestSubstring("pwwkew")
 }
+
+func TestHttpClientPool(t *testing.T) {
+	pool := other.NewHttpClientPool()
+
+	for i := 0; i < 5; i++ {
+		client := pool.Get()
+		resp, err := client.Get("https://www.example.com\"")
+		if err != nil {
+			t.Error("失败了")
+
+			return
+		}
+
+		_ = resp.Body.Close()
+		pool.Put(client)
+	}
+
+}
