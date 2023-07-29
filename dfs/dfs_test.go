@@ -16,3 +16,10 @@ func TestPermute(t *testing.T) {
 	}
 
 }
+
+func TestKuoHao(t *testing.T) {
+
+	pa := generateParenthesis(3)
+
+	fmt.Println(pa)
+}
