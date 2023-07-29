@@ -3,9 +3,11 @@
 package other_test
 
 import (
+	"context"
 	"fmt"
 	"github.com/Yziyan/go-algorithm/other"
 	"testing"
+	"time"
 )
 
 func TestPrint(t *testing.T) {
@@ -45,5 +47,16 @@ func TestHttpClientPool(t *testing.T) {
 		_ = resp.Body.Close()
 		pool.Put(client)
 	}
+
+}
+
+func Busyness(ctx context.Context) {
+	time.Sleep(3 * time.Second)
+	fmt.Println("业务完成了")
+}
+
+func TestControl(t *testing.T) {
+
+	ch := make(chan struct{})
 
 }
