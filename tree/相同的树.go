@@ -5,14 +5,14 @@ package tree
 // https://leetcode.cn/problems/same-tree/
 
 func isSameTree(p *TreeNode, q *TreeNode) bool {
-	if (p == nil && q != nil) || (p != nil && q == nil) {
-		// 说明有一个是空树，肯定不相等
-		return false
-	}
-
 	if p == nil && q == nil {
 		// 说明两个都是空树，肯定相等
 		return true
+	}
+
+	if p == nil || q == nil {
+		// 说明有一个是空树，肯定不相等
+		return false
 	}
 
 	// 判断当前节点是否相等 && 左子树是否相等 && 右子树是否相等
