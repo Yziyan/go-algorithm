@@ -4,8 +4,25 @@ package tree
 
 // https://leetcode.cn/problems/path-sum/
 
+// 递归解法
+func hasPathSum1(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+
+	// 为叶子节点的时候，
+	if root.Left == nil && root.Right == nil {
+		// 如果最终有路径的值被减到了 root.Val，那么就不用遍历了，直接返回即可
+		return targetSum == root.Val
+	}
+
+	// 去调用左右子树前，将路径和减掉当前的值
+	return hasPathSum1(root.Left, targetSum-root.Val) || hasPathSum1(root.Right, targetSum-root.Val)
+}
+
 var isSum bool
 
+// DFS 做法
 func hasPathSum(root *TreeNode, targetSum int) bool {
 	if root == nil {
 		return false
