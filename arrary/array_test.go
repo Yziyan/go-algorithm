@@ -17,3 +17,12 @@ func TestMergeKSortArray(t *testing.T) {
 	array := mergeKSortedArray(arrs)
 	fmt.Println(array)
 }
+
+func TestChangeSort(t *testing.T) {
+	arr := []int{1, 4, 8, 2, 1, 5}
+
+	changeSort(arr)
+
+	fmt.Println(arr)
+
+}
