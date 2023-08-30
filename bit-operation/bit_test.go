@@ -42,3 +42,23 @@ func TestSwap(t *testing.T) {
 		})
 	}
 }
+
+func TestOddTimesNum1(t *testing.T) {
+	tests := []struct {
+		name string
+		args []int
+		want int
+	}{
+		{name: "case1", args: []int{1, 2, 2}, want: 1},
+		{name: "case2", args: []int{10, 9, 10, 3, 3, 9, 2, 1, 2, 1, 2}, want: 2},
+		{name: "case3", args: []int{3, 2, 4, 2, 2, 3, 2, 4, 4, 6, 4, 4, 4}, want: 6},
+		{name: "case4", args: []int{3, 2, 4, 2, 4}, want: 3},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := OddTimesNum1(tt.args)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
