@@ -41,3 +41,23 @@ func TestNearestIndex(t *testing.T) {
 		})
 	}
 }
+
+func TestLessIndex(t *testing.T) {
+	tests := []struct {
+		name string
+		args []int
+		want int
+	}{
+		{name: "case1", args: []int{1, 2, 3}, want: 0},
+		{name: "case2", args: []int{10, 9, 8, 3, 3, 6, 5, 2}, want: 7},
+		{name: "case3", args: []int{5, 2, 2, 2, 3, 1, 4, 4, 6, 6, 6, 7}, want: 5},
+		{name: "case4", args: []int{3, 2, 4}, want: 1},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := LessIndex(tt.args)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
