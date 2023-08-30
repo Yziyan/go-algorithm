@@ -82,3 +82,27 @@ func TestOddTimesNum2(t *testing.T) {
 		})
 	}
 }
+
+func TestKm(t *testing.T) {
+	type args struct {
+		arr []int
+		m   int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{name: "case1", args: args{arr: []int{1, 2, 3, 2, 1, 2, 1, 3, 3, 1, 2, 3, 5}, m: 4}, want: 5},
+		{name: "case1", args: args{arr: []int{1, 2, 3, 2, 1, 3, 7}, m: 2}, want: 7},
+		{name: "case1", args: args{arr: []int{1, 9, 9, 5, 1, 5, 1, 5}, m: 3}, want: 9},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Km(tt.args.arr, tt.args.m)
+			assert.Equal(t, got, tt.want)
+		})
+	}
+}

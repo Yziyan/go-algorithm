@@ -2,7 +2,9 @@
 
 package bit_operation
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Swap 交换 arr 中，i 和 j 位置的值
 //
@@ -70,4 +72,32 @@ func OddTimesNum2(arr []int) int {
 	fmt.Println(num1, nums2)
 
 	return num1 + nums2
+}
+
+// Km 只有一个数出现了 K 次，其余的都出现了 M 次，并且 K < M && M > 1
+func Km(arr []int, m int) int {
+	if arr == nil {
+		return -1
+	}
+
+	helps := [64]int{}
+	for _, v := range arr {
+		// 将此数字的每一位映射到一个二进制数组里面去
+		for i := 0; i < len(helps); i++ {
+			// 如果最后一位不是 1 加的也是 0，那么也没关系
+			helps[i] += (v >> i) & 1
+		}
+	}
+
+	res := 0
+	for i := 0; i < len(helps); i++ {
+		if helps[i]%m != 0 {
+			// 说明出现 k 次的数对这一位也有贡献。将第 i 为设置到 res 中去
+			// 相当于将 res 的第 i 位设置为 1。
+			// 那么就将 1 左移到第 i 位，然后和 res 进行 按位或
+			res |= 1 << i
+		}
+	}
+
+	return res
 }
