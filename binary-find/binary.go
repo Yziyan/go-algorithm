@@ -63,3 +63,45 @@ func NearestIndex(arr []int, num int) int {
 
 	return index
 }
+
+// LessIndex arr 不一定是有序的
+func LessIndex(arr []int) int {
+	if arr == nil || len(arr) == 0 {
+		return -1
+	}
+
+	l := len(arr)
+
+	// 处理左边界
+	if l == 1 || arr[0] < arr[1] {
+		return 0
+	}
+
+	// 处理右边界
+	if arr[l-1] < arr[l-2] {
+		return l - 1
+	}
+
+	var (
+		begin = 1
+		end   = l - 2
+		mid   int
+	)
+
+	for begin < end {
+		mid = begin + (end-begin)>>1
+
+		// 如果中间比左边大，那就往左边靠
+		// 如果中间比右边大，那就往右边靠
+		// 如果比左右两边都小，那么就说明这是一个局部最小值了嘛
+		if arr[mid] > arr[mid-1] {
+			end = mid
+		} else if arr[mid] > arr[mid+1] {
+			begin = mid + 1
+		} else {
+			return mid
+		}
+	}
+
+	return begin
+}
