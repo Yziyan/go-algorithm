@@ -1,6 +1,6 @@
 // @Author: Ciusyan 2023/7/23
 
-package 题目
+package subject
 
 type ListNode struct {
 	Val  int

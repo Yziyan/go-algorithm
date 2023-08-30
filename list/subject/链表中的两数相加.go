@@ -1,6 +1,6 @@
 // @Author: Ciusyan 2023/7/30
 
-package 题目
+package subject
 
 // https://leetcode.cn/problems/lMSNwu/
 

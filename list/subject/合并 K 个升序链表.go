@@ -1,6 +1,6 @@
 // @Author: Ciusyan 2023/7/31
 
-package 题目
+package subject
 
 // https://leetcode.cn/problems/merge-k-sorted-lists/
 
