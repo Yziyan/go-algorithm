@@ -7,7 +7,9 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func MergeKLists(lists []*ListNode) *ListNode {
+// https://leetcode.cn/problems/merge-k-sorted-lists/
+
+func mergeKLists(lists []*ListNode) *ListNode {
 	if lists == nil || len(lists) == 0 {
 		return nil
 	}
@@ -19,8 +21,8 @@ func MergeKLists(lists []*ListNode) *ListNode {
 
 	// 采用分治的思想去求解
 	mid := len(lists) >> 1
-	leftList := MergeKLists(lists[:mid])
-	rightList := MergeKLists(lists[mid:])
+	leftList := mergeKLists(lists[:mid])
+	rightList := mergeKLists(lists[mid:])
 
 	// 最后合并两条链表
 	return merge2Lists(leftList, rightList)
