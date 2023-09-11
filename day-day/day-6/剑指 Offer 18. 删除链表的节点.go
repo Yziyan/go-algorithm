@@ -7,6 +7,8 @@ type ListNode struct {
 	Next *ListNode
 }
 
+// https://leetcode.cn/problems/shan-chu-lian-biao-de-jie-dian-lcof/
+
 func deleteNode(head *ListNode, val int) *ListNode {
 	if head == nil {
 		return head
