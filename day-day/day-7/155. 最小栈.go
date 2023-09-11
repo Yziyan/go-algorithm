@@ -2,6 +2,8 @@
 
 package day_7
 
+// https://leetcode.cn/problems/min-stack/
+
 type MinStack struct {
 	Head *node
 }
