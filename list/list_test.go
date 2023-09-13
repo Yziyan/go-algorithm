@@ -19,7 +19,7 @@ func TestStack(t *testing.T) {
 		t.Error("Expected stack to be empty, but it's not")
 	}
 
-	// Test Push and Size on a non-empty stack
+	// Test Offer and Size on a non-empty stack
 	stack.Push(10)
 	stack.Push(20)
 
@@ -31,7 +31,7 @@ func TestStack(t *testing.T) {
 		t.Error("Expected stack not to be empty, but it is")
 	}
 
-	// Test Pop on a non-empty stack
+	// Test Poll on a non-empty stack
 	if v := stack.Pop(); v != 20 {
 		t.Errorf("Expected popped value to be 20, but got %d", v)
 	}
@@ -40,8 +40,8 @@ func TestStack(t *testing.T) {
 		t.Errorf("Expected stack size to be 1 after pop, but got %d", size)
 	}
 
-	// Test Pop on an empty stack
-	stack.Pop() // Pop the last element
+	// Test Poll on an empty stack
+	stack.Pop() // Poll the last element
 
 	if v := stack.Pop(); v != 0 {
 		t.Errorf("Expected popped value to be 0 on an empty stack, but got %d", v)

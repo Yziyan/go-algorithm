@@ -57,8 +57,8 @@ func (this *MinStack) GetMin() int {
 /**
  * Your MinStack object will be instantiated and called as such:
  * obj := Constructor();
- * obj.Push(val);
- * obj.Pop();
+ * obj.Offer(val);
+ * obj.Poll();
  * param_3 := obj.Top();
  * param_4 := obj.GetMin();
  */
