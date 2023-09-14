@@ -72,3 +72,39 @@ func merge(arr []int, begin, mid, end int) {
 		begin++
 	}
 }
+
+// MergeSort2 非递归实现
+func MergeSort2(arr []int) {
+	if arr == nil || len(arr) < 2 {
+		return
+	}
+
+	// 步长
+	mergeSize := 1
+	l := len(arr)
+
+	// 只要 mergeSize 小于数组长度，就可以尝试
+	for mergeSize < l {
+		// 每一次从第一组开始，只要组不超过数组长度就可以去合并
+		begin := 0
+		for begin < l {
+			if mergeSize >= l-begin {
+				// 要是左边都灭有一个步长的长度，就没必要合并了
+				break
+			}
+			// 找到第一组开头左边界
+			mid := begin + mergeSize
+			// 找到右边的结束（mid + 步长 or 剩余长度）
+			end := mid + min(mergeSize, l-mid)
+
+			// 合并 [begin, mid) 和  [mid, end)
+			merge(arr, begin, mid, end)
+
+			begin = end
+		}
+
+		// 在做完一次操作后，步长扩大 2
+		mergeSize <<= 1
+	}
+
+}
