@@ -2,7 +2,9 @@
 
 package day_15
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestHeap(t *testing.T) {
 	heap := NewHeap()
@@ -43,4 +45,10 @@ func TestHeap(t *testing.T) {
 	if heap.Size() != 0 || !heap.IsEmpty() {
 		t.Errorf("Expected heap to be empty after clearing, but got size %d", heap.Size())
 	}
+}
+
+func TestSortedLengthK(t *testing.T) {
+	nums := []int{3, 4, 1, 5, 4, 6, 8, 6}
+	sortedArrLengthK(nums, 2)
+	t.Log(nums)
 }
