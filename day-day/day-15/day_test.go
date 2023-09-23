@@ -52,3 +52,8 @@ func TestSortedLengthK(t *testing.T) {
 	sortedArrLengthK(nums, 2)
 	t.Log(nums)
 }
+
+func TestTopK(t *testing.T) {
+	nums := []int{3, 567, 4, 1, 331, 5, 4, 6, 8, 6, 201, 21, 45, 124, 25, 89, 4, 53, 4, 21, 221, 45, 23, 6, 9, 2, 64}
+	t.Log(TopK(nums, 6))
+}
