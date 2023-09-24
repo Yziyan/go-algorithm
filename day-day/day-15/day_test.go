@@ -57,3 +57,28 @@ func TestTopK(t *testing.T) {
 	nums := []int{3, 567, 4, 1, 331, 5, 4, 6, 8, 6, 201, 21, 45, 124, 25, 89, 4, 53, 4, 21, 221, 45, 23, 6, 9, 2, 64}
 	t.Log(TopK(nums, 6))
 }
+
+func TestCoverMax(t *testing.T) {
+	tests := []struct {
+		lines    [][]int
+		expected int
+	}{
+		// 添加测试用例，每个测试用例包含输入线段和期望的输出
+		{
+			lines:    [][]int{{1, 4}, {4, 9}, {2, 8}, {3, 10}},
+			expected: 3,
+		},
+		{
+			lines:    [][]int{{1, 5}, {2, 6}, {3, 7}},
+			expected: 3,
+		},
+		// 添加更多测试用例
+	}
+
+	for _, test := range tests {
+		result := CoverMax(test.lines)
+		if result != test.expected {
+			t.Errorf("For input %v, expected %d, but got %d", test.lines, test.expected, result)
+		}
+	}
+}
