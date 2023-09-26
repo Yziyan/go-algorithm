@@ -9,3 +9,9 @@ func TestCountingSort(t *testing.T) {
 	CountingSort(nums)
 	t.Log(nums)
 }
+
+func TestRadixSort(t *testing.T) {
+	nums := []int{4, 2, 7, 3556, 211, 35, 98, 985, 29, 4, 3, 18, 34, 100, 2211, 241}
+	CountingSort(nums)
+	t.Log(nums)
+}
