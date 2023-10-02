@@ -56,9 +56,9 @@ func MidOrUpMidPreNode(head *ListNode) *ListNode {
 	}
 
 	var (
-		// 慢指针指向 nil，快指针领先两个节点
-		slow *ListNode
-		fast = head.Next
+		// 慢指针指向头，快指针领先两个节点
+		slow = head
+		fast = head.Next.Next
 	)
 
 	for fast != nil && fast.Next != nil {
@@ -78,8 +78,8 @@ func MidOrDownMidPreNode(head *ListNode) *ListNode {
 
 	var (
 		// 慢指针指向头结点，快指针领先一个节点
-		slow *ListNode
-		fast = head
+		slow = head
+		fast = head.Next
 	)
 
 	for fast != nil && fast.Next != nil {
