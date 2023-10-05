@@ -4,7 +4,40 @@ package day_19
 
 // https://leetcode.cn/problems/binary-tree-preorder-traversal/
 
+// 非递归实现
 func preorderTraversal(root *TreeNode) []int {
+	res := make([]int, 0)
+	if root == nil {
+		return res
+	}
+
+	// 准备一个遍历用的节点和一个栈
+	cur := root
+	stack := NewStack()
+
+	// 只要 cur 或者 栈 不为空，就需要做操作
+	for cur != nil || stack.Size() != 0 {
+		if cur != nil {
+			// 只要 cur 不为 nil，上来就操作 cur
+			res = append(res, cur.Val)
+			// 要是有右节点，将右节点入栈
+			if cur.Right != nil {
+				stack.Push(cur.Right)
+			}
+
+			// 然后一路向左
+			cur = cur.Left
+		} else {
+			// 这里上来说明 cur 为 nil了，但是栈不为 nil，将栈里面的元素给 cur 继续遍历下去
+			cur = stack.Pop()
+		}
+	}
+
+	return res
+}
+
+// 非递归实现：类似层序遍历
+func preorderTraversal2(root *TreeNode) []int {
 	res := make([]int, 0)
 	if root == nil {
 		return res
