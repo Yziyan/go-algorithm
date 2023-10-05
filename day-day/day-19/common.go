@@ -29,6 +29,10 @@ func (s *Stack) Pop() *TreeNode {
 	return res
 }
 
+func (s *Stack) Peek() *TreeNode {
+	return (*s)[len(*s)-1]
+}
+
 func (s *Stack) Size() int {
 	return len(*s)
 }
