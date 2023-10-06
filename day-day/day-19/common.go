@@ -36,3 +36,28 @@ func (s *Stack) Peek() *TreeNode {
 func (s *Stack) Size() int {
 	return len(*s)
 }
+
+// Queue 简单使用切片当做一个队列
+type Queue []*TreeNode
+
+func NewQueue() Queue {
+	return make([]*TreeNode, 0)
+}
+
+func (q *Queue) Offer(node *TreeNode) {
+	// 添加到末尾即可
+	*q = append(*q, node)
+}
+
+func (q *Queue) Poll() *TreeNode {
+	// 取出最先加入的返回
+	node := (*q)[0]
+	// 将头部删掉
+	*q = (*q)[1:]
+
+	return node
+}
+
+func (q *Queue) Size() int {
+	return len(*q)
+}
