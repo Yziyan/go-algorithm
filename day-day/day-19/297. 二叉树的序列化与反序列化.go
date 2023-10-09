@@ -13,7 +13,7 @@ import (
 const (
 	// NIL nil 字符
 	NIL = "#"
-	// 分隔符
+	// SPLIT 分隔符
 	SPLIT = ","
 )
 
@@ -26,12 +26,126 @@ func Constructor() Codec {
 	return Codec{}
 }
 
-// Serializes a tree to a single string.
+// 层序遍历序列化
 func (this *Codec) serialize(root *TreeNode) string {
+	return this.levelSerialize(root)
+}
+
+// 使用层序遍历的方式反序列化
+func (this *Codec) deserialize(data string) *TreeNode {
+	if data == "" {
+		return nil
+	}
+
+	// 裁剪字符串后传入
+	return this.levelDeserialize(strings.Split(data, SPLIT))
+}
+
+// 使用层序遍历的方式序列化
+func (this *Codec) levelSerialize(root *TreeNode) string {
+	if root == nil {
+		return ""
+	}
+	// 用于序列化字符
+	sb := make([]rune, 0, 1)
+
+	// 用于层序遍历的队列
+	queue := NewQueue()
+	queue.Offer(root)
+	// 现将根节点序列化了
+	sb = append(sb, []rune(fmt.Sprintf("%d%s", root.Val, SPLIT))...)
+
+	for queue.Size() != 0 {
+		node := queue.Poll()
+
+		if node.Left != nil {
+			// 层序遍历
+			queue.Offer(node.Left)
+			// 序列化子节点
+			sb = append(sb, []rune(fmt.Sprintf("%d%s", node.Left.Val, SPLIT))...)
+		} else {
+			sb = append(sb, []rune(NIL+SPLIT)...)
+		}
+
+		if node.Right != nil {
+			queue.Offer(node.Right)
+			// 序列化子节点
+			sb = append(sb, []rune(fmt.Sprintf("%d%s", node.Right.Val, SPLIT))...)
+		} else {
+			sb = append(sb, []rune(NIL+SPLIT)...)
+		}
+	}
+
+	return string(sb[0 : len(sb)-1])
+}
+
+// 使用层序遍历的方式反序列化
+func (this *Codec) levelDeserialize(data []string) *TreeNode {
+	if len(data) == 0 {
+		return nil
+	}
+
+	// 将根节点的值弹出来
+	rootVal, _ := strconv.Atoi(data[this.idx])
+	this.idx++
+
+	// 先将根节点建起来
+	root := &TreeNode{Val: rootVal}
+	// 准备一个队列用于层序遍历
+	queue := NewQueue()
+	queue.Offer(root)
+
+	for queue.Size() != 0 {
+		// 每次弹出最前面的两个字符
+		leftStr := data[this.idx]
+		this.idx++
+		rightStr := data[this.idx]
+		this.idx++
+
+		// 弹出队头元素
+		node := queue.Poll()
+
+		// 看左子树
+		if leftStr != NIL {
+			leftVal, _ := strconv.Atoi(leftStr)
+			node.Left = &TreeNode{Val: leftVal}
+			// 层序遍历，有左加左
+			queue.Offer(node.Left)
+		}
+
+		// 看右子树
+		if rightStr != NIL {
+			rightVal, _ := strconv.Atoi(rightStr)
+			node.Right = &TreeNode{Val: rightVal}
+			// 层序遍历，有右加右
+			queue.Offer(node.Right)
+		}
+	}
+
+	return root
+}
+
+// Serializes a tree to a single string. 前序遍历
+func (this *Codec) serialize1(root *TreeNode) string {
 	sb := make([]rune, 0)
 	this.preorderSerialize(root, &sb)
 
 	return string(sb)
+}
+
+// Deserializes your encoded data to tree.
+func (this *Codec) deserialize1(data string) *TreeNode {
+	if data == "" {
+		return nil
+	}
+
+	// 裁剪字符串
+	strs := strings.Split(data, SPLIT)
+	if len(strs) <= 1 {
+		return nil
+	}
+	// strs 需要去掉最后一个 ,
+	return this.preorderDeserialize(strs[0 : len(strs)-1])
 }
 
 // 按照前序遍历的方式序列化
@@ -48,21 +162,6 @@ func (this *Codec) preorderSerialize(root *TreeNode, sb *[]rune) {
 	// 然后对左右子树也进行前序遍历
 	this.preorderSerialize(root.Left, sb)
 	this.preorderSerialize(root.Right, sb)
-}
-
-// Deserializes your encoded data to tree.
-func (this *Codec) deserialize(data string) *TreeNode {
-	if data == "" {
-		return nil
-	}
-
-	// 裁剪字符串
-	strs := strings.Split(data, SPLIT)
-	if len(strs) <= 1 {
-		return nil
-	}
-	// strs 需要去掉最后一个 ,
-	return this.preorderDeserialize(strs[0 : len(strs)-1])
 }
 
 // 前序遍历的方式反序列化
