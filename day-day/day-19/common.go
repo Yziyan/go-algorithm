@@ -61,3 +61,9 @@ func (q *Queue) Poll() *TreeNode {
 func (q *Queue) Size() int {
 	return len(*q)
 }
+
+// NTreeNode N 叉树的节点
+type NTreeNode struct {
+	Val      int
+	children []*NTreeNode
+}

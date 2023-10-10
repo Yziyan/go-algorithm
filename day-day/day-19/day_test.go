@@ -24,3 +24,62 @@ func TestCodec(t *testing.T) {
 	root = codec.deserialize(serialize)
 	fmt.Println()
 }
+
+func TestNTreeNode2TreeNode(t *testing.T) {
+	// N 叉树
+	//				1
+	//		2 		3 			4
+	//	5 6 7		8 		9 10 11
+	nRoot := &NTreeNode{
+		Val: 1,
+		children: []*NTreeNode{
+			&NTreeNode{
+				Val: 2,
+				children: []*NTreeNode{
+					&NTreeNode{
+						Val:      5,
+						children: []*NTreeNode{},
+					},
+					&NTreeNode{
+						Val:      6,
+						children: []*NTreeNode{},
+					},
+					&NTreeNode{
+						Val:      7,
+						children: []*NTreeNode{},
+					},
+				},
+			},
+			&NTreeNode{
+				Val: 3,
+				children: []*NTreeNode{
+					&NTreeNode{
+						Val:      8,
+						children: []*NTreeNode{},
+					},
+				},
+			},
+			&NTreeNode{
+				Val: 4,
+				children: []*NTreeNode{
+					&NTreeNode{
+						Val:      9,
+						children: []*NTreeNode{},
+					},
+					&NTreeNode{
+						Val:      10,
+						children: []*NTreeNode{},
+					},
+					&NTreeNode{
+						Val:      11,
+						children: []*NTreeNode{},
+					},
+				},
+			},
+		},
+	}
+	// 二叉树
+	root := Encode(nRoot)
+	nRoot = Decode(root)
+	fmt.Println()
+}
