@@ -106,3 +106,21 @@ func TestMaxWidth(t *testing.T) {
 
 	t.Log(width, width2, width == width2)
 }
+
+func TestPrintAllFolds(t *testing.T) {
+	testCases := []struct {
+		name string
+
+		n int
+	}{
+		{name: "1", n: 1},
+		{name: "2", n: 2},
+		{name: "2", n: 2},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			PrintAllFolds(tt.n)
+		})
+	}
+}
