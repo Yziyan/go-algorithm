@@ -20,3 +20,46 @@ func TestIsCBT(t *testing.T) {
 
 	assert.True(t, IsCBT(root))
 }
+
+func isAscendingOrder(nums []int) (string, bool) {
+	if len(nums) == 0 {
+		return "", true
+	}
+
+	for i := 1; i < len(nums); i++ {
+		if nums[i] < nums[i-1] {
+			return "不是升序", false
+		}
+	}
+
+	return "", true
+}
+
+func TestStackSort(t *testing.T) {
+
+	testCases := []struct {
+		name   string
+		stackA Stack
+	}{
+		{
+			name:   "【随机乱序】",
+			stackA: []int{4, 1, 2, 4, 6, 2, 3, 5, 10, 8, 7, 9},
+		},
+		{
+			name:   "【无元素】",
+			stackA: []int{},
+		},
+		{
+			name:   "【原本有序】",
+			stackA: []int{1, 2, 3, 4, 5, 6},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			StackSort(tt.stackA)
+			msg, order := isAscendingOrder(tt.stackA)
+			assert.True(t, order, msg)
+		})
+	}
+}

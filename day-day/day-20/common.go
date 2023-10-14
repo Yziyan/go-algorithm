@@ -28,3 +28,30 @@ func (q *Queue) Poll() *TreeNode {
 func (q *Queue) Size() int {
 	return len(*q)
 }
+
+type Stack []int
+
+func NewStack() Stack {
+	return make([]int, 0)
+}
+
+func (s *Stack) Push(val int) {
+	*s = append(*s, val)
+}
+
+func (s *Stack) Pop() int {
+	last := len(*s) - 1
+	res := (*s)[last]
+	*s = (*s)[:last]
+	return res
+}
+
+func (s *Stack) Top() int {
+	last := len(*s) - 1
+	res := (*s)[last]
+	return res
+}
+
+func (s *Stack) Size() int {
+	return len(*s)
+}
