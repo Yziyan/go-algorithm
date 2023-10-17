@@ -54,9 +54,3 @@ func Busyness(ctx context.Context) {
 	time.Sleep(3 * time.Second)
 	fmt.Println("业务完成了")
 }
-
-func TestControl(t *testing.T) {
-
-	ch := make(chan struct{})
-
-}
