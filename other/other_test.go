@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Yziyan/go-algorithm/other"
+	"sync"
 	"testing"
 	"time"
 )
@@ -53,4 +54,139 @@ func TestHttpClientPool(t *testing.T) {
 func Busyness(ctx context.Context) {
 	time.Sleep(3 * time.Second)
 	fmt.Println("业务完成了")
+}
+
+func TestGoroutine(t *testing.T) {
+
+	loopCount := 10000
+	size := 10000
+
+	type resp struct {
+		age int
+	}
+
+	pushing := func(age int) *resp {
+		// 模拟业务耗时
+		return &resp{age: age}
+	}
+
+	goPushing := func(i int, ch chan<- *resp) {
+		defer close(ch)
+		for j := 0; j < size; j++ {
+			res := pushing(i + j)
+			ch <- res
+		}
+	}
+
+	pushAfter := func(res *resp) {
+		// 模拟业务耗时
+	}
+
+	testCases := []struct {
+		name string
+
+		execute func()
+	}{
+		// 会开过多的 Goroutine，协程调度开销很大、还需要涉及多个协程同步等待执行的结果
+		{
+			name: "【case1: for 循环，不协程】",
+			execute: func() {
+				wg := sync.WaitGroup{}
+				for i := 0; i < loopCount; i++ {
+					for j := 0; j < size; j++ {
+						res := pushing(i + j)
+						wg.Add(1)
+						go func() {
+							defer wg.Done()
+							pushAfter(res)
+						}()
+					}
+					wg.Wait()
+				}
+				fmt.Println()
+			},
+		},
+		{
+			// 这里每次只会去开一个协程，然后利用 channel，就避免了大量协程间的调度和等待问题。
+			// 还有就是使用有 buffer 的 channel，可以减少协程频繁的阻塞和唤醒。
+			name: "【case2:go 协程，channel 有 size 缓冲】",
+			execute: func() {
+				wg := sync.WaitGroup{}
+				for i := 0; i < loopCount; i++ {
+					ch := make(chan *resp, size)
+					end := make(chan struct{})
+					go func() {
+						defer close(end)
+						goPushing(i, ch)
+						end <- struct{}{}
+					}()
+
+				OUTLOOP:
+					for {
+						select {
+						case <-end:
+							break OUTLOOP
+						case res, ok := <-ch:
+							if !ok {
+								break
+							}
+							wg.Add(1)
+							go func() {
+								defer wg.Done()
+								pushAfter(res)
+							}()
+						}
+					}
+
+					wg.Wait()
+				}
+			},
+		},
+		{
+			// 这里每次只会去开一个协程，然后利用 channel，就避免了大量协程间的调度和等待问题。
+			// 但是这里没有缓冲，所以按理来说要比上面慢
+			name: "【case3:go 协程，channel 无缓冲】",
+			execute: func() {
+				wg := sync.WaitGroup{}
+				for i := 0; i < loopCount; i++ {
+					ch := make(chan *resp)
+					end := make(chan struct{})
+					go func() {
+						defer close(end)
+						goPushing(i, ch)
+						end <- struct{}{}
+					}()
+
+				OUTLOOP:
+					for {
+						select {
+						case <-end:
+							break OUTLOOP
+						case res, ok := <-ch:
+							if !ok {
+								break
+							}
+							wg.Add(1)
+							go func() {
+								defer wg.Done()
+								pushAfter(res)
+							}()
+						}
+					}
+
+					wg.Wait()
+				}
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			start := time.Now()
+			tt.execute()
+			elapsed := time.Since(start)
+			t.Logf("%s执行耗时: %s\n", tt.name, elapsed)
+		})
+	}
+
 }
