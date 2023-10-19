@@ -63,3 +63,73 @@ func TestStackSort(t *testing.T) {
 		})
 	}
 }
+
+func TestMaxSubBSTTree(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    *TreeNode
+		expected int
+	}{
+		{
+			name:     "【单一节点，树中只有一个节点】",
+			input:    &TreeNode{Val: 5},
+			expected: 1,
+		},
+		{
+			name: "【完全平衡的二叉搜索树（BST）】",
+			input: &TreeNode{
+				Val:   10,
+				Left:  &TreeNode{Val: 5},
+				Right: &TreeNode{Val: 15},
+			},
+			expected: 3,
+		},
+		{
+			name: "【一个完整的非BST树】",
+			input: &TreeNode{
+				Val:   10,
+				Left:  &TreeNode{Val: 15},
+				Right: &TreeNode{Val: 5},
+			},
+			expected: 1,
+		},
+		{
+			name: "【非平衡树，但有BST子树】",
+			input: &TreeNode{
+				Val:  10,
+				Left: &TreeNode{Val: 5},
+				Right: &TreeNode{
+					Val:  15,
+					Left: &TreeNode{Val: 6},
+				},
+			},
+			expected: 2,
+		},
+		{
+			name: "【更复杂的树，混合了BST和非BST部分】",
+			input: &TreeNode{
+				Val:  10,
+				Left: &TreeNode{Val: 15},
+				Right: &TreeNode{
+					Val:  5,
+					Left: &TreeNode{Val: 3},
+					Right: &TreeNode{
+						Val:   8,
+						Left:  &TreeNode{Val: 7},
+						Right: &TreeNode{Val: 10},
+					},
+				},
+			},
+			expected: 5,
+		},
+		// 添加更多测试用例
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := MaxSubBSTTree(tt.input)
+			assert.Equal(t, tt.expected, got)
+		})
+
+	}
+}
