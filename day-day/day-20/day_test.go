@@ -12,13 +12,142 @@ func NewTreeNode(val int) *TreeNode {
 }
 
 func TestIsCBT(t *testing.T) {
-	root := NewTreeNode(1)
-	root.Left = NewTreeNode(2)
-	root.Right = NewTreeNode(3)
-	root.Left.Left = NewTreeNode(4)
-	root.Left.Right = NewTreeNode(5)
+	// 构建测试用例表格
+	testCases := []struct {
+		name     string
+		input    *TreeNode
+		expected bool
+	}{
+		{
+			name:     "Empty Tree",
+			input:    nil,
+			expected: true,
+		},
+		{
+			name: "Complete Binary Tree",
+			input: &TreeNode{
+				Val:   1,
+				Left:  &TreeNode{Val: 2},
+				Right: &TreeNode{Val: 3},
+			},
+			expected: true,
+		},
+		{
+			name: "Incomplete Binary Tree",
+			input: &TreeNode{
+				Val:  1,
+				Left: &TreeNode{Val: 2},
+			},
+			expected: true,
+		},
+		{
+			name: "Full Binary Tree",
+			input: &TreeNode{
+				Val: 1,
+				Left: &TreeNode{
+					Val:   2,
+					Left:  &TreeNode{Val: 4},
+					Right: &TreeNode{Val: 5},
+				},
+				Right: &TreeNode{
+					Val:   3,
+					Left:  &TreeNode{Val: 6},
+					Right: &TreeNode{Val: 7},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Not Full Binary Tree",
+			input: &TreeNode{
+				Val: 1,
+				Left: &TreeNode{
+					Val:   2,
+					Left:  &TreeNode{Val: 4},
+					Right: &TreeNode{Val: 5},
+				},
+				Right: &TreeNode{
+					Val:   3,
+					Right: &TreeNode{Val: 6},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "测试用例 3：满二叉树，应该返回 true",
+			input: &TreeNode{
+				Val: 1,
+				Left: &TreeNode{
+					Val: 2,
+					Left: &TreeNode{
+						Val: 4,
+					},
+					Right: &TreeNode{
+						Val: 5,
+					},
+				},
+				Right: &TreeNode{
+					Val: 3,
+					Left: &TreeNode{
+						Val: 6,
+					},
+					Right: &TreeNode{
+						Val: 7,
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "测试用例 4：完全二叉树，但不是满二叉树，应该返回 true",
+			input: &TreeNode{
+				Val: 1,
+				Left: &TreeNode{
+					Val: 2,
+					Left: &TreeNode{
+						Val: 4,
+					},
+					Right: &TreeNode{
+						Val: 5,
+					},
+				},
+				Right: &TreeNode{
+					Val: 3,
+					Left: &TreeNode{
+						Val: 6,
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "测试用例 5：非完全二叉树，应该返回 false",
+			input: &TreeNode{
+				Val: 1,
+				Left: &TreeNode{
+					Val: 2,
+					Left: &TreeNode{
+						Val: 4,
+					},
+				},
+				Right: &TreeNode{
+					Val: 3,
+					Right: &TreeNode{
+						Val: 7,
+					},
+				},
+			},
+			expected: false,
+		},
+	}
 
-	assert.True(t, IsCBT(root))
+	// 遍历测试用例并运行测试
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			actual := isCompleteTree(tc.input)
+			assert.Equal(t, tc.expected, actual)
+		})
+	}
 }
 
 func isAscendingOrder(nums []int) (string, bool) {
@@ -67,17 +196,17 @@ func TestStackSort(t *testing.T) {
 func TestMaxSubBSTTree(t *testing.T) {
 	testCases := []struct {
 		name     string
-		input    *TreeNode
+		args     *TreeNode
 		expected int
 	}{
 		{
 			name:     "【单一节点，树中只有一个节点】",
-			input:    &TreeNode{Val: 5},
+			args:     &TreeNode{Val: 5},
 			expected: 1,
 		},
 		{
 			name: "【完全平衡的二叉搜索树（BST）】",
-			input: &TreeNode{
+			args: &TreeNode{
 				Val:   10,
 				Left:  &TreeNode{Val: 5},
 				Right: &TreeNode{Val: 15},
@@ -86,7 +215,7 @@ func TestMaxSubBSTTree(t *testing.T) {
 		},
 		{
 			name: "【一个完整的非BST树】",
-			input: &TreeNode{
+			args: &TreeNode{
 				Val:   10,
 				Left:  &TreeNode{Val: 15},
 				Right: &TreeNode{Val: 5},
@@ -95,7 +224,7 @@ func TestMaxSubBSTTree(t *testing.T) {
 		},
 		{
 			name: "【非平衡树，但有BST子树】",
-			input: &TreeNode{
+			args: &TreeNode{
 				Val:  10,
 				Left: &TreeNode{Val: 5},
 				Right: &TreeNode{
@@ -107,7 +236,7 @@ func TestMaxSubBSTTree(t *testing.T) {
 		},
 		{
 			name: "【更复杂的树，混合了BST和非BST部分】",
-			input: &TreeNode{
+			args: &TreeNode{
 				Val:  10,
 				Left: &TreeNode{Val: 15},
 				Right: &TreeNode{
@@ -127,9 +256,8 @@ func TestMaxSubBSTTree(t *testing.T) {
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MaxSubBSTTree(tt.input)
+			got := MaxSubBSTTree(tt.args)
 			assert.Equal(t, tt.expected, got)
 		})
-
 	}
 }
