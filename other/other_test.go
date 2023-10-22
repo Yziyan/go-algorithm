@@ -195,3 +195,36 @@ func TestNewConfig(t *testing.T) {
 	t.Logf("cfg1: %+v\n", cfg1)
 	t.Logf("cfg2: %+v\n", cfg2)
 }
+
+func TestNewBuilder(t *testing.T) {
+	builder := NewBuilder()
+
+	p := builder.SetName("ciusyan").SetPrice(2.31).SetQuantity(3).Build()
+	t.Logf("price: %f", p.GetPrice())
+
+	// 假设中间获取 p 可能出错
+	p1, err := builder.SetName("zhiyan").SetPrice(3.20).SetQuantity(3).BuildV1()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	priceV1, err := p1.GetPriceV1()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Logf("price: %f", priceV1)
+
+	// 假设中间获取 p 可能出错，但是我们这里并不影响链式调用，
+	// 可以将错误，交给最后一个链条处理，这样的代码会优雅很多。
+	price, err := builder.SetName("zhiyan").SetPrice(0.00).SetQuantity(3).BuildV2().GetPrice()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Logf("%f", price)
+
+	// 如果确保一定不会出错，出错就 panic
+	p4 := builder.SetName("志颜").SetPrice(5.20).SetQuantity(100).BuildV2().MustProduct()
+	t.Logf("%+v", p4)
+}
