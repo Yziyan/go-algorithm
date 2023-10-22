@@ -1,18 +1,16 @@
 // @Author: Ciusyan 2023/7/23
 
-package other_test
+package other
 
 import (
-	"context"
 	"fmt"
-	"github.com/Yziyan/go-algorithm/other"
 	"sync"
 	"testing"
 	"time"
 )
 
 func TestPrint(t *testing.T) {
-	other.Print()
+	Print()
 }
 
 func Test1(t *testing.T) {
@@ -30,11 +28,11 @@ func Test1(t *testing.T) {
 
 func TestLengthOfLongestSubstring(t *testing.T) {
 
-	other.LengthOfLongestSubstring("pwwkew")
+	LengthOfLongestSubstring("pwwkew")
 }
 
 func TestHttpClientPool(t *testing.T) {
-	pool := other.NewHttpClientPool()
+	pool := NewHttpClientPool()
 
 	for i := 0; i < 5; i++ {
 		client := pool.Get()
@@ -49,11 +47,6 @@ func TestHttpClientPool(t *testing.T) {
 		pool.Put(client)
 	}
 
-}
-
-func Busyness(ctx context.Context) {
-	time.Sleep(3 * time.Second)
-	fmt.Println("业务完成了")
 }
 
 func TestGoroutine(t *testing.T) {
@@ -189,4 +182,16 @@ func TestGoroutine(t *testing.T) {
 		})
 	}
 
+}
+
+func TestNewConfig(t *testing.T) {
+	// 使用的时候，就可以这样来使用
+	// 这里使用必传参数
+	cfg1 := NewConfig("localhost", 8080)
+
+	// 这里可以使用可选项
+	cfg2 := NewConfig("127.0.0.1", 433, WithTimeoutOption(5), WithIsLogOption(true))
+
+	t.Logf("cfg1: %+v\n", cfg1)
+	t.Logf("cfg2: %+v\n", cfg2)
 }
