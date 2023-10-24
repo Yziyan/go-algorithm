@@ -261,3 +261,76 @@ func TestMaxSubBSTTree(t *testing.T) {
 		})
 	}
 }
+
+func TestMaxHappy(t *testing.T) {
+	testCases := []struct {
+		name string
+		args *Employee
+		want int
+	}{
+		{
+			name: "Nil args",
+			args: nil,
+			want: 0,
+		},
+		{
+			name: "Single employee",
+			args: NewEmployee(5),
+			want: 5,
+		},
+		{
+			name: "Leader chooses not to come",
+			args: func() *Employee {
+				boss := NewEmployee(10)
+				subordinate1 := NewEmployee(5)
+				subordinate2 := NewEmployee(7)
+				boss.nexts = append(boss.nexts, subordinate1, subordinate2)
+				return boss
+			}(),
+			want: 12,
+		},
+		{
+			name: "Leader chooses to come",
+			args: func() *Employee {
+				boss := NewEmployee(15)
+				subordinate1 := NewEmployee(5)
+				subordinate2 := NewEmployee(7)
+				boss.nexts = append(boss.nexts, subordinate1, subordinate2)
+				return boss
+			}(),
+			want: 15,
+		},
+		{
+			name: "更复杂的结构",
+			args: func() *Employee {
+				// 构建更复杂的 Employee 结构
+				boss := NewEmployee(15)
+
+				// boss 的下级
+				subordinate1 := NewEmployee(10)
+				subordinate2 := NewEmployee(20)
+				subordinate3 := NewEmployee(5)
+
+				// subordinate1 的下级
+				subordinate4 := NewEmployee(8)
+				subordinate5 := NewEmployee(12)
+				// subordinate3 的下级
+				subordinate6 := NewEmployee(15)
+
+				boss.nexts = append(boss.nexts, subordinate1, subordinate2, subordinate3)
+				subordinate1.nexts = append(subordinate1.nexts, subordinate4, subordinate5)
+				subordinate3.nexts = append(subordinate3.nexts, subordinate6)
+
+				return boss
+			}(),
+			want: 55,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := MaxHappy(tc.args)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
