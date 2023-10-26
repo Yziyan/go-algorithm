@@ -182,3 +182,90 @@ func TransferLock(account *Account, amount int64, md method) {
 		panic("不支持此方法")
 	}
 }
+
+var counter int32 = 0
+
+var max int32 = 1 // 最大允许的并发数量
+
+// 在运行时更新 max 的值
+func updateMax(max *int32, newMaxConcurrent int32) {
+	atomic.StoreInt32(max, newMaxConcurrent)
+}
+
+func TestAtomic(t *testing.T) {
+	var wg sync.WaitGroup
+
+	// 模拟修改成 3
+	go func() {
+		time.Sleep(2 * time.Second)
+		t.Log("max修改为3")
+		updateMax(&max, 3)
+	}()
+
+	// 模拟修改成 1
+	go func() {
+		time.Sleep(6 * time.Second)
+		t.Log("max修改为1")
+		updateMax(&max, 1)
+	}()
+
+	// 模拟改成 5
+	go func() {
+		time.Sleep(10 * time.Second)
+		t.Log("max修改为5")
+		updateMax(&max, 5)
+	}()
+
+	// 模拟改成 5
+	go func() {
+		time.Sleep(12 * time.Second)
+		t.Log("max修改为2")
+		updateMax(&max, 2)
+	}()
+
+	for i := 1; i <= 150; i++ {
+		wg.Add(1)
+		go func(taskId int) {
+			defer wg.Done()
+
+			if !acquireSemaphore() {
+				// 没获取到锁
+				t.Logf("TaskId = %d 尚未获取到锁", taskId)
+				return
+			}
+			// 获取信号量
+			defer releaseSemaphore() // 释放信号量
+
+			// 执行任务
+			t.Logf("TaskID = %d 开始执行\n", taskId)
+			time.Sleep(2 * time.Second)
+			t.Logf("TaskID = %d 执行结束\n", taskId)
+		}(i)
+
+		time.Sleep(100 * time.Millisecond)
+	}
+	wg.Wait()
+}
+
+func acquireSemaphore() bool {
+	n := atomic.LoadInt32(&counter)
+	mx := atomic.LoadInt32(&max)
+	if n >= mx {
+		return false
+	}
+
+	// 说明可以获取
+	n = atomic.AddInt32(&counter, 1)
+	if n > mx {
+		// 说明有别的协程刚刚增加了，把刚刚增加的减回来
+		n = atomic.AddInt32(&counter, 1)
+
+		return false
+	}
+
+	return true
+}
+
+func releaseSemaphore() {
+	atomic.AddInt32(&counter, -1)
+}
