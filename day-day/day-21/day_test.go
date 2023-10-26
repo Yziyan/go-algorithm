@@ -65,3 +65,46 @@ func TestLowestString(t *testing.T) {
 	assert.Equal(t, got1, got2)
 
 }
+
+func TestBestArrange(t *testing.T) {
+
+	// 随机生成会议
+	randArranges := func(size int, maxTime int) [][2]int {
+		rand.New(rand.NewSource(time.Now().UnixNano()))
+
+		size = rand.Intn(size) + 1
+		res := make([][2]int, size)
+
+		for i := 0; i < size; i++ {
+			var (
+				beginTime = rand.Intn(maxTime) + 1
+				endTime   = rand.Intn(maxTime) + 1
+			)
+
+			if beginTime == endTime {
+				endTime++
+			} else if beginTime > endTime {
+				// 说明开始比结束还晚，交换一下
+				beginTime, endTime = endTime, beginTime
+			}
+
+			res[i] = [2]int{beginTime, endTime}
+		}
+
+		return res
+	}
+
+	arrangesLen := 20
+	maxTime := 30
+	loopSize := 10000
+
+	for i := 0; i < loopSize; i++ {
+		arranges := randArranges(arrangesLen, maxTime)
+		arranges1 := slices.Clone(arranges)
+
+		got := BestArrange(arranges)
+		got1 := BestArrange1(arranges1)
+
+		assert.Equal(t, got, got1)
+	}
+}
