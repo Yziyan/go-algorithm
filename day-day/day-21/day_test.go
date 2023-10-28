@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func TestName(t *testing.T) {
 	idx := 3
 	strs := []int{44, 22, 133, 765, 43}
@@ -24,14 +26,12 @@ func TestLowestString(t *testing.T) {
 		const charset = "abcdefghijklmnopqrstuvwxyz"
 		b := make([]byte, strLen)
 		for i := range b {
-			b[i] = charset[rand.Intn(len(charset))]
+			b[i] = charset[r.Intn(len(charset))]
 		}
 		return string(b)
 	}
 
 	randStringSlice := func(size, strLen int) []string {
-		rand.New(rand.NewSource(time.Now().UnixNano()))
-
 		res := make([]string, size)
 		for i := 0; i < size; i++ {
 			res[i] = randString(strLen)
@@ -39,7 +39,7 @@ func TestLowestString(t *testing.T) {
 		return res
 	}
 
-	loopCount := 50
+	loopCount := 1000
 	arrLen := 6
 	strLen := 4
 	for i := 0; i < loopCount; i++ {
@@ -70,15 +70,13 @@ func TestBestArrange(t *testing.T) {
 
 	// 随机生成会议
 	randArranges := func(size int, maxTime int) [][2]int {
-		rand.New(rand.NewSource(time.Now().UnixNano()))
-
-		size = rand.Intn(size) + 1
+		size = r.Intn(size) + 1
 		res := make([][2]int, size)
 
 		for i := 0; i < size; i++ {
 			var (
-				beginTime = rand.Intn(maxTime) + 1
-				endTime   = rand.Intn(maxTime) + 1
+				beginTime = r.Intn(maxTime) + 1
+				endTime   = r.Intn(maxTime) + 1
 			)
 
 			if beginTime == endTime {
@@ -148,4 +146,33 @@ func TestHeap(t *testing.T) {
 	if newTop != 5 {
 		t.Errorf("Expected new top element to be 5, but got %d", newTop)
 	}
+}
+
+func TestLessMoneySplitGold(t *testing.T) {
+
+	randArr := func(size int, max int) []int {
+		size = r.Intn(size) + 1
+		res := make([]int, size)
+
+		for i := 0; i < size; i++ {
+			res[i] = r.Intn(max) + 1
+		}
+
+		return res
+	}
+
+	arrLen := 20
+	mx := 100
+	loopSize := 10000
+
+	for i := 0; i < loopSize; i++ {
+		arr := randArr(arrLen, mx)
+		arr1 := slices.Clone(arr)
+
+		got := LessMoneySplitGold(arr)
+		got1 := LessMoneySplitGold(arr1)
+
+		assert.Equal(t, got, got1)
+	}
+
 }
