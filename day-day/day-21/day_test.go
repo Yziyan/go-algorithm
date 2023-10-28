@@ -108,3 +108,44 @@ func TestBestArrange(t *testing.T) {
 		assert.Equal(t, got, got1)
 	}
 }
+
+func TestHeap(t *testing.T) {
+
+	heap := NewHeap()
+
+	// 添加元素
+	heap.Add(5)
+	heap.Add(7)
+	heap.Add(3)
+	heap.Add(10)
+	heap.Add(2)
+
+	// 获取堆顶元素
+	top := heap.Get()
+	if top != 2 {
+		t.Errorf("Expected top element to be 2, but got %d", top)
+	}
+
+	// 删除堆顶元素
+	removed := heap.Remove()
+	if removed != 2 {
+		t.Errorf("Expected removed element to be 2, but got %d", removed)
+	}
+
+	// 再次获取堆顶元素
+	newTop := heap.Get()
+	if newTop != 3 {
+		t.Errorf("Expected new top element to be 3, but got %d", newTop)
+	}
+
+	// 删除堆顶元素
+	removed = heap.Remove()
+	if removed != 3 {
+		t.Errorf("Expected removed element to be 3, but got %d", removed)
+	}
+
+	newTop = heap.Get()
+	if newTop != 5 {
+		t.Errorf("Expected new top element to be 5, but got %d", newTop)
+	}
+}
