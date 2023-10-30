@@ -2,23 +2,62 @@
 
 package day_21
 
-// 小跟堆
-type minHeap struct {
-	elements []int
+// 堆
+type minHeap[T any] struct {
+	elements []T
 	size     int
+
+	// 比较器
+	cmp CompareFuc[T]
+}
+
+func Zero[T any]() (z T) {
+	return
 }
 
 const defaultCapacity = 10
 
-func NewHeap() *minHeap {
-	return &minHeap{
-		elements: make([]int, defaultCapacity),
+//func NewHeap[T any](opts ...HeapOptions[T]) *minHeap[T] {
+//	heap := &minHeap[T]{
+//		elements: make([]T, defaultCapacity),
+//		size:     0,
+//	}
+//
+//	for _, opt := range opts {
+//		opt(heap)
+//	}
+//
+//	// 如果没有传入比较器，那么就默认是小跟堆
+//	if heap.cmp == nil {
+//		heap.cmp = func(x, y T) int {
+//			// TODO 这里不好处理，如果用泛型，不方便使用默认值，除非这里使用反射
+//		}
+//	}
+//
+//	return heap
+//}
+
+func NewHeap[T any](cmp CompareFuc[T]) *minHeap[T] {
+	heap := &minHeap[T]{
+		elements: make([]T, defaultCapacity),
 		size:     0,
+		cmp:      cmp,
+	}
+
+	return heap
+}
+
+type HeapOptions[T any] func(heap *minHeap[T])
+type CompareFuc[T any] func(x, y T) int
+
+func WithCmpOption[T any](cmp CompareFuc[T]) HeapOptions[T] {
+	return func(heap *minHeap[T]) {
+		heap.cmp = cmp
 	}
 }
 
 // Add 元素入堆
-func (h *minHeap) Add(ele int) {
+func (h *minHeap[T]) Add(ele T) {
 	// 检查容量是否足够
 	h.ensureCapacity(h.size + 1)
 
@@ -30,7 +69,7 @@ func (h *minHeap) Add(ele int) {
 }
 
 // Remove 删除堆顶元素
-func (h *minHeap) Remove() int {
+func (h *minHeap[T]) Remove() T {
 	if h.size == 0 {
 		panic("堆是空的")
 	}
@@ -38,7 +77,7 @@ func (h *minHeap) Remove() int {
 	ele := h.elements[0]
 	// 将堆尾放在堆顶
 	h.elements[0] = h.elements[h.size]
-	h.elements[h.size] = 0
+	h.elements[h.size] = Zero[T]()
 
 	// 然后对堆顶进行下滤操作
 	h.siftDown(0)
@@ -46,7 +85,7 @@ func (h *minHeap) Remove() int {
 	return ele
 }
 
-func (h *minHeap) Get() int {
+func (h *minHeap[T]) Get() T {
 	if h.size == 0 {
 		panic("堆为空")
 	}
@@ -54,12 +93,12 @@ func (h *minHeap) Get() int {
 	return h.elements[0]
 }
 
-func (h *minHeap) Size() int {
+func (h *minHeap[T]) Size() int {
 	return h.size
 }
 
 // 确保容量足够
-func (h *minHeap) ensureCapacity(minCapacity int) {
+func (h *minHeap[T]) ensureCapacity(minCapacity int) {
 	oldCapacity := len(h.elements)
 	if oldCapacity >= minCapacity {
 		return
@@ -67,7 +106,7 @@ func (h *minHeap) ensureCapacity(minCapacity int) {
 
 	// 说明容量不够了
 	newCapacity := oldCapacity + (oldCapacity >> 1)
-	newElements := make([]int, newCapacity)
+	newElements := make([]T, newCapacity)
 
 	// 挨个拷贝旧数组的内容
 	for i := 0; i < h.size; i++ {
@@ -78,7 +117,7 @@ func (h *minHeap) ensureCapacity(minCapacity int) {
 	h.elements = newElements
 }
 
-func (h *minHeap) siftUp(idx int) {
+func (h *minHeap[T]) siftUp(idx int) {
 
 	// 上滤就是不断用上滤元素不断与父节点比较，放置在合适的位置
 	upEle := h.elements[idx]
@@ -91,7 +130,7 @@ func (h *minHeap) siftUp(idx int) {
 		parentEle := h.elements[parentIdx]
 
 		// 小的要放上面
-		if upEle >= parentEle {
+		if h.cmp(upEle, parentEle) >= 0 {
 			break
 		}
 
@@ -105,7 +144,7 @@ func (h *minHeap) siftUp(idx int) {
 	h.elements[idx] = upEle
 }
 
-func (h *minHeap) siftDown(idx int) {
+func (h *minHeap[T]) siftDown(idx int) {
 	downEle := h.elements[idx]
 	// 从有孩子的地方开始遍历
 	half := h.size >> 1 // 叶子节点的数量，那么 idx < half，就一定有孩子
@@ -118,14 +157,14 @@ func (h *minHeap) siftDown(idx int) {
 		rightIdx := childIdx + 1
 
 		// 但是得看还有没有右子树
-		if rightIdx < h.size && h.elements[rightIdx] < child {
+		if rightIdx < h.size && h.cmp(h.elements[rightIdx], child) < 0 {
 			// 说明右边小
 			childIdx = rightIdx
 			child = h.elements[rightIdx]
 		}
 
 		// 看看下滤元素是否能往下走
-		if child >= downEle {
+		if h.cmp(child, downEle) >= 0 {
 			// 说明最小的子节点都比下滤元素大了，就没必要往下走了
 			break
 		}

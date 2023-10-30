@@ -109,7 +109,9 @@ func TestBestArrange(t *testing.T) {
 
 func TestHeap(t *testing.T) {
 
-	heap := NewHeap()
+	heap := NewHeap[int](func(x, y int) int {
+		return x - y
+	})
 
 	// 添加元素
 	heap.Add(5)
@@ -175,4 +177,11 @@ func TestLessMoneySplitGold(t *testing.T) {
 		assert.Equal(t, got, got1)
 	}
 
+}
+
+func TestFindMaximizedCapital(t *testing.T) {
+
+	profit := findMaximizedCapital(3, 0, []int{1, 2, 3}, []int{0, 1, 2})
+
+	t.Log(profit)
 }

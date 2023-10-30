@@ -19,7 +19,9 @@ func LessMoneySplitGold(arr []int) int {
 	}
 
 	// 准备一个最小堆
-	heap := NewHeap()
+	heap := NewHeap[int](func(x, y int) int {
+		return x - y
+	})
 	// 将所有 arr 加入最小堆中
 	for _, v := range arr {
 		heap.Add(v)
