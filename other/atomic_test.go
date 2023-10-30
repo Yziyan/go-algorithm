@@ -258,7 +258,7 @@ func acquireSemaphore() bool {
 	n = atomic.AddInt32(&counter, 1)
 	if n > mx {
 		// 说明有别的协程刚刚增加了，把刚刚增加的减回来
-		n = atomic.AddInt32(&counter, 1)
+		n = atomic.AddInt32(&counter, -1)
 
 		return false
 	}
