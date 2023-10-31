@@ -80,6 +80,7 @@ func (s *MiniSema) Release(n int32) {
 }
 
 // ListenMaxConcurrent 在后台监听
+//
 //	getValFunc 告诉如何获取值，duration 多久轮询一次
 //		// 默认使用 1 个并发数
 //		miniSema = sema.NewMiniSema()

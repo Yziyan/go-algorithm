@@ -185,3 +185,33 @@ func TestFindMaximizedCapital(t *testing.T) {
 
 	t.Log(profit)
 }
+
+func TestMinLight(t *testing.T) {
+
+	testCases := []struct {
+		name string
+		road string
+		want int
+	}{
+		{"空路", "", 0},
+		{"只有墙", "X", 0},
+		{"只有一个街道", ".", 1},
+		{"一个街道两边是墙", "X.X", 1},
+		{"连续三个街道", "...", 1},
+		{"两个街道两边是墙", "X..X", 1},
+		{"三个街道两边是墙", "X...X", 1},
+		{"中间有一个墙", "..X..", 2},
+		{"中间有一个墙，两边各有三个街道", "...X...", 2},
+		{"中间有一个墙，两边各有四个街道", "....X....", 4},
+		{"多个分段的街道", "XX...XX...XX", 2},
+		{"复杂街道", "..X...X....X.....X..X...X..X...X..", 11},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := MinLight(tc.road)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+
+}
