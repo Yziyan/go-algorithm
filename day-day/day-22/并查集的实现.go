@@ -8,6 +8,8 @@ package day_22
 type UnionFind[V comparable] struct {
 	// 标识所有的集合
 	sets map[V]*node[V]
+	// 集合的数量
+	size int
 }
 
 // 内部节点类
@@ -39,7 +41,12 @@ func (uf *UnionFind[V]) MakeSets(vals ...V) {
 	for i := range vals {
 		val := vals[i]
 		uf.sets[val] = newNode(val)
+		uf.size++
 	}
+}
+
+func (uf *UnionFind[V]) GetSize() int {
+	return uf.size
 }
 
 // IsSame 查看 v1 v2 是否处于同一个集合
@@ -85,6 +92,9 @@ func (uf *UnionFind[V]) Union(v1, v2 V) {
 		root1.parent = root2
 		root2.rank++
 	}
+
+	// 合并后，少一个集合
+	uf.size--
 }
 
 // 找到 val 的根节点
