@@ -65,3 +65,13 @@ func TestUnionFind(t *testing.T) {
 
 	t.Log("over")
 }
+
+func TestFindCircleNum(t *testing.T) {
+	args := [][]int{
+		{1, 1, 0},
+		{1, 1, 0},
+		{0, 0, 1},
+	}
+	num := findCircleNum(args)
+	t.Log(num)
+}
