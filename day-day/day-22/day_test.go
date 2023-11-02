@@ -75,3 +75,16 @@ func TestFindCircleNum(t *testing.T) {
 	num := findCircleNum(args)
 	t.Log(num)
 }
+
+func TestName(t *testing.T) {
+
+	args := [][]byte{
+		{'1', '1', '1', '1', '0'},
+		{'1', '1', '0', '1', '0'},
+		{'1', '1', '0', '0', '0'},
+		{'0', '0', '0', '0', '0'},
+	}
+
+	islands := numIslands(args)
+	t.Log(islands)
+}

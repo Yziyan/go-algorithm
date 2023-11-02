@@ -39,7 +39,7 @@ func business(t *testing.T, sema *MiniSema) {
 
 	var wg sync.WaitGroup
 
-	for i := 1; i <= 150; i++ {
+	for i := 1; i <= 1000; i++ {
 		wg.Add(1)
 		go func(taskId int) {
 			defer wg.Done()
@@ -57,39 +57,40 @@ func business(t *testing.T, sema *MiniSema) {
 
 			// 执行任务
 			t.Logf("TaskID = %d 开始执行, Acquire: %#v\n", taskId, sema)
-			time.Sleep(2 * time.Second)
+			time.Sleep(3 * time.Minute)
 			t.Logf("TaskID = %d 执行结束\n", taskId)
 		}(i)
 
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(5 * time.Second)
 	}
 	wg.Wait()
 }
 
 func TestMiniSema_ListenMaxConcurrent(t *testing.T) {
 
-	maxSize := []int32{1, 3, 6, 2, 5, 1}
+	maxSize := []int32{1, 2, 2, 3, 3, 3}
 	idx := 0
 	count := 0
 	// 新建一个一开始能有 3 个并发数量的 sema
-	sema := NewMiniSema(WithMaxConcurrentOption(3))
+	sema := NewMiniSema(WithMaxConcurrentOption(1))
 
 	// 假设 2 秒改一次并发数
 	sema.ListenMaxConcurrent(func() int32 {
 		count++
-		if (count & 1) != 1 {
+		if (count & 1) != 0 {
 			// 如果是偶数次，那当做没有改过，复用上一次的
 			return maxSize[idx]
 		}
 
-		if idx >= len(maxSize) {
+		if idx >= len(maxSize)-1 {
 			idx = 0
+		} else {
+			idx++
 		}
 
 		val := maxSize[idx]
-		idx++
 		return val
-	}, 2*time.Second)
+	}, time.Minute)
 
 	business(t, sema)
 }

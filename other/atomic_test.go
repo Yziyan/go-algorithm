@@ -16,7 +16,7 @@ import (
 
 func TestLockTransfer(t *testing.T) {
 
-	loopCount := int64(10000000)
+	loopCount := int64(100000000)
 	amount := int64(1)
 	testCases := []struct {
 		name string
