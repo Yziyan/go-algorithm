@@ -76,7 +76,7 @@ func TestFindCircleNum(t *testing.T) {
 	t.Log(num)
 }
 
-func TestName(t *testing.T) {
+func TestNumIslands(t *testing.T) {
 
 	args := [][]byte{
 		{'1', '1', '1', '1', '0'},
@@ -87,4 +87,9 @@ func TestName(t *testing.T) {
 
 	islands := numIslands(args)
 	t.Log(islands)
+}
+
+func TestNumIslands2(t *testing.T) {
+	res := numIslands22(3, 4, [][]int{{1, 3}, {0, 1}, {1, 1}, {2, 3}, {1, 2}})
+	t.Log(res)
 }
