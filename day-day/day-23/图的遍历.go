@@ -57,3 +57,59 @@ func (g *Graph) BFS(startVal int) {
 		}
 	}
 }
+
+// DFS 深度优先遍历，startVal 起点的值
+func (g *Graph) DFS(startVal int) {
+	start, ok := g.vertexes[startVal]
+	if !ok {
+		return
+	}
+
+	// 准备一一个栈，用于深度优先遍历
+	stack := newStack()
+	// 将根起点入栈
+	stack.Push(start)
+
+	// 准备一个 Set，用于记录已经访问过的节点
+	visited := make(map[int]struct{}, len(g.vertexes))
+
+	// 栈不为空，就继续遍历
+	for stack.Size() != 0 {
+		vt := stack.Pop()
+		if _, ok = visited[vt.val]; ok {
+			// 说明访问过了
+			continue
+		}
+
+		// 访问，并标记为已访问
+		fmt.Print(vt.val, " ")
+		visited[vt.val] = struct{}{}
+
+		// 找一个能往下钻的所有节点
+		for _, next := range vt.nexts {
+			// 将其加入 Stack
+			stack.Push(next)
+		}
+	}
+}
+
+type Stack []*vertex
+
+func newStack() Stack {
+	return make([]*vertex, 0)
+}
+
+func (s *Stack) Size() int {
+	return len(*s)
+}
+
+func (s *Stack) Push(vt *vertex) {
+	*s = append(*s, vt)
+}
+
+func (s *Stack) Pop() *vertex {
+	last := len(*s) - 1
+	res := (*s)[last]
+	*s = (*s)[:last]
+	return res
+}
