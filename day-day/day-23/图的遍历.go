@@ -58,7 +58,7 @@ func (g *Graph) BFS(startVal int) {
 	}
 }
 
-// DFS 深度优先遍历，startVal 起点的值
+// DFS 深度优先遍历，startVal 起点的值（方法一）
 func (g *Graph) DFS(startVal int) {
 	start, ok := g.vertexes[startVal]
 	if !ok {
@@ -91,6 +91,49 @@ func (g *Graph) DFS(startVal int) {
 			stack.Push(next)
 		}
 	}
+	fmt.Println()
+}
+
+// DFS1 深度优先遍历，startVal 起点的值（方法二）
+func (g *Graph) DFS1(startVal int) {
+	start, ok := g.vertexes[startVal]
+	if !ok {
+		return
+	}
+
+	// 准备一个 SET，用于记录已访问的节点
+	visited := make(map[int]struct{}, len(g.vertexes))
+	// 准备一一个栈，用于深度优先遍历
+	stack := newStack()
+	stack.Push(start)
+	// 并且压入就访问
+	fmt.Print(start.val, " ")
+	visited[start.val] = struct{}{}
+
+	// 栈不为空，就说明还没访问完成
+	for stack.Size() != 0 {
+		// 弹出队头
+		vt := stack.Pop()
+
+		// 看看能否访问一个邻居
+		for _, next := range vt.nexts {
+			if _, ok = visited[next.val]; ok {
+				// 说明访问过了，跳过这个
+				continue
+			}
+
+			// 说明还没访问，
+			fmt.Print(next.val, " ")
+			visited[next.val] = struct{}{}
+
+			// 然后加入栈，但是加入前，还需要将当前节点加入，方便回溯
+			stack.Push(vt)
+			stack.Push(next)
+			// 但是这一次只要一个邻居就可以了
+			break
+		}
+	}
+
 }
 
 type Stack []*vertex

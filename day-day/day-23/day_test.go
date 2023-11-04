@@ -79,15 +79,16 @@ func TestGraph_DFS(t *testing.T) {
 		startVal int
 		expected string
 	}{
-		{"Start from Node 1", 1, "1 2 3 5 6 7 4 8 "},
-		{"Start from Node 2", 2, "2 3 6 7 4 "},
-		{"Start from Node 3", 3, "3 4 7 "},
+		{"Start from Node 1", 1, "1 5 8 3 7 4 2 6 "},
+		{"Start from Node 2", 2, "2 7 6 3 4 "},
+		{"Start from Node 3", 3, "3 7 4 "},
 		{"Start from Non-Existent Node", 4, "4 "},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			graph.DFS(tc.startVal)
+			graph.DFS1(tc.startVal)
 		})
 	}
 
