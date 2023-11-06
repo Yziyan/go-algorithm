@@ -93,3 +93,25 @@ func TestGraph_DFS(t *testing.T) {
 	}
 
 }
+
+func TestGraph_TopologicalSort(t *testing.T) {
+	// 创建一个图
+	args := [][]int{
+		{4, 1, 2},
+		{4, 1, 3},
+		{4, 3, 4},
+		{4, 3, 9},
+		{4, 1, 5},
+		{4, 2, 6},
+		{4, 2, 7},
+		{4, 2, 10},
+		{4, 5, 8},
+		{4, 6, 12},
+		{4, 7, 12},
+		{4, 8, 12},
+	}
+
+	graph := GenerateGraph(args)
+	got := graph.TopologicalSort()
+	t.Log(got)
+}
