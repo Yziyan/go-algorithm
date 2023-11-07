@@ -115,3 +115,35 @@ func TestGraph_TopologicalSort(t *testing.T) {
 	got := graph.TopologicalSort()
 	t.Log(got)
 }
+
+func TestGraph_KruskalBST(t *testing.T) {
+	// 创建一个无向图
+	args := [][]int{
+		{4, 1, 2},
+		{4, 2, 1},
+		{6, 1, 3},
+		{6, 3, 1},
+		{9, 1, 4},
+		{9, 4, 1},
+		{9, 2, 3},
+		{9, 3, 2},
+		{10, 2, 5},
+		{10, 4, 2},
+		{4, 2, 4},
+		{4, 4, 2},
+		{1, 3, 4},
+		{1, 4, 3},
+		{8, 3, 6},
+		{8, 6, 3},
+		{12, 3, 5},
+		{12, 5, 3},
+		{15, 4, 6},
+		{15, 6, 4},
+		{12, 5, 6},
+		{12, 6, 5},
+	}
+
+	graph := GenerateGraph(args)
+	got := graph.KruskalBST()
+	t.Log(got)
+}

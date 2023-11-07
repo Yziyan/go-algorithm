@@ -4,28 +4,6 @@ package day_23
 
 import "fmt"
 
-// Queue模拟一个队列
-type Queue []*vertex
-
-func newQueue() Queue {
-	return make([]*vertex, 0)
-}
-
-func (q *Queue) Size() int {
-	return len(*q)
-}
-
-func (q *Queue) Push(vt *vertex) {
-	*q = append(*q, vt)
-}
-
-func (q *Queue) Pop() *vertex {
-	vt := (*q)[0]
-	// 模拟队头弹出
-	*q = (*q)[1:]
-	return vt
-}
-
 // BFS 广度优先遍历，startVal 起点的值
 func (g *Graph) BFS(startVal int) {
 	start, ok := g.vertexes[startVal]
@@ -134,25 +112,4 @@ func (g *Graph) DFS1(startVal int) {
 		}
 	}
 
-}
-
-type Stack []*vertex
-
-func newStack() Stack {
-	return make([]*vertex, 0)
-}
-
-func (s *Stack) Size() int {
-	return len(*s)
-}
-
-func (s *Stack) Push(vt *vertex) {
-	*s = append(*s, vt)
-}
-
-func (s *Stack) Pop() *vertex {
-	last := len(*s) - 1
-	res := (*s)[last]
-	*s = (*s)[:last]
-	return res
 }
