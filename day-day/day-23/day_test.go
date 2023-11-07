@@ -128,7 +128,7 @@ func TestGraph_KruskalBST(t *testing.T) {
 		{9, 2, 3},
 		{9, 3, 2},
 		{10, 2, 5},
-		{10, 4, 2},
+		{10, 5, 2},
 		{4, 2, 4},
 		{4, 4, 2},
 		{1, 3, 4},
@@ -145,5 +145,7 @@ func TestGraph_KruskalBST(t *testing.T) {
 
 	graph := GenerateGraph(args)
 	got := graph.KruskalBST()
+	got2 := graph.PrimBst()
 	t.Log(got)
+	t.Log(got2)
 }

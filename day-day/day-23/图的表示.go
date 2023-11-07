@@ -20,6 +20,11 @@ type vertex struct {
 	edges []*edge
 }
 
+func (v *vertex) key() string {
+	// 唯一标识一个 Key
+	return fmt.Sprintf("%d_%d_%d", v.out, v.val, v.in)
+}
+
 func newVertex(val int) *vertex {
 	return &vertex{
 		val: val,

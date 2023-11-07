@@ -41,3 +41,50 @@ func (g *Graph) KruskalBST() []int {
 
 	return res
 }
+
+// PrimBst P 算法求解，最小生成树，
+// 随机选定一个起点，将其加入一个集合中，然后选择它的最小权边，但是选择的时候，对应边的终点不能再已经选择过的点集中了。
+func (g *Graph) PrimBst() []int {
+
+	// 随机选择一个起点
+	var beginVt *vertex
+	for _, vt := range g.vertexes {
+		beginVt = vt
+		break
+	}
+	vtL := len(g.vertexes)
+	// 准备一个集合，用于记录已经解锁过的顶点
+	unLockVtSet := make(map[int]struct{}, vtL)
+	unLockVtSet[beginVt.val] = struct{}{}
+	// 准备一个最小堆，用于记录已经解锁了的边
+	unLockEgHeap := NewMinHeap()
+
+	for i := range beginVt.edges {
+		// 将所有出边加入最小堆
+		unLockEgHeap.Add(beginVt.edges[i])
+	}
+
+	res := make([]int, 0, vtL-1)
+
+	// 当堆里有元素就遍历，除非已经解锁完所有的顶点了
+	for unLockEgHeap.Size() != 0 && len(unLockVtSet) < vtL {
+		// 弹出堆顶元素
+		minEd := unLockEgHeap.Remove()
+
+		if _, ok := unLockVtSet[minEd.to.val]; ok {
+			// 说明已经解锁过了
+			continue
+		}
+
+		// 否则选择这条边
+		res = append(res, minEd.weight)
+		// 并且将它加入这个集合
+		unLockVtSet[minEd.to.val] = struct{}{}
+		// 再将所有的出边解锁
+		for i := range minEd.to.edges {
+			unLockEgHeap.Add(minEd.to.edges[i])
+		}
+	}
+
+	return res
+}
