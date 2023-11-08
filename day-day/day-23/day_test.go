@@ -149,3 +149,24 @@ func TestGraph_KruskalBST(t *testing.T) {
 	t.Log(got)
 	t.Log(got2)
 }
+
+func TestGraph_DijkstraShortPath(t *testing.T) {
+	// 创建一个有向，无负权环的图
+	args := [][]int{
+		{1, 1, 2},
+		{6, 1, 3},
+		{7, 1, 4},
+		{2, 2, 3},
+		{10, 2, 5},
+		{3, 3, 4},
+		{6, 3, 5},
+		{2, 4, 5},
+	}
+
+	graph := GenerateGraph(args)
+
+	shortPath := graph.DijkstraShortPath(1)
+
+	// map[1:0 2:1 3:3 4:6 5:8]
+	t.Log(shortPath)
+}
