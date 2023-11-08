@@ -10,7 +10,40 @@ import "math"
 // 但是在途中，需要尝试更新已存在顶点的最短路径，还要将新能够到达的顶点，加入其中。
 // @startVal: 求解哪个点的最短路径 @return: 到所有点的最短路径
 // ep: a <a, 0> <c, 10> <b, 5> 代表 a -> a 的最短路径为 0，a -> c 的最短路径为 10，a -> b 的最短路径为 5
+
 func (g *Graph) DijkstraShortPath(startVal int) map[int]int {
+	// 查看起点是否存在
+	start, ok := g.vertexes[startVal]
+	if !ok {
+		return nil
+	}
+
+	vtL := len(g.vertexes)
+	// 准备一个加强堆(小根堆)，用于获取 spEndVt，并且方便更新存在于堆上的内容
+	heap := NewEnhanceMinHeap(vtL)
+	// 先将起点加入堆中
+	heap.AddOrUpdateOrIgnore(start, 0)
+
+	result := make(map[int]int, vtL)
+	// 只要堆里还有元素，就说明还没求解完成
+	for heap.Size() != 0 {
+		// 将堆顶弹出
+		spEndVt, spDistance := heap.Pop()
+
+		// 然后遍历所有的出边
+		for _, ed := range spEndVt.edges {
+			// 将对应的终点加入堆中
+			heap.AddOrUpdateOrIgnore(ed.to, spDistance+ed.weight)
+		}
+
+		// 保存结果
+		result[spEndVt.val] = spDistance
+	}
+
+	return result
+}
+
+func (g *Graph) DijkstraShortPath1(startVal int) map[int]int {
 	// 查看起点是否存在
 	if _, ok := g.vertexes[startVal]; !ok {
 		return nil

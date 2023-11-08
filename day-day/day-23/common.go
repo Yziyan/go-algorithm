@@ -246,3 +246,145 @@ func (u *UnionFind) findRoot(v int) *node {
 
 	return nd
 }
+
+// EnhanceMinHeap 加强的小根堆
+type EnhanceMinHeap struct {
+	// 堆里的元素
+	elements []*vertex
+	// 堆里元素的索引位置
+	eleIdx map[*vertex]int
+	// 最短路径
+	shortDistance map[*vertex]int
+
+	// 元素
+	size int
+}
+
+func NewEnhanceMinHeap(capacity int) *EnhanceMinHeap {
+	return &EnhanceMinHeap{
+		elements:      make([]*vertex, capacity),
+		eleIdx:        make(map[*vertex]int, capacity),
+		shortDistance: make(map[*vertex]int, capacity),
+	}
+}
+
+// AddOrUpdateOrIgnore 新增 or 更新 or 什么也不做(已经锁定的顶点)
+func (h *EnhanceMinHeap) AddOrUpdateOrIgnore(ele *vertex, distance int) {
+	// 得判断堆里是否已经有这个元素了
+	if !h.isEntered(ele) {
+		// 说明第一次入堆
+		h.shortDistance[ele] = distance
+		h.eleIdx[ele] = h.size
+		h.elements[h.size] = ele
+		// 上滤
+		h.siftUp(h.size)
+		h.size++
+	} else if !h.isLocked(ele) {
+		// 说明没有锁定这个点，需要更新其值
+		h.shortDistance[ele] = min(distance, h.shortDistance[ele])
+		// 但是需要对当前元素进行上滤操作
+		h.siftUp(h.eleIdx[ele])
+	}
+}
+
+// Pop 弹出最小的顶点，及其最小的路径距离
+func (h *EnhanceMinHeap) Pop() (*vertex, int) {
+	// 先取出原先的值
+	ele := h.elements[0]
+	d := h.shortDistance[ele]
+
+	h.size--
+	// 将堆尾换至堆顶
+	h.elements[0] = h.elements[h.size]
+	h.elements[h.size] = nil
+	// 下滤操作
+	h.siftDown(0)
+
+	// 标记为锁定
+	h.eleIdx[ele] = -1
+	// 删除距离
+	delete(h.shortDistance, ele)
+
+	return ele, d
+}
+
+func (h *EnhanceMinHeap) Size() int {
+	return h.size
+}
+
+// 是否已经加入过堆了
+func (h *EnhanceMinHeap) isEntered(ele *vertex) bool {
+	if _, ok := h.eleIdx[ele]; ok {
+		return true
+	}
+
+	return false
+}
+
+// 是否已经锁住了，如果一个顶点使用完后，我们将它在堆上的索引设置为 -1
+func (h *EnhanceMinHeap) isLocked(ele *vertex) bool {
+	d, ok := h.eleIdx[ele]
+	if ok && d == -1 {
+		return true
+	}
+	return false
+}
+
+func (h *EnhanceMinHeap) siftUp(idx int) {
+	// 取出上滤节点的值
+	upEle := h.elements[idx]
+
+	// 有父节点才上滤
+	for idx > 0 {
+		// 取出父节点
+		parentIdx := (idx - 1) >> 1
+		parent := h.elements[parentIdx]
+
+		// 如果不比父节点的距离要小，就返回了
+		if h.shortDistance[parent] <= h.shortDistance[upEle] {
+			break
+		}
+		// 否则说明需要往上走
+		h.elements[idx] = parent
+		// 父节点往下走，记得更新索引
+		h.eleIdx[parent] = idx
+		idx = parentIdx
+	}
+
+	h.elements[idx] = upEle
+	h.eleIdx[upEle] = idx
+}
+
+func (h *EnhanceMinHeap) siftDown(idx int) {
+	downEle := h.elements[idx]
+	leafSize := h.size >> 1
+
+	// 从第一个非叶子节点遍历
+	for idx < leafSize {
+		// 取出子节点，默认是左子节点
+		childIdx := (idx << 1) + 1
+		child := h.elements[childIdx]
+
+		rightIdx := childIdx + 1
+		if rightIdx < h.size && h.shortDistance[h.elements[rightIdx]] < h.shortDistance[child] {
+			// 说明右边更小
+			childIdx = rightIdx
+			child = h.elements[rightIdx]
+		}
+
+		// 看看能不能往下走
+		if h.shortDistance[child] >= h.shortDistance[downEle] {
+			// 说明子节点本身就大了，走不了一点
+			break
+		}
+
+		// 将子节点上走
+		h.elements[idx] = child
+		h.eleIdx[child] = idx
+		idx = childIdx
+	}
+
+	// 保存节点
+	h.elements[idx] = downEle
+	h.eleIdx[downEle] = idx
+}

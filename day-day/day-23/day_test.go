@@ -165,8 +165,15 @@ func TestGraph_DijkstraShortPath(t *testing.T) {
 
 	graph := GenerateGraph(args)
 
-	shortPath := graph.DijkstraShortPath(1)
+	startVal := 5
+	shortPath := graph.DijkstraShortPath(startVal)
+	shortPath1 := graph.DijkstraShortPath1(startVal)
 
 	// map[1:0 2:1 3:3 4:6 5:8]
+	// map[2:0 3:2 4:5 5:7]
+	// map[3:0 4:3 5:5]
+	// map[4:0 5:2]
+	// map[5:0]
 	t.Log(shortPath)
+	t.Log(shortPath1)
 }
