@@ -13,3 +13,9 @@ func TestHanoi(t *testing.T) {
 	fmt.Println()
 	Hanoi1(3)
 }
+
+func TestAllSubsquences(t *testing.T) {
+
+	got := AllSubsquences("ABC")
+	t.Log(got, len(got))
+}
