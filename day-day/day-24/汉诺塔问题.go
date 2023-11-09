@@ -8,7 +8,7 @@ import "fmt"
 // 1.每次只能挪动一个盘子
 // 2.大盘子只能放在小盘子下面
 
-func Hanoi(n int) {
+func Hanoi1(n int) {
 	// 我们最终就是想把所有盘子都从左 -> 右
 	left2right(n)
 }
@@ -95,4 +95,24 @@ func right2left(n int) {
 	right2mid(n - 1)
 	fmt.Printf("Move %d from right to left\n", n)
 	mid2left(n - 1)
+}
+
+func Hanoi(n int) {
+	process(n, "left", "right", "mid")
+}
+
+// 将 n 根柱子，from -> to, other 过渡
+func process(n int, from, to, other string) {
+	if n == 1 {
+		// 如果只有一个盘子，直接从 from -> to
+		fmt.Printf("Move %d from %s to %s\n", n, from, to)
+		return
+	}
+
+	// 否则先将 n-1 个盘子，from -> other, to 过渡
+	process(n-1, from, other, to)
+	// 再将第 n 个盘子从 from -> to
+	fmt.Printf("Move %d from %s to %s\n", n, from, to)
+	// 最后将 n-1 个盘子，从 other -> to, from 过渡
+	process(n-1, other, to, from)
 }
