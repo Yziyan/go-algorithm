@@ -4,8 +4,10 @@ package other
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"sync"
 	"testing"
+	"time"
 )
 
 func TestMutex(t *testing.T) {
@@ -59,15 +61,60 @@ func TestMutex(t *testing.T) {
 			}()
 		}
 		wg.Wait()
-		// 并发环境，share <= 200
+		// 并发环境，share = 200
 		assert.Equal(t, 200, share)
 		t.Logf("执行后的值: %d", share)
 	})
 }
 
 func TestRwMutex(t *testing.T) {
-	var rwMu sync.RWMutex
+	var (
+		//rwMu  sync.RWMutex               // 准备一把读写锁
+		wg    sync.WaitGroup      // 等待组
+		cache = make(map[int]int) // 准备一个本地缓存
+	)
 
-	rwMu.Lock()
+	// 先构建缓存
+	for i := 0; i < 100; i++ {
+		// 写入数据进入 cache
+		cache[i] = i + 10
+	}
 
+	for i := 0; i < 20; i++ {
+		wg.Add(1)
+
+		// 后台 2s 写一次数据
+		go func() {
+			//rwMu.Lock()
+			//defer rwMu.Unlock()
+			defer wg.Done()
+			time.Sleep(1 * time.Second)
+
+			r := rand.New(rand.NewSource(time.Now().UnixNano()))
+			key := r.Intn(100)
+
+			// 写入数据进入 cache
+			cache[key] = key + 100
+		}()
+	}
+
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		// 后台 1s 读取一次数据
+		go func(key int) {
+			//rwMu.Lock()
+			//defer rwMu.Unlock()
+			defer wg.Done()
+			time.Sleep(1 * time.Second)
+			// 读取 cache 中的数据
+			val, ok := cache[key]
+			if !ok {
+				t.Logf("key: %d 不存在", key)
+				return
+			}
+			t.Logf("key: %d, val: %d", key, val)
+		}(i)
+	}
+
+	wg.Wait()
 }
