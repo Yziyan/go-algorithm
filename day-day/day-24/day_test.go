@@ -16,6 +16,8 @@ func TestHanoi(t *testing.T) {
 
 func TestAllSubsquences(t *testing.T) {
 
-	got := AllSubsquences("ABC")
+	got := AllSubsquences("ABCA")
+	got2 := AllSubsquencesNoRepeat("ABC")
 	t.Log(got, len(got))
+	t.Log(got2, len(got2))
 }
