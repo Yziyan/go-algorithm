@@ -29,3 +29,16 @@ func TestAllSubsquences(t *testing.T) {
 	t.Log(got5, len(got5))
 	t.Log(got6, len(got6))
 }
+
+func TestReverseStackUsingRecursive(t *testing.T) {
+
+	stack := NewStack()
+	stack.Push(1)
+	stack.Push(2)
+	stack.Push(3)
+	stack.Push(4)
+	stack.Push(5)
+	t.Log(stack)
+	ReverseStackUsingRecursive(stack)
+	t.Log(stack)
+}
