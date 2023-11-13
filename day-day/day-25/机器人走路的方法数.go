@@ -94,3 +94,35 @@ func ways2(n, start, aim, k int) int {
 
 	return process(n, aim, start, k, dp)
 }
+
+// 动态规划方法
+func ways3(n, start, aim, k int) int {
+
+	// 准备 dp 数组
+	// dp[cur][remain] 代表：处于 cur 位置，还剩余 remain 步可以走的方法数
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+
+	// 先设置 base case
+	// 代表 dp[aim][0] 代表：处于 aim 位置，还剩余 0 步可走的方法数是 1
+	dp[aim][0] = 1
+
+	// 经过分析，所有位置要么依赖左下角，要么依赖左上角，所以需要一列一列的填写
+	for col := 1; col <= n; col++ {
+		// 处于第一个格子，只能往右走，依赖左下角
+		dp[1][col] = dp[1+1][col-1]
+
+		// 处于最后一个格子，只能往左走，依赖左上角
+		dp[n][col] = dp[n-1][col-1]
+
+		// 其余位置，依赖左下角和左上角
+		for row := 2; row < n; row++ {
+			dp[row][col] = dp[row-1][col-1] + dp[row+1][col-1]
+		}
+	}
+
+	// 返回当前处于 start 位置，还剩余 k 步可以走的方法数
+	return dp[start][k]
+}

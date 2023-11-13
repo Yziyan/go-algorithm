@@ -5,6 +5,7 @@ package day_25
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestWays(t *testing.T) {
@@ -38,7 +39,7 @@ func TestWays(t *testing.T) {
 			want: 14,
 		},
 		{
-			name: "case4",
+			name: "case5",
 			args: args{n: 6, start: 2, aim: 5, k: 5},
 			want: 5,
 		},
@@ -46,10 +47,20 @@ func TestWays(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			start := time.Now()
 			got1 := ways1(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
 			assert.Equal(t, tc.want, got1)
+			t.Logf("暴力递归耗时：%s", time.Since(start))
+
+			start = time.Now()
 			got2 := ways2(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
 			assert.Equal(t, tc.want, got2)
+			t.Logf("傻缓存耗时：%s", time.Since(start))
+
+			start = time.Now()
+			got3 := ways3(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
+			assert.Equal(t, tc.want, got3)
+			t.Logf("动态规划耗时：%s", time.Since(start))
 		})
 	}
 
