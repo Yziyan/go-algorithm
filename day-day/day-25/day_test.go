@@ -37,12 +37,19 @@ func TestWays(t *testing.T) {
 			args: args{n: 8, start: 2, aim: 4, k: 6},
 			want: 14,
 		},
+		{
+			name: "case4",
+			args: args{n: 6, start: 2, aim: 5, k: 5},
+			want: 5,
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := ways1(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
-			assert.Equal(t, tc.want, got)
+			got1 := ways1(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
+			assert.Equal(t, tc.want, got1)
+			got2 := ways2(tc.args.n, tc.args.start, tc.args.aim, tc.args.k)
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 

@@ -17,9 +17,9 @@ func ways1(n, start, aim, k int) int {
 
 	// 总共有 n 个格子，要走到 aim 处，当前在 cur，还剩余 remain 步要走
 	// 返回能走的方法数量
-	var f func(n, aim, cur, remain int) int
+	var process func(n, aim, cur, remain int) int
 
-	f = func(n, aim, cur, remain int) int {
+	process = func(n, aim, cur, remain int) int {
 		if remain == 0 {
 			// 说明没有步数要走了
 			if cur == aim {
@@ -32,19 +32,65 @@ func ways1(n, start, aim, k int) int {
 
 		if cur == 1 {
 			// 这只能往右走
-			return f(n, aim, cur+1, remain-1)
+			return process(n, aim, cur+1, remain-1)
 		}
 
 		if cur == n {
 			// 这只能往前走
-			return f(n, aim, cur-1, remain-1)
+			return process(n, aim, cur-1, remain-1)
 		}
 
 		// 来到这里，既可以选择往左，也可以选择往右，如何才能看到求出最多的方法数呢？
 		// 那肯定是相加咯
-		return f(n, aim, cur+1, remain-1) + f(n, aim, cur-1, remain-1)
+		return process(n, aim, cur+1, remain-1) + process(n, aim, cur-1, remain-1)
 	}
 
 	// 最开始是从 start 开始，还剩余 k 步
-	return f(n, aim, start, k)
+	return process(n, aim, start, k)
+}
+
+// 傻缓存法
+func ways2(n, start, aim, k int) int {
+
+	// 其余含义不变，dp 就是一个缓存，dp[i][j] 代表 process(n, aim, i, j) 的答案
+	var process func(n, aim, cur, remain int, dp [][]int) int
+	process = func(n, aim, cur, remain int, dp [][]int) int {
+		if dp[cur][remain] != -1 {
+			// 说明已经计算过了，直接返回缓存的结果
+			return dp[cur][remain]
+		}
+		// 否则说明以前没计算过
+
+		res := 0
+		if remain == 0 {
+			if cur == aim {
+				res = 1
+			}
+		} else if cur == 1 {
+			res = process(n, aim, cur+1, remain-1, dp)
+		} else if cur == n {
+			res = process(n, aim, cur-1, remain-1, dp)
+		} else {
+			// 说明左右都可走
+			res = process(n, aim, cur+1, remain-1, dp) + process(n, aim, cur-1, remain-1, dp)
+		}
+
+		// 返回前需要设置缓存
+		dp[cur][remain] = res
+
+		return res
+	}
+
+	// 主方法如何调用呢？
+	// 准备缓存
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+		for j := 0; j <= n; j++ {
+			// 初始化为 -1
+			dp[i][j] = -1
+		}
+	}
+
+	return process(n, aim, start, k, dp)
 }
