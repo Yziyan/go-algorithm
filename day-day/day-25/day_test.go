@@ -109,6 +109,8 @@ func TestCardsWin(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got1 := cardsWin1(tc.args)
 			assert.Equal(t, tc.want, got1)
+			got2 := cardsWin2(tc.args)
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 }

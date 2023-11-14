@@ -54,3 +54,77 @@ func cardsWin1(cards []int) int {
 	// 那么最终返回的最大分数，只能是 先拿 和 后拿 中的最大值
 	return max(pre(cards, 0, last), post(cards, 0, last))
 }
+
+// 傻缓存法
+func cardsWin2(cards []int) int {
+
+	// 准备两个缓存
+	n := len(cards)
+	// preDp[l][r] 代表：cards 从 l~r 先拿牌获取的最大分数
+	preDp := make([][]int, n+1)
+	// postDp[l][r] 代表：cards 从 l~r 后拿牌获取的最大分数
+	postDp := make([][]int, n+1)
+
+	// 初始化缓存
+	for i := 0; i <= n; i++ {
+		preDp[i] = make([]int, n+1)
+		postDp[i] = make([]int, n+1)
+
+		for j := 0; j <= n; j++ {
+			preDp[i][j] = -1
+			postDp[i][j] = -1
+		}
+	}
+
+	// 准备两个递归函数，并且将缓存一起传递下去
+	var pre func(cards []int, l, r int, preDp, postDp [][]int) int
+	var post func(cards []int, l, r int, preDp, postDp [][]int) int
+	pre = func(cards []int, l, r int, preDp, postDp [][]int) int {
+		if preDp[l][r] != -1 {
+			// 说明命中了缓存
+			return preDp[l][r]
+		}
+
+		res := 0
+		if l == r {
+			res = cards[l]
+		} else {
+			// 选的是 cards[l]
+			p1 := cards[l] + post(cards, l+1, r, preDp, postDp)
+			// 选的是 cards[r]
+			p2 := cards[r] + post(cards, l, r-1, preDp, postDp)
+
+			// 两种可能的最大值
+			res = max(p1, p2)
+		}
+
+		// 返回时设置缓存
+		preDp[l][r] = res
+		return res
+	}
+
+	post = func(cards []int, l, r int, preDp, postDp [][]int) int {
+		if postDp[l][r] != -1 {
+			// 说明命中了缓存
+			return postDp[l][r]
+		}
+		res := 0
+
+		if l != r {
+			// 说明对手选了 cards[l]
+			p1 := pre(cards, l+1, r, preDp, postDp)
+			// 说明对手选了 cards[r]
+			p2 := pre(cards, l, r-1, preDp, postDp)
+
+			// 两种最优解的最小值
+			res = min(p1, p2)
+		}
+
+		// 返回时设置缓存
+		postDp[l][r] = res
+		return res
+	}
+
+	// 还是 先拿 和 后拿 得到的最大值
+	return max(pre(cards, 0, n-1, preDp, postDp), post(cards, 0, n-1, preDp, postDp))
+}
