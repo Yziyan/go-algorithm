@@ -61,16 +61,16 @@ func cardsWin2(cards []int) int {
 	// 准备两个缓存
 	n := len(cards)
 	// preDp[l][r] 代表：cards 从 l~r 先拿牌获取的最大分数
-	preDp := make([][]int, n+1)
+	preDp := make([][]int, n)
 	// postDp[l][r] 代表：cards 从 l~r 后拿牌获取的最大分数
-	postDp := make([][]int, n+1)
+	postDp := make([][]int, n)
 
 	// 初始化缓存
-	for i := 0; i <= n; i++ {
-		preDp[i] = make([]int, n+1)
-		postDp[i] = make([]int, n+1)
+	for i := 0; i < n; i++ {
+		preDp[i] = make([]int, n)
+		postDp[i] = make([]int, n)
 
-		for j := 0; j <= n; j++ {
+		for j := 0; j < n; j++ {
 			preDp[i][j] = -1
 			postDp[i][j] = -1
 		}
@@ -127,4 +127,42 @@ func cardsWin2(cards []int) int {
 
 	// 还是 先拿 和 后拿 得到的最大值
 	return max(pre(cards, 0, n-1, preDp, postDp), post(cards, 0, n-1, preDp, postDp))
+}
+
+// 动态规划方法
+func cardsWin3(cards []int) int {
+	n := len(cards)
+	// 准备两个缓存
+	// preDp[L][R] 代表从 L~R 上先拿，获取的最大分数
+	preDp := make([][]int, n)
+	// postDp[L][R] 代表从 L~R 上后拿，获取的最大分数
+	postDp := make([][]int, n)
+
+	for i := 0; i < n; i++ {
+		preDp[i] = make([]int, n)
+		postDp[i] = make([]int, n)
+	}
+
+	for L := 0; L < n; L++ {
+		// 当 L == R 时，先拿的可以拿到这张牌的分数，后拿的没有分数
+		preDp[L][L] = cards[L]
+	}
+
+	// 需要从斜线，依次填写下来
+	for startCol := 1; startCol < n; startCol++ {
+		L := 0
+		R := startCol
+		for R < n {
+			// 两种情况的最大值
+			preDp[L][R] = max(cards[L]+postDp[L+1][R], cards[R]+postDp[L][R-1])
+			// 两种最优情况的最小值
+			postDp[L][R] = min(preDp[L+1][R], preDp[L][R-1])
+
+			L++
+			R++
+		}
+	}
+
+	// 代表从 L~R 上，分别先拿和后拿，获取的最大分数，返回最大值
+	return max(preDp[0][n-1], postDp[0][n-1])
 }

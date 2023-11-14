@@ -107,10 +107,20 @@ func TestCardsWin(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			start := time.Now()
 			got1 := cardsWin1(tc.args)
 			assert.Equal(t, tc.want, got1)
+			t.Logf("暴力递归耗时: %s", time.Since(start))
+			start = time.Now()
+
 			got2 := cardsWin2(tc.args)
 			assert.Equal(t, tc.want, got2)
+			t.Logf("傻缓存法耗时: %s", time.Since(start))
+			start = time.Now()
+
+			got3 := cardsWin3(tc.args)
+			assert.Equal(t, tc.want, got3)
+			t.Logf("动态规划耗时: %s", time.Since(start))
 		})
 	}
 }
