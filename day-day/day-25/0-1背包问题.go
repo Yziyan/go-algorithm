@@ -40,7 +40,7 @@ func maxValue1(weights, values []int, bag int) int {
 		next := process(weights, values, cur+1, remain-weights[cur])
 		if next != -1 {
 			// 说明当前这件可以选，选择后并不超重
-			p2 += values[cur]
+			p2 = values[cur] + next
 		}
 
 		// 当然返回的是两种可能的最大值呐
@@ -49,4 +49,45 @@ func maxValue1(weights, values []int, bag int) int {
 
 	// 那么主函数就应该，可选物品是 [0 ...]，剩余重量是 bag
 	return process(weights, values, 0, bag)
+}
+
+// 动态规划，这个题的模型是：从左到右的尝试模型
+func maxValue2(weights, values []int, bag int) int {
+	if weights == nil || values == nil || len(weights) != len(values) || len(weights) == 0 || bag < 0 {
+		return 0
+	}
+
+	n := len(weights)
+	// 可变参数是 cur 和 remain，它们的范围分别是：[0~N] 和 [负数, bag]
+	// dp[cur][remain] 代表从 [cur ...] 中挑选 remain 的重量所得到的最大价值
+	dp := make([][]int, n+1)
+	for i := range dp {
+		// bag 的范围是 [负数 ~ bag]，负数我们交由代码来处理
+		dp[i] = make([]int, bag+1)
+	}
+
+	// 填写 dp
+	// 因为 cur 依赖 cur+1，所以，得从下往上填写
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= bag; remain++ {
+			// 不选当前物品
+			dp[cur][remain] = dp[cur+1][remain]
+
+			curRemain := remain - weights[cur]
+			if curRemain < 0 {
+				// 说明当前物品不可选，选了会超重
+				continue
+			}
+
+			// 选择当前物品：当前物品的价值 + 从 [cur+1 ...] 选 curRemain 的价值
+			p2 := values[cur] + dp[cur+1][curRemain]
+			if p2 > dp[cur][remain] {
+				// 选两种可能的最大值
+				dp[cur][remain] = p2
+			}
+		}
+	}
+
+	// 那么我们的结果，就是从 [0 ...] 里选 bag 重量，所获取的最大价值
+	return dp[0][bag]
 }

@@ -143,7 +143,7 @@ func TestMaxValue(t *testing.T) {
 				values:  []int{5, 6, 3, 19},
 				bag:     11,
 			},
-			want: 19,
+			want: 25,
 		},
 		{
 			name: "case2",
@@ -152,7 +152,7 @@ func TestMaxValue(t *testing.T) {
 				values:  []int{1, 2, 3},
 				bag:     4,
 			},
-			want: 3,
+			want: 4,
 		},
 		{
 			name: "case3",
@@ -161,7 +161,7 @@ func TestMaxValue(t *testing.T) {
 				values:  []int{6, 10, 12},
 				bag:     5,
 			},
-			want: 12,
+			want: 22,
 		},
 		{
 			name: "case4",
@@ -170,7 +170,7 @@ func TestMaxValue(t *testing.T) {
 				values:  []int{6, 3, 5, 4, 6},
 				bag:     10,
 			},
-			want: 6,
+			want: 15,
 		},
 		{
 			name: "case5",
@@ -179,14 +179,21 @@ func TestMaxValue(t *testing.T) {
 				values:  []int{4, 2, 6, 8},
 				bag:     7,
 			},
-			want: 8,
+			want: 18,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			start := time.Now()
 			got1 := maxValue1(tc.args.weights, tc.args.values, tc.args.bag)
+			t.Logf("暴力递归耗时:%s", time.Since(start))
 			assert.Equal(t, tc.want, got1)
+
+			start = time.Now()
+			got2 := maxValue2(tc.args.weights, tc.args.values, tc.args.bag)
+			t.Logf("动态规划耗时:%s", time.Since(start))
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 }
