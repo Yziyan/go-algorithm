@@ -124,3 +124,69 @@ func TestCardsWin(t *testing.T) {
 		})
 	}
 }
+
+func TestMaxValue(t *testing.T) {
+	type args struct {
+		weights []int
+		values  []int
+		bag     int
+	}
+	testCases := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "case1",
+			args: args{
+				weights: []int{3, 2, 4, 7},
+				values:  []int{5, 6, 3, 19},
+				bag:     11,
+			},
+			want: 19,
+		},
+		{
+			name: "case2",
+			args: args{
+				weights: []int{1, 2, 3},
+				values:  []int{1, 2, 3},
+				bag:     4,
+			},
+			want: 3,
+		},
+		{
+			name: "case3",
+			args: args{
+				weights: []int{1, 2, 3},
+				values:  []int{6, 10, 12},
+				bag:     5,
+			},
+			want: 12,
+		},
+		{
+			name: "case4",
+			args: args{
+				weights: []int{2, 2, 6, 5, 4},
+				values:  []int{6, 3, 5, 4, 6},
+				bag:     10,
+			},
+			want: 6,
+		},
+		{
+			name: "case5",
+			args: args{
+				weights: []int{3, 5, 1, 2},
+				values:  []int{4, 2, 6, 8},
+				bag:     7,
+			},
+			want: 8,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got1 := maxValue1(tc.args.weights, tc.args.values, tc.args.bag)
+			assert.Equal(t, tc.want, got1)
+		})
+	}
+}

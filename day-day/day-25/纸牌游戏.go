@@ -129,7 +129,7 @@ func cardsWin2(cards []int) int {
 	return max(pre(cards, 0, n-1, preDp, postDp), post(cards, 0, n-1, preDp, postDp))
 }
 
-// 动态规划方法
+// 动态规划方法，这个题是一个范围模型，即使用 L ... R 两个范围逐步求解。
 func cardsWin3(cards []int) int {
 	n := len(cards)
 	// 准备两个缓存
