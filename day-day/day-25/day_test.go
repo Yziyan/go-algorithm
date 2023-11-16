@@ -197,3 +197,30 @@ func TestMaxValue(t *testing.T) {
 		})
 	}
 }
+
+func TestConvertStrLetter(t *testing.T) {
+
+	testCases := []struct {
+		name string
+		args string
+		want int
+	}{
+		{name: "case1", args: "111", want: 3},
+		{name: "case2", args: "1302", want: 0},
+		{name: "case3", args: "1111", want: 5},
+		{name: "case4", args: "12345", want: 3},
+		{name: "case5", args: "1234567890", want: 0},
+		{name: "case6", args: "261812", want: 8},
+		{name: "case7", args: "1111111111", want: 89},
+		{name: "case8", args: "9999999999", want: 1},
+		{name: "case9", args: "12121212", want: 34},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got1 := convertStrLetter1(tc.args)
+			assert.Equal(t, tc.want, got1)
+		})
+	}
+
+}
