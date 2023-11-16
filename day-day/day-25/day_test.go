@@ -218,8 +218,15 @@ func TestConvertStrLetter(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			start := time.Now()
 			got1 := convertStrLetter1(tc.args)
+			t.Logf("暴力递归耗时：%s", time.Since(start))
 			assert.Equal(t, tc.want, got1)
+
+			start = time.Now()
+			got2 := convertStrLetter2(tc.args)
+			t.Logf("动态规划耗时：%s", time.Since(start))
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 

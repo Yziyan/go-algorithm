@@ -47,3 +47,37 @@ func convertStrLetter1(str string) int {
 	// 那么返回值就是：当前处于 0 位置，从 [0 ...] 开始，有多少种转换方法
 	return process(chars, 0)
 }
+
+// 动态规划方法：根据上述暴力递归，修改为动态规划方法
+func convertStrLetter2(str string) int {
+	if str == "" {
+		return 0
+	}
+
+	chars := []byte(str)
+	n := len(chars)
+	// 准备缓存数组，可变参数是 cur，cur 的范围是 [0 ~ n]
+	// dp[cur] 代表：当前处于 cur 位置，从 [cur ...] 开始，有多少种转换方法
+	dp := make([]int, n+1)
+
+	// 根据递归基可知，代表当前处于 n 位置，已经没有字符需要转换了，有一种转换方法
+	dp[n] = 1
+	// 根据依赖关系可知，cur 位置依赖 cur+1 和 cur+2 位置，所以需要从右往左填
+	for cur := n - 1; cur >= 0; cur-- {
+		if chars[cur] == '0' {
+			// 说明当前字符是 0 字符，不能转换
+			dp[cur] = 0
+			continue
+		}
+
+		// 否则至少能选择当前字符，那么方法数就是转换[cur+1 ...]所拥有的方法数
+		dp[cur] = dp[cur+1]
+		if cur+1 < n && (chars[cur]-'0')*10+(chars[cur+1]-'0') < 27 {
+			// 说明能选择两个字符，方法数还需要加上转换[cur+2 ...]所拥有的方法数
+			dp[cur] += dp[cur+2]
+		}
+	}
+
+	// 那么结果就是：当前处于 0 位置，需要转换 [0 ...]，所得到的转换数
+	return dp[0]
+}
