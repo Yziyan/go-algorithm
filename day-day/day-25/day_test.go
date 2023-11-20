@@ -4,6 +4,7 @@ package day_25
 
 import (
 	"github.com/stretchr/testify/assert"
+	"sort"
 	"testing"
 	"time"
 )
@@ -181,6 +182,24 @@ func TestMaxValue(t *testing.T) {
 			},
 			want: 18,
 		},
+		{
+			name: "case5",
+			args: args{
+				weights: []int{4, 2, 3},
+				values:  []int{10, 4, 7},
+				bag:     5,
+			},
+			want: 11,
+		},
+		{
+			name: "Complex Case Large Dataset",
+			args: args{
+				weights: []int{10, 20, 30, 40, 50, 5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 12, 22, 32, 42, 52, 62, 72, 82, 92, 2, 14, 24, 34, 44, 54, 64, 74, 84, 94, 3, 13, 23, 33, 43, 53, 63, 73, 83, 93},
+				values:  []int{35, 25, 55, 45, 20, 50, 65, 75, 85, 95, 15, 25, 35, 45, 55, 65, 75, 85, 95, 5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 10, 30, 50, 70, 90, 11, 22, 33, 44, 55, 66, 77, 88, 99, 100},
+				bag:     200,
+			},
+			want: 741, // The expected value must be calculated based on the algorithm's logic
+		},
 	}
 
 	for _, tc := range testCases {
@@ -230,4 +249,61 @@ func TestConvertStrLetter(t *testing.T) {
 		})
 	}
 
+}
+
+func TestMinStickers(t *testing.T) {
+
+	testCases := []struct {
+		name     string
+		stickers []string
+		target   string
+		want     int
+	}{
+		{
+			name:     "case1",
+			stickers: []string{"with", "example", "science"},
+			target:   "thehat",
+			want:     3,
+		},
+		{
+			name:     "case2",
+			stickers: []string{"notice", "possible"},
+			target:   "basicbasic",
+			want:     -1,
+		},
+		{
+			name:     "case3",
+			stickers: []string{"these", "guess", "about", "garden", "him"},
+			target:   "atomher",
+			want:     3,
+		},
+		{
+			name:     "case4",
+			stickers: []string{"control", "heart", "interest", "stream", "sentence", "soil", "wonder", "them", "month", "slip", "table", "miss", "boat", "speak", "figure", "no", "perhaps", "twenty", "throw", "rich", "capital", "save", "method", "store", "meant", "life", "oil", "string", "song", "food", "am", "who", "fat", "if", "put", "path", "come", "grow", "box", "great", "word", "object", "stead", "common", "fresh", "the", "operate", "where", "road", "mean"},
+			target:   "stoodcrease",
+			want:     3,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got1 := minStickers1(tc.stickers, tc.target)
+			assert.Equal(t, tc.want, got1)
+		})
+	}
+
+}
+
+func TestOther(t *testing.T) {
+
+	str := "adxasadcb"
+	chars := []byte(str)
+
+	sort.Slice(chars, func(i, j int) bool {
+		return chars[i] < chars[j]
+	})
+
+	t.Log(str)
+	str = string(chars)
+	t.Log(str)
 }
