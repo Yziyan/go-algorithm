@@ -9,7 +9,99 @@ import (
 
 // https://leetcode.cn/problems/stickers-to-spell-word/
 
+// 暴力递归，但是有加傻缓存法
 func minStickers(stickers []string, target string) int {
+	if stickers == nil || len(stickers) == 0 || target == "" {
+		return 0
+	}
+
+	// 定义递归函数，代表从 stickersCount 中，拼凑出 remain，至少需要的贴纸数，如果拼不出，就返回 MaxInt
+	// stickersCount 代表所有的贴纸。remain 代表此次需要凑出来的字符，dp 代表 remain 的缓存
+	var process func(stickersCount [][]int, remain string, dp map[string]int) int
+	process = func(stickersCount [][]int, remain string, dp map[string]int) int {
+		res, ok := dp[remain]
+		if ok {
+			// 说明命中缓存了
+			return res
+		}
+
+		chars := []byte(remain)
+		if len(chars) == 0 {
+			// 说明没有字符需要拼接了
+			return 0
+		}
+
+		// 先将 remain 的字符频率统计了
+		remainCount := make([]int, 26)
+		for _, c := range chars {
+			remainCount[c-'a']++
+		}
+
+		// 默认为系统最大值
+		res = math.MaxInt
+		for _, sticker := range stickersCount {
+			if sticker[chars[0]-'a'] <= 0 {
+				// 说明 sticker 这张贴纸没有 chars[0] 这个字符，直接换下一张
+				continue
+			}
+
+			// 否则用 sticker 这张贴纸看看能拼出几个字符，将剩余的字符拼接在 sb 里面
+			var sb strings.Builder
+			for i, count := range remainCount {
+				if count <= 0 {
+					// 说明 i-'a' 这个字符在 sticker 这张贴纸里没有
+					continue
+				}
+
+				// 在这里说明有，那么先计算出现了几次，然后拼起来
+				count -= sticker[i]
+				for j := 0; j < count; j++ {
+					sb.WriteByte(byte(i) + 'a')
+				}
+			}
+
+			// 然后看看，凑完后的，还需要多少张贴纸
+			nextRemain := sb.String()
+			nextRes := process(stickersCount, nextRemain, dp)
+			if nextRes != math.MaxInt {
+				// 说明能拼出 nextRemain，最少需要 nextRes 张贴纸，
+				// 那么想要拼出 remain，就还得加上 sticker 这张贴纸，
+				// 但是如果现在这种方案还没有以前的方案省，那就没必要选这种方案了
+				res = min(res, nextRes+1)
+			}
+		}
+
+		// 并且在返回前，先设置缓存
+		dp[remain] = res
+		return res
+	}
+
+	// 准备所有贴纸的字符频
+	stickerCount := make([][]int, len(stickers))
+	for i := range stickerCount {
+		// 都是英文小写字符
+		stickerCount[i] = make([]int, 26)
+	}
+
+	for i, str := range stickers {
+		// 统计每一张贴纸的字符频
+		for _, c := range []byte(str) {
+			stickerCount[i][c-'a']++
+		}
+	}
+	// 准备缓存
+	dp := make(map[string]int, len(target))
+	// 那么主函数就应该，从所有的贴纸中，拼凑出 target 所需要最少的贴纸数量
+	res := process(stickerCount, target, dp)
+	if res == math.MaxInt {
+		return -1
+	}
+
+	return res
+}
+
+// 暴力递归，剪枝优化
+func minStickers2(stickers []string, target string) int {
 	if stickers == nil || len(stickers) == 0 || target == "" {
 		return 0
 	}
@@ -92,6 +184,7 @@ func minStickers(stickers []string, target string) int {
 	return res
 }
 
+// 暴力递归，挨个尝试
 func minStickers1(stickers []string, target string) int {
 	if stickers == nil || len(stickers) == 0 || target == "" {
 		return 0
