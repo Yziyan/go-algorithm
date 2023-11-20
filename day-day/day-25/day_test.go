@@ -283,12 +283,21 @@ func TestMinStickers(t *testing.T) {
 			target:   "stoodcrease",
 			want:     3,
 		},
+		{
+			name:     "case5",
+			stickers: []string{"heavy", "claim", "seven", "set", "had", "it", "dead", "jump", "design", "question", "sugar", "dress", "any", "special", "ground", "huge", "use", "busy", "prove", "there", "lone", "window", "trip", "also", "hot", "choose", "tie", "several", "be", "that", "corn", "after", "excite", "insect", "cat", "cook", "glad", "like", "wont", "gray", "especially", "level", "when", "cover", "ocean", "try", "clean", "property", "root", "wing"},
+			target:   "travelbell",
+			want:     4,
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got1 := minStickers1(tc.stickers, tc.target)
-			assert.Equal(t, tc.want, got1)
+			got := minStickers(tc.stickers, tc.target)
+			assert.Equal(t, tc.want, got)
+
+			//got1 := minStickers1(tc.stickers, tc.target)
+			//assert.Equal(t, tc.want, got1)
 		})
 	}
 

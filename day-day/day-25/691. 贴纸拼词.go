@@ -9,6 +9,89 @@ import (
 
 // https://leetcode.cn/problems/stickers-to-spell-word/
 
+func minStickers(stickers []string, target string) int {
+	if stickers == nil || len(stickers) == 0 || target == "" {
+		return 0
+	}
+
+	// stickerCount -> 代表所有的字符数组，remain 代表剩余需要拼出的字符，所使用的最少贴纸数
+	var process func(stickerCount [][]int, remain string) int
+	process = func(stickerCount [][]int, remain string) int {
+		chars := []byte(remain)
+		if len(chars) == 0 {
+			// 说明已经拼凑齐了贴纸
+			return 0
+		}
+
+		// 将 remain 的字符频率也统计出来
+		remainCount := make([]int, 26)
+		for _, c := range chars {
+			remainCount[c-'a']++
+		}
+
+		// 默认设置为最大值
+		res := math.MaxInt
+		// 然后遍历所有的贴纸，挨个查看能否拼出 remain
+		for _, first := range stickerCount {
+			// 每次先拿第一个字符判断一下，first 这一张有没有这个字符，没有就换下一张，
+			// 因为最终 chars[0] 肯定也是需要凑出来的，如果没有就可以提前剪枝
+			if first[chars[0]-'a'] <= 0 {
+				// 说明这一张贴纸， 没有 chars[0] 字符，换下一张
+				continue
+			}
+
+			// 然后将剩下的字符拼出来
+			var sb strings.Builder
+			for i, count := range remainCount {
+				if remainCount[i] <= 0 {
+					// 说明当前字符已经拼完了，或者根本没有这个字符
+					continue
+				}
+
+				// 需要计算出，需要拼接多少个字符，但是不能影响原字符
+				count -= first[i]
+
+				// 需要还原出字符，并拼接 count 次
+				for j := 0; j < count; j++ {
+					sb.WriteByte(byte(i) + 'a')
+				}
+			}
+
+			nextRemain := sb.String()
+			// 这里不用判断此次是否凑到了字符，因为前面剪过枝，一定会匹配一个
+			nextRes := process(stickerCount, nextRemain)
+			if nextRes != math.MaxInt {
+				// nextRes 指的是使用这些贴纸，凑出 nextRemain 所需要的最少贴纸数，
+				// 但是需要 +1，因为还要算上刚刚使用的 first 这张贴纸
+				res = min(res, nextRes+1)
+			}
+		}
+
+		return res
+	}
+
+	// 先将贴纸出现的字符频率统计了
+	stickersCount := make([][]int, len(stickers))
+	for i := range stickersCount {
+		// 因为都是小写字母，所以 26 即可
+		stickersCount[i] = make([]int, 26)
+	}
+
+	// stickersCount[i] 代表每一张贴纸，将每一张贴纸的字符频率先统计一遍
+	for i, str := range stickers {
+		for _, c := range []byte(str) {
+			stickersCount[i][c-'a']++
+		}
+	}
+
+	// 那么结果如何掉呢
+	res := process(stickersCount, target)
+	if res == math.MaxInt {
+		return -1
+	}
+	return res
+}
+
 func minStickers1(stickers []string, target string) int {
 	if stickers == nil || len(stickers) == 0 || target == "" {
 		return 0
