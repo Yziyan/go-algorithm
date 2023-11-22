@@ -6,8 +6,59 @@ import "slices"
 
 // https://leetcode.cn/problems/longest-palindromic-subsequence/description/
 
-// 暴力递归方法，范围尝试模型
+// 动态规划求解
 func longestPalindromeSubseq(s string) int {
+	if s == "" {
+		return 0
+	}
+
+	chars := []byte(s)
+	n := len(chars)
+	// 可变参数是 l 和 r，范围都是 0 ~ n，所以准备缓存 dp n*n
+	// dp[l][r] 代表：chars[l ... r] 的最长回文子序列长度
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, n)
+	}
+
+	// 填充 dp
+	// 递归基
+	dp[n-1][n-1] = 1
+	for l := 0; l < n-1; l++ {
+		// 说明只有一个字符
+		dp[l][l] = 1
+		// 说明只有两个字符
+		dp[l][l+1] = 1
+		if chars[l] == chars[l+1] {
+			// 这俩字符相等
+			dp[l][l+1] = 2
+		}
+	}
+
+	// 一般情况
+	for l := n - 3; l >= 0; l-- {
+		for r := l + 2; r < n; r++ {
+			// 依赖 l 和 r
+			// p1 ：= dp[l+1][r-1]
+			p2 := dp[l+1][r]
+			p3 := dp[l][r-1]
+			p4 := 0
+			if chars[l] == chars[r] {
+				// 说明本身就有 2 个字符了
+				p4 = 2 + dp[l+1][r-1]
+			}
+
+			// 几种可能的最大值
+			dp[l][r] = max(p2, p3, p4)
+		}
+	}
+
+	// 那么返回值应该是：chars[0 ... n-1] 的最长回文子序列长度
+	return dp[0][n-1]
+}
+
+// 暴力递归方法，范围尝试模型
+func longestPalindromeSubseq2(s string) int {
 	if s == "" {
 		return 0
 	}
