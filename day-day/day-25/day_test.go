@@ -312,6 +312,23 @@ func TestMinStickers(t *testing.T) {
 
 }
 
+func TestLongestPalindromeSubseq(t *testing.T) {
+	testCases := []struct {
+		name string
+		args string
+		want int
+	}{
+		{name: "case1", args: "bbbab", want: 4},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := longestPalindromeSubseq(tc.args)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
