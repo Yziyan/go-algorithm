@@ -329,6 +329,75 @@ func TestLongestPalindromeSubseq(t *testing.T) {
 	}
 }
 
+func TestJump(t *testing.T) {
+	type args struct {
+		x, y, k int
+	}
+	testCases := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "case1",
+			args: args{x: 3, y: 4, k: 5},
+			want: 108,
+		},
+		{
+			name: "case2",
+			args: args{x: 0, y: 0, k: 1},
+			want: 0,
+		},
+		{
+			name: "case3",
+			args: args{x: 5, y: 5, k: 2},
+			want: 0,
+		},
+		{
+			name: "case4",
+			args: args{x: 9, y: 8, k: 3},
+			want: 0,
+		},
+		{
+			name: "case5",
+			args: args{x: 1, y: 1, k: 4},
+			want: 10,
+		},
+		{
+			name: "case6",
+			args: args{x: 2, y: 2, k: 6},
+			want: 640,
+		},
+		{
+			name: "case7",
+			args: args{x: 2, y: 2, k: 2},
+			want: 0,
+		},
+		{
+			name: "case8",
+			args: args{x: 1, y: 1, k: 1},
+			want: 0,
+		},
+		{
+			name: "case9",
+			args: args{x: 5, y: 5, k: 10},
+			want: 1102475,
+		},
+		{
+			name: "case10",
+			args: args{x: 9, y: 8, k: 10},
+			want: 0,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := jump(tc.args.x, tc.args.y, tc.args.k)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
