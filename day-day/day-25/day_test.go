@@ -392,8 +392,15 @@ func TestJump(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			start := time.Now()
 			got := jump(tc.args.x, tc.args.y, tc.args.k)
+			t.Logf("动态规划耗时：%s", time.Since(start))
 			assert.Equal(t, tc.want, got)
+
+			start = time.Now()
+			got1 := jump1(tc.args.x, tc.args.y, tc.args.k)
+			t.Logf("暴力递归耗时：%s", time.Since(start))
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 }
