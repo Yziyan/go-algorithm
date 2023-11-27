@@ -405,6 +405,44 @@ func TestJump(t *testing.T) {
 	}
 }
 
+type testCase struct {
+	name      string
+	cookTimes []int
+	n         int
+	washTime  int
+	selfTime  int
+	want      int
+}
+
+func TestWashTime(t *testing.T) {
+	tests := []testCase{
+		{
+			name:      "Test1",
+			cookTimes: []int{1, 2, 3},
+			n:         3,
+			washTime:  5,
+			selfTime:  10,
+			want:      12,
+		},
+		{
+			name:      "Test2",
+			cookTimes: []int{4, 3, 2},
+			n:         3,
+			washTime:  1,
+			selfTime:  2,
+			want:      5,
+		},
+		// 更多测试用例...
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := WashTime(tc.cookTimes, tc.n, tc.washTime, tc.selfTime)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
