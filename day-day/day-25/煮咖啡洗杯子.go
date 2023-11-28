@@ -12,8 +12,63 @@ package day_25
 三个参数：int[] arr、int N，int a、int b
 */
 
-// WashTime n 个人喝咖啡，所有人都喝完，并且洗完杯子的最短时间
+// WashTime 动态规划方法
 func WashTime(cookTimes []int, n, washTime, selfTime int) int {
+	if cookTimes == nil || len(cookTimes) == 0 || n < 1 {
+		return 0
+	}
+
+	// 也是先获取所有人喝完咖啡，杯子可洗的时间
+	drinkTimes := getDrinkTime(cookTimes, n)
+
+	// 有两个可变参数，cur 和 free，分别代表当前正在洗的杯子、洗杯机可用的时间。
+	// 它们的范围是：cur ∈ [0, n]，free ∈ [0, maxFree]，那么 maxFree 代表什么呢？代表最大的洗杯时间。
+	maxFree := 0
+	for i := 0; i < n; i++ {
+		// 看谁最晚能用 + 洗杯时间
+		maxFree = max(maxFree, drinkTimes[i]) + washTime
+	}
+
+	// 准备缓存
+	// dp[cur][free] 的含义是：从第 cur 个杯子开始洗，洗杯机最早可用的时间是 free
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, maxFree+1)
+	}
+
+	// 根据递归基可知， dp[n][...] = 0
+	// 根据依赖关系可知，cur 依赖 cur+1，那么从下往上求解
+	for cur := n - 1; cur >= 0; cur-- {
+		// 反正是依赖 cur+1 层的，都填好了
+		for free := 0; free <= maxFree; free++ {
+			// 1.使用洗杯机洗当前杯子
+			curTime := max(drinkTimes[cur], free) + washTime
+			if curTime > maxFree {
+				// 代表后面的不用填了，因为比全部使用洗杯机洗都慢了，那肯定不会是答案
+				break
+			}
+			// 可求剩余的杯子的最早时间
+			remainTime := dp[cur+1][curTime]
+			// 洗当前的杯子和剩下的杯子，最大值
+			p1 := max(curTime, remainTime)
+
+			// 2.使用自净的方式
+			curTime = drinkTimes[cur] + selfTime
+			remainTime = dp[cur+1][free]
+			// 自净当前杯子和剩下的杯子最大值
+			p2 := max(curTime, remainTime)
+
+			// 使用两种清洗策略的最优值
+			dp[cur][free] = min(p1, p2)
+		}
+	}
+
+	// 返回值代表，从第 0 个杯子开始洗，洗杯机最早可用的时间是 0 时刻。，
+	return dp[0][0]
+}
+
+// WashTime1 暴力递归方法（业务尝试模型） n 个人喝咖啡，所有人都喝完，并且洗完杯子的最短时间
+func WashTime1(cookTimes []int, n, washTime, selfTime int) int {
 	if cookTimes == nil || len(cookTimes) == 0 || n < 1 {
 		return 0
 	}
