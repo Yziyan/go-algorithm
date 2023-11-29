@@ -8,7 +8,42 @@ package day_25
 返回最小距离累加和
 */
 
+// 动态规划方法，节省空间(一维数组)
 func minPathSum(matrix [][]int) int {
+	if matrix == nil || len(matrix) == 0 || len(matrix[0]) == 0 {
+		return 0
+	}
+
+	m, n := len(matrix), len(matrix[0])
+	// 因为只依赖左边和上边，在求解时只依赖上一行，之前的都用不到了，那么完全可以使用一维数组，
+	dp := make([]int, n)
+
+	// 代表 (0, 0) -> (0, 0)
+	dp[0] = matrix[0][0]
+
+	// 第一行
+	for col := 1; col < n; col++ {
+		// 只依赖左边的值
+		dp[col] = dp[col-1] + matrix[0][col]
+	}
+
+	// 一般位置
+	for row := 1; row < m; row++ {
+		// 先求这一行的第一个值，只依赖上面
+		dp[0] = dp[row-1] + matrix[row][0]
+
+		for col := 1; col < n; col++ {
+			// 针对一般位置，依赖左边和上边
+			// dp[col] 还没被赋值前，就是上边的值，dp[col-1] 就是左边的值
+			dp[col] = min(dp[col], dp[col-1]) + matrix[row][col]
+		}
+	}
+
+	return dp[n-1]
+}
+
+// 动态规划方法（二维数组）
+func minPathSum2(matrix [][]int) int {
 	if matrix == nil || len(matrix) == 0 || len(matrix[0]) == 0 {
 		return 0
 	}

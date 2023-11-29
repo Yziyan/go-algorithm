@@ -476,6 +476,9 @@ func TestMinPathSum(t *testing.T) {
 			got := minPathSum(tc.matrix)
 			assert.Equal(t, tc.want, got)
 
+			got2 := minPathSum1(tc.matrix)
+			assert.Equal(t, tc.want, got2)
+
 			got1 := minPathSum1(tc.matrix)
 			assert.Equal(t, tc.want, got1)
 		})
