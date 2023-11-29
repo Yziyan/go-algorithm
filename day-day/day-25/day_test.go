@@ -443,6 +443,32 @@ func TestWashTime(t *testing.T) {
 	}
 }
 
+func TestMinPathSum(t *testing.T) {
+	testCases := []struct {
+		name   string
+		matrix [][]int
+		want   int
+	}{
+		{
+			name:   "case1",
+			matrix: [][]int{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}},
+			want:   7,
+		},
+		{
+			name:   "case2",
+			matrix: [][]int{{1, 2, 3}, {4, 5, 6}},
+			want:   12,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := minPathSum(tc.matrix)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
