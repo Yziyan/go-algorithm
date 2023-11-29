@@ -13,6 +13,46 @@ func minPathSum(matrix [][]int) int {
 		return 0
 	}
 
+	// 准备缓存，可变参数是 row, col
+	m, n := len(matrix), len(matrix[0])
+	// dp[row][col] 代表，从 (0, 0) -> (row, col) 最小的累加和
+	dp := make([][]int, m)
+	for i := range dp {
+		dp[i] = make([]int, n)
+	}
+
+	// 根据递归基
+	dp[0][0] = matrix[0][0]
+
+	// 第一行
+	for col := 1; col < n; col++ {
+		// 只依赖左边
+		dp[0][col] = dp[0][col-1] + matrix[0][col]
+	}
+	// 第一列
+	for row := 1; row < m; row++ {
+		// 只依赖上面
+		dp[row][0] = dp[row-1][0] + matrix[row][0]
+	}
+
+	// 其余位置
+	for row := 1; row < m; row++ {
+		for col := 1; col < n; col++ {
+			// 一般位置，就依赖左边和右边的最小值
+			dp[row][col] = min(dp[row][col-1], dp[row-1][col]) + matrix[row][col]
+		}
+	}
+
+	// 从 (0, 0) -> (m, n) 的最小累加和
+	return dp[m-1][n-1]
+}
+
+// 暴力递归方法
+func minPathSum1(matrix [][]int) int {
+	if matrix == nil || len(matrix) == 0 || len(matrix[0]) == 0 {
+		return 0
+	}
+
 	// 从 (0, 0) 位置 -> (row, col) 位置，得到的最小累加和
 	var process func(matrix [][]int, row, col int) int
 	process = func(matrix [][]int, row, col int) int {

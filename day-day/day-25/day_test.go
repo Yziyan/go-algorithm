@@ -459,12 +459,25 @@ func TestMinPathSum(t *testing.T) {
 			matrix: [][]int{{1, 2, 3}, {4, 5, 6}},
 			want:   12,
 		},
+		{
+			name:   "case3",
+			matrix: [][]int{{5, 4, 2}, {1, 9, 6}, {8, 7, 3}, {2, 6, 7}},
+			want:   27,
+		},
+		{
+			name:   "case4",
+			matrix: [][]int{{1, 3, 5, 8}, {4, 2, 1, 7}, {4, 3, 2, 3}},
+			want:   12,
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			got := minPathSum(tc.matrix)
 			assert.Equal(t, tc.want, got)
+
+			got1 := minPathSum1(tc.matrix)
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 }
