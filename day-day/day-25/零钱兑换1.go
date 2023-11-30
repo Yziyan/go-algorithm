@@ -12,8 +12,45 @@ arr 是货币数组，其中的值都是正数。再给定一个正数 aim。
 一共就 3 种方法，所以返回 3
 */
 
-// CoinsWayEveryPaperDifferent 每一张钱都不同，只有 len(coins) 张钱，需要找零 aim，有多少种找零方案
+// CoinsWayEveryPaperDifferent 动态规划方法
 func CoinsWayEveryPaperDifferent(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
+	n := len(coins)
+	// 发现可变参数就俩：cur ∈ [0, n] remain ∈ [0, aim]
+	// 准备缓存 dp，dp[cur][remain] 的含义是：使用 coins[cur ...] 找零 remain，拥有多少种方案
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, aim+1)
+	}
+	// 根据递归基可知，当 cur == n 时，只有 remain == 0，才有一种方案，其余的全是 0
+	dp[n][0] = 1
+	// 根据依赖关系，cur 依赖 cur+1，所以应该从下往上求解
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+			// 有两种方案，要么选 cur，要么不选 cur
+			p1 := 0
+			if remain-coins[cur] >= 0 {
+				// 要保证选择当前零钱后，不能多找钱才算
+				p1 = dp[cur+1][remain-coins[cur]]
+			}
+			// 不选
+			p2 := dp[cur+1][remain]
+
+			// 两种方案累加起来
+			dp[cur][remain] = p1 + p2
+		}
+	}
+
+	// 那么主函数应该代表：使用 coins[0 ...] 找零 aim，拥有多少种方案
+	return dp[0][aim]
+}
+
+// CoinsWayEveryPaperDifferent1 每一张钱都不同，只有 len(coins) 张钱，需要找零 aim，有多少种找零方案
+// 暴力递归方法（从左往右的尝试模型）
+func CoinsWayEveryPaperDifferent1(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return 0
 	}

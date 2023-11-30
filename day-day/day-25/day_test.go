@@ -511,12 +511,33 @@ func TestCoinsWayEveryPaperDifferent(t *testing.T) {
 			aim:   4,
 			want:  3,
 		},
+		{
+			name:  "case4",
+			coins: []int{1, 3, 5, 7},
+			aim:   8,
+			want:  2,
+		},
+		{
+			name:  "case5",
+			coins: []int{2, 4, 6, 8},
+			aim:   12,
+			want:  2,
+		},
+		{
+			name:  "case6",
+			coins: []int{3, 6, 9, 12, 15},
+			aim:   18,
+			want:  3,
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			got := CoinsWayEveryPaperDifferent(tc.coins, tc.aim)
 			assert.Equal(t, tc.want, got)
+
+			got1 := CoinsWayEveryPaperDifferent1(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 
