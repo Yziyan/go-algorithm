@@ -12,8 +12,38 @@ arr 是货币数组，其中的值都是正数。再给定一个正数 aim。
 一共就 3 种方法，所以返回 3
 */
 
-// CoinsWayEveryPaperDifferent 动态规划方法
+// CoinsWayEveryPaperDifferent 动态规划方法（一维数组）
 func CoinsWayEveryPaperDifferent(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
+	n := len(coins)
+
+	// 因为 cur 只依赖 cur+1，并且后面只依赖前面的某个值，所以可以简化二维数组
+	dp := make([]int, aim+1)
+	// 代表 cur == n 时，remain == 0，有一种方法数
+	dp[0] = 1
+
+	// 下面依赖上面，从下往上求解
+	for cur := n - 1; cur >= 0; cur-- {
+		// 因为后面依赖前面，所以从后往前求解
+		for remain := aim; remain >= 0; remain-- {
+			if remain-coins[cur] < 0 {
+				// 说明使用当前零钱会多找，没必要。
+				continue
+			}
+			// 不选当前零钱，那么方法数就是以前的 dp[remain]
+			// 选当前零钱，并且选了不会多找，那么方法数就加上 dp[remain-coins[cur]]
+			dp[remain] += dp[remain-coins[cur]]
+		}
+	}
+
+	return dp[aim]
+}
+
+// CoinsWayEveryPaperDifferent2 动态规划方法（二维数组）
+func CoinsWayEveryPaperDifferent2(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return 0
 	}
