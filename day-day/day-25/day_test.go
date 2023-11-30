@@ -485,6 +485,43 @@ func TestMinPathSum(t *testing.T) {
 	}
 }
 
+func TestCoinsWayEveryPaperDifferent(t *testing.T) {
+
+	testCases := []struct {
+		name  string
+		coins []int
+		aim   int
+		want  int
+	}{
+		{
+			name:  "case1",
+			coins: []int{1, 2, 5},
+			aim:   6,
+			want:  1,
+		},
+		{
+			name:  "case2",
+			coins: []int{2, 3, 5},
+			aim:   10,
+			want:  1,
+		},
+		{
+			name:  "case3",
+			coins: []int{2, 2, 2},
+			aim:   4,
+			want:  3,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := CoinsWayEveryPaperDifferent(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
