@@ -543,6 +543,40 @@ func TestCoinsWayEveryPaperDifferent(t *testing.T) {
 
 }
 
+func TestCoinsWayNoLimit(t *testing.T) {
+	tests := []struct {
+		name  string
+		coins []int
+		aim   int
+		want  int
+	}{
+		{
+			name:  "Test1",
+			coins: []int{1, 2, 5},
+			aim:   6,
+			want:  5,
+		},
+		{
+			name:  "Test2",
+			coins: []int{2, 3, 5},
+			aim:   10,
+			want:  4,
+		},
+		{
+			name:  "Test3",
+			coins: []int{2, 2, 2},
+			aim:   4,
+			want:  6,
+		},
+		// 可以添加更多测试用例...
+	}
+
+	for _, tc := range tests {
+		got := CoinsWayNoLimit(tc.coins, tc.aim)
+		assert.Equal(t, tc.want, got)
+	}
+}
+
 func TestOther(t *testing.T) {
 
 	str := "adxasadcb"
