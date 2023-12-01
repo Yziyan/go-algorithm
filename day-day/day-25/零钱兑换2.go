@@ -11,8 +11,36 @@ arr 是面值数组，其中的值都是正数且没有重复。再给定一个�
 一共就 3 种方法，所以返回 3
 */
 
-// CoinsWayNoLimit 动态规划方法
+// CoinsWayNoLimit 动态规划方法，（优化空间 + 时间）
 func CoinsWayNoLimit(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
+	n := len(coins)
+
+	// 准备 dp，根据观察，可以知道：
+	// dp[remain] = dp[remain] + 如果索引合理，(dp[remain - coins{cur}])
+	dp := make([]int, aim+1)
+	// 代表 dp[n][0] 有一种方式找零
+	dp[0] = 1
+
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+			// 右边旧的 dp[remain] 其实是 cur+1 的值
+			// dp[remain] = dp[remain]
+			if remain-coins[cur] >= 0 {
+				// 说明这样找零，不会多找，可以放心求解（其实也是为了索引不越界）
+				dp[remain] += dp[remain-coins[cur]]
+			}
+		}
+	}
+
+	return dp[aim]
+}
+
+// CoinsWayNoLimit2 动态规划方法
+func CoinsWayNoLimit2(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return 0
 	}

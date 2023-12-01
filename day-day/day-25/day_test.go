@@ -592,6 +592,12 @@ func TestCoinsWayNoLimit(t *testing.T) {
 	for _, tc := range tests {
 		got := CoinsWayNoLimit(tc.coins, tc.aim)
 		assert.Equal(t, tc.want, got)
+
+		got1 := CoinsWayNoLimit1(tc.coins, tc.aim)
+		assert.Equal(t, tc.want, got1)
+
+		got2 := CoinsWayNoLimit1(tc.coins, tc.aim)
+		assert.Equal(t, tc.want, got2)
 	}
 }
 
