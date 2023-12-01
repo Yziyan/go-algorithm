@@ -568,6 +568,24 @@ func TestCoinsWayNoLimit(t *testing.T) {
 			aim:   4,
 			want:  6,
 		},
+		{
+			name:  "Test4",
+			coins: []int{1, 2, 3, 5},
+			aim:   7,
+			want:  10,
+		},
+		{
+			name:  "Test5",
+			coins: []int{3, 5, 7},
+			aim:   12,
+			want:  2,
+		},
+		{
+			name:  "Test6",
+			coins: []int{1, 3, 4, 7},
+			aim:   10,
+			want:  10,
+		},
 		// 可以添加更多测试用例...
 	}
 

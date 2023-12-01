@@ -11,8 +11,44 @@ arr 是面值数组，其中的值都是正数且没有重复。再给定一个�
 一共就 3 种方法，所以返回 3
 */
 
-// CoinsWayNoLimit 暴力尝试方法(从左往右的尝试方法)
+// CoinsWayNoLimit 动态规划方法
 func CoinsWayNoLimit(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
+	n := len(coins)
+	// 可变参数是 cur 和 remain，建立缓存
+	// dp[cur][remain] 的含义是：
+	// 使用 coins[cur ...] 枚硬币，想要筹够 remain 的钱，有多少种方法
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, aim+1)
+	}
+
+	// 根据递归基可知，当没钱可用时，钱也筹够才有一种方法数
+	dp[n][0] = 1
+
+	// 根据依赖关系，cur 依赖 cur+1，所以需要从下往上求
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+
+			ways := 0
+			// 要使用 cur 这枚硬币多少次，但不管使用多少枚，都不能比余额还大
+			for num := 0; num*coins[cur] <= remain; num++ {
+				ways += dp[cur+1][remain-num*coins[cur]]
+			}
+
+			dp[cur][remain] = ways
+		}
+	}
+
+	// 返回 dp[0][aim]，代表使用 coins[0 ...] 枚硬币，筹够 aim 钱，有多少种方法
+	return dp[0][aim]
+}
+
+// CoinsWayNoLimit1 暴力尝试方法(从左往右的尝试方法)
+func CoinsWayNoLimit1(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return 0
 	}
