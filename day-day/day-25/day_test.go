@@ -476,7 +476,7 @@ func TestMinPathSum(t *testing.T) {
 			got := minPathSum(tc.matrix)
 			assert.Equal(t, tc.want, got)
 
-			got2 := minPathSum1(tc.matrix)
+			got2 := minPathSum2(tc.matrix)
 			assert.Equal(t, tc.want, got2)
 
 			got1 := minPathSum1(tc.matrix)
@@ -613,4 +613,38 @@ func TestOther(t *testing.T) {
 	t.Log(str)
 	str = string(chars)
 	t.Log(str)
+}
+
+func TestCoinsWaySameValueSamePaper(t *testing.T) {
+	tests := []struct {
+		name  string
+		coins []int
+		aim   int
+		want  int
+	}{
+		{
+			name:  "Test1",
+			coins: []int{1, 2, 2, 5},
+			aim:   6,
+			want:  1,
+		},
+		{
+			name:  "Test2",
+			coins: []int{1, 1, 2, 2, 5},
+			aim:   8,
+			want:  1,
+		},
+		{
+			name:  "Test3",
+			coins: []int{1, 1, 1, 2, 2, 5},
+			aim:   10,
+			want:  2,
+		},
+	}
+
+	for _, tc := range tests {
+
+		got := CoinsWaySameValueSamePaper(tc.coins, tc.aim)
+		assert.Equal(t, tc.want, got)
+	}
 }
