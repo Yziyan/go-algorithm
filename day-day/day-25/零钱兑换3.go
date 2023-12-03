@@ -17,6 +17,45 @@ func CoinsWaySameValueSamePaper(coins []int, aim int) int {
 		return 0
 	}
 
+	// 可变参数还是只有 cur 和 remain，但是 cur 的范围变了
+	// 先构建 Info 信息
+	info := newCoinsInfo(coins)
+	n := len(info.coins)
+	// dp[cur][remain] 的含义是：
+	// 使用 info.coins[cur ...] 凑出 remain 面值，有多少种方法
+	// 注意：info.coins[cur]，只有 info.nums[cur] 枚
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, aim+1)
+	}
+
+	// 根据递归基：代表没有硬币可用了，remain 已经凑完了
+	dp[n][0] = 1
+
+	// 根据依赖关系：cur 依赖 cur+1，需要从下往上求
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+
+			// 对于每一枚硬币，都看看能使用多少次
+			ways := 0
+			// 但不管怎么样，1.不能多找钱，2.cur 这枚硬币只有 info.nums[cur] 枚
+			for num := 0; num*info.coins[cur] <= remain && num <= info.nums[cur]; num++ {
+				ways += dp[cur+1][remain-num*info.coins[cur]]
+			}
+			dp[cur][remain] = ways
+		}
+	}
+
+	// 根据递归调用：代表使用 info.coins[cur ...] 凑出 aim 的方法数
+	return dp[0][aim]
+}
+
+// CoinsWaySameValueSamePaper1 暴力递归方法
+func CoinsWaySameValueSamePaper1(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
 	// 先憋一个暴力递归，含义是：
 	// coins[cur] 枚硬币有 nums[cur] 个，使用 coins[cur ...] 凑出 remain 面值，拥有的方法数
 	var process func(coins, nums []int, cur, remain int) int

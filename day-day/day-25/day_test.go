@@ -634,17 +634,32 @@ func TestCoinsWaySameValueSamePaper(t *testing.T) {
 			aim:   8,
 			want:  1,
 		},
+		// ...（其他测试用例）
 		{
-			name:  "Test3",
-			coins: []int{1, 1, 1, 2, 2, 5},
+			name:  "Test4",
+			coins: []int{1, 1, 2, 2, 2, 5},
 			aim:   10,
+			want:  1,
+		},
+		{
+			name:  "Test5",
+			coins: []int{2, 2, 3, 3, 5, 5},
+			aim:   16,
+			want:  1,
+		},
+		{
+			name:  "Test6",
+			coins: []int{1, 1, 1, 4, 4, 6, 6},
+			aim:   14,
 			want:  2,
 		},
 	}
 
 	for _, tc := range tests {
-
 		got := CoinsWaySameValueSamePaper(tc.coins, tc.aim)
 		assert.Equal(t, tc.want, got)
+
+		got1 := CoinsWaySameValueSamePaper1(tc.coins, tc.aim)
+		assert.Equal(t, tc.want, got1)
 	}
 }
