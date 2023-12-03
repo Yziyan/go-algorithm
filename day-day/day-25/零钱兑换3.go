@@ -12,7 +12,47 @@ arr 是货币数组，其中的值都是正数。再给定一个正数 aim。
 一共就 3 种方法，所以返回 3
 */
 
+// CoinsWaySameValueSamePaper 动态规划方法（优化版）
 func CoinsWaySameValueSamePaper(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return 0
+	}
+
+	// 构建硬币信息
+	info := newCoinsInfo(coins)
+	n := len(info.coins)
+	// 准备缓存 dp
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, aim+1)
+	}
+	dp[n][0] = 1
+
+	// 根据观察：dp[cur][remain] = dp[cur+1][remain] + dp[cur][remain-info.coins[cur]]
+	// - dp[cur+1][remain-info.coins[cur]*(info.nums[cur]+1)]
+	// 但是需要保证索引不越界，所以需要判断一下
+	// 根据依赖关系，dp 需要从下往上滚动
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+			thanNumValue := 0
+			// 但是是有限张，因为往前推了一枚，所以只能少用一枚，上面既然可能多加了，就减回来
+			thanNum := remain - info.coins[cur]*(info.nums[cur]+1)
+			if thanNum >= 0 {
+				thanNumValue = dp[cur+1][thanNum]
+			}
+
+			dp[cur][remain] = dp[cur+1][remain]
+			if remain-info.coins[cur] >= 0 {
+				dp[cur][remain] += dp[cur][remain-info.coins[cur]] - thanNumValue
+			}
+		}
+	}
+
+	return dp[0][aim]
+}
+
+// CoinsWaySameValueSamePaper2 动态规划方法
+func CoinsWaySameValueSamePaper2(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return 0
 	}

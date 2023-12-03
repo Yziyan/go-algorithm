@@ -656,10 +656,15 @@ func TestCoinsWaySameValueSamePaper(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		got := CoinsWaySameValueSamePaper(tc.coins, tc.aim)
-		assert.Equal(t, tc.want, got)
+		t.Run(tc.name, func(t *testing.T) {
+			got := CoinsWaySameValueSamePaper(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got)
 
-		got1 := CoinsWaySameValueSamePaper1(tc.coins, tc.aim)
-		assert.Equal(t, tc.want, got1)
+			got1 := CoinsWaySameValueSamePaper1(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got1)
+
+			got2 := CoinsWaySameValueSamePaper2(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got2)
+		})
 	}
 }
