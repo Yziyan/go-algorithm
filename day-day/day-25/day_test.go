@@ -596,7 +596,7 @@ func TestCoinsWayNoLimit(t *testing.T) {
 		got1 := CoinsWayNoLimit1(tc.coins, tc.aim)
 		assert.Equal(t, tc.want, got1)
 
-		got2 := CoinsWayNoLimit1(tc.coins, tc.aim)
+		got2 := CoinsWayNoLimit2(tc.coins, tc.aim)
 		assert.Equal(t, tc.want, got2)
 	}
 }
