@@ -12,6 +12,7 @@ Bob 一共要迈出 k 步，且每步都会等概率向上下左右四个方向�
 返回 k 步之后，Bob 还在 N*M 的区域的概率
 */
 
+// 动态规划方法
 func livePossibility(row, col int, k int, n, m int) float64 {
 
 	// 我们发现，这个题有三个可变参数：row、col、remain，那么是一个三维的动态规划
