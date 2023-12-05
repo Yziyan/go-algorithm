@@ -101,6 +101,9 @@ func TestKillMonster(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got := KillMonster(tc.n, tc.m, tc.k)
 			assert.Equal(t, tc.want, got)
+
+			got1 := KillMonster1(tc.n, tc.m, tc.k)
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 }

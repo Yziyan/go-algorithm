@@ -18,6 +18,53 @@ func KillMonster(n, m, k int) float64 {
 		return 0
 	}
 
+	// 有两个可变参数：remain 和 hp，它们的范围分别是：
+	// remain ∈ [0, k]，hp ∈ [负数, n]
+	// 但是对于 hp 为负数的情况，我们可以通过代码处理，所以 hp ∈ [0, n]
+	// 准备缓存 dp，dp[remain][hp] 的含义是：
+	// 还剩余 remain 刀要砍掉怪兽 hp 滴血，每刀能掉 0~m 滴血，砍完 remain 刀怪兽死掉的数量
+	dp := make([][]int64, k+1)
+	for i := range dp {
+		dp[i] = make([]int64, n+1)
+	}
+
+	// 根据递归基：当刀数为零的时候，只有怪兽的血 <= 0 的时候才算死掉了
+	dp[0][0] = 1 // dp[0][...] = 0
+
+	// 根据依赖关系，remain 依赖 remain-1，所以需要从上往下求
+	for remain := 1; remain <= k; remain++ {
+		// 当 hp = 0 时，怪兽已经死掉了，那么余下的 remain 刀都是在鞭尸，每一种伤害，都是结果
+		dp[remain][0] = int64(math.Pow(float64(m+1), float64(remain)))
+		for hp := 1; hp <= n; hp++ {
+			// 对于一般情况，需要看 remain 这一刀，砍掉的血量
+			ways := int64(0)
+			for hurt := 0; hurt <= m; hurt++ {
+				if hp-hurt <= 0 {
+					// 说明砍这一刀，怪兽绝对死掉了，剩余 remain-1 刀都是在鞭尸
+					ways += int64(math.Pow(float64(m+1), float64(remain-1)))
+				} else {
+					// 否则依赖 remain-1
+					ways += dp[remain-1][hp-hurt]
+				}
+			}
+
+			dp[remain][hp] = ways
+		}
+	}
+
+	// 剩余 k 刀要砍掉怪兽 n 滴血，每刀能掉 0~m 滴血，砍完 k 刀怪兽死掉的数量
+	kill := dp[k][n]
+	all := math.Pow(float64(m+1), float64(k))
+	return float64(kill) / all
+}
+
+// KillMonster1 暴力递归方法
+func KillMonster1(n, m, k int) float64 {
+	if n < 1 || m < 1 || k < 1 {
+		// 说明：怪兽本身就是死的 or 永远砍不出伤害 or 要砍的刀数为 0
+		return 0
+	}
+
 	// 先憋一个暴力递归，递归含义是：
 	// 剩余 remain 刀，每一刀能砍掉 0~m 滴血，怪兽现在还剩 hp 滴血，返回砍完 remain 刀，能把怪兽砍死的总数
 	var process func(remain, m, hp int) int64
@@ -29,6 +76,10 @@ func KillMonster(n, m, k int) float64 {
 				return 0
 			}
 			return 1
+		}
+
+		if hp <= 0 {
+			return int64(math.Pow(float64(m+1), float64(remain)))
 		}
 
 		// 对于一般情况，有多少种方式呢？
