@@ -12,7 +12,46 @@ import "math"
 求 K 次打击之后，英雄把怪兽砍死的概率
 */
 
+// KillMonster 动态规划方法，优化版本
 func KillMonster(n, m, k int) float64 {
+	if n < 1 || m < 1 || k < 1 {
+		// 说明：怪兽本身就是死的 or 永远砍不出伤害 or 要砍的刀数为 0
+		return 0
+	}
+
+	// 其他的还是一样的含义
+	dp := make([][]int64, k+1)
+	for i := range dp {
+		dp[i] = make([]int64, n+1)
+	}
+
+	for remain := 0; remain <= k; remain++ {
+		// 不管有没有刀数，怪兽肯定已经死掉了，那么再砍 remain 刀，都是在鞭尸，所有的砍法都是答案
+		dp[remain][0] = int64(math.Pow(float64(m+1), float64(remain)))
+	}
+
+	for remain := 1; remain <= k; remain++ {
+		for hp := 1; hp <= n; hp++ {
+			// 根据优化推导的转移方程
+			ways := dp[remain-1][hp] + dp[remain][hp-1]
+			if hp-(m+1) <= 0 {
+				// 说明怪兽肯定死了，剩余的 remain 都是在鞭尸，也说明索引会越界
+				ways -= int64(math.Pow(float64(m+1), float64(remain-1)))
+			} else {
+				// 说明不越界
+				ways -= dp[remain-1][hp-(m+1)]
+			}
+			dp[remain][hp] = ways
+		}
+	}
+
+	kill := dp[k][n]
+	all := math.Pow(float64(m+1), float64(k))
+	return float64(kill) / all
+}
+
+// KillMonster2 动态规划方法，普通版本
+func KillMonster2(n, m, k int) float64 {
 	if n < 1 || m < 1 || k < 1 {
 		// 说明：怪兽本身就是死的 or 永远砍不出伤害 or 要砍的刀数为 0
 		return 0
@@ -30,11 +69,13 @@ func KillMonster(n, m, k int) float64 {
 
 	// 根据递归基：当刀数为零的时候，只有怪兽的血 <= 0 的时候才算死掉了
 	dp[0][0] = 1 // dp[0][...] = 0
-
-	// 根据依赖关系，remain 依赖 remain-1，所以需要从上往下求
 	for remain := 1; remain <= k; remain++ {
 		// 当 hp = 0 时，怪兽已经死掉了，那么余下的 remain 刀都是在鞭尸，每一种伤害，都是结果
 		dp[remain][0] = int64(math.Pow(float64(m+1), float64(remain)))
+	}
+
+	// 根据依赖关系，remain 依赖 remain-1，所以需要从上往下求
+	for remain := 1; remain <= k; remain++ {
 		for hp := 1; hp <= n; hp++ {
 			// 对于一般情况，需要看 remain 这一刀，砍掉的血量
 			ways := int64(0)
@@ -79,6 +120,7 @@ func KillMonster1(n, m, k int) float64 {
 		}
 
 		if hp <= 0 {
+			// 说明怪兽已经死了，现在余下的 remain 刀都在鞭尸
 			return int64(math.Pow(float64(m+1), float64(remain)))
 		}
 
