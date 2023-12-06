@@ -4,6 +4,7 @@ package day_26
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math"
 	"testing"
 )
 
@@ -123,12 +124,22 @@ func TestMinCoinsNoLimit(t *testing.T) {
 		{"Test3", []int{2, 3, 7}, 14, 2},
 		{"Test4", []int{3, 5, 7}, 17, 3},
 		{"Test5", []int{1, 3, 4}, 6, 2},
+		{"Test6", []int{2, 4}, 7, math.MaxInt},
+
+		{name: "ComplexTest1", coins: []int{1, 4, 6, 8}, aim: 15, want: 3},
+		{name: "ComplexTest2", coins: []int{5, 7, 8, 9}, aim: 22, want: 3},
+		{name: "ComplexTest3", coins: []int{1, 3, 7, 10}, aim: 14, want: 2},
+		{name: "ComplexTest4", coins: []int{2, 6, 9, 12}, aim: 24, want: 2},
+		{name: "ComplexTest5", coins: []int{1, 5, 6, 8}, aim: 20, want: 3},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			got := minCoinsNoLimit(tc.coins, tc.aim)
 			assert.Equal(t, tc.want, got)
+
+			got1 := minCoinsNoLimit1(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 }
