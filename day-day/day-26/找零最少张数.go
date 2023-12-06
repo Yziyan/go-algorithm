@@ -10,7 +10,47 @@ coins 是硬币面值数组，其中的值都是正数且没有重复。再给�
 返回组成 aim 的最少硬币数
 */
 
+// 动态规划，优化版本
 func minCoinsNoLimit(coins []int, aim int) int {
+	if coins == nil || len(coins) == 0 || aim <= 0 {
+		return math.MaxInt
+	}
+
+	n := len(coins)
+	// 根据可变参数及其范围
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, aim+1)
+	}
+
+	// 根据递归基：
+	dp[n][0] = 0
+	for remain := 1; remain <= aim; remain++ {
+		dp[n][remain] = math.MaxInt
+	}
+
+	// 根据依赖关系
+	for cur := n - 1; cur >= 0; cur-- {
+		for remain := 0; remain <= aim; remain++ {
+			// 根据观察可得的转移方程：
+			// dp[cur][remain] = min{dp[cur+1][remain], (dp[cur][remain-coins{cur}]+1)}
+			res := dp[cur+1][remain]
+
+			// 计算出，接下来要凑的面值
+			nextRemain := remain - coins[cur]
+			if nextRemain >= 0 && dp[cur][nextRemain] != math.MaxInt {
+				// 说明不会多找，索引合理，别忘了还得 + 1，那么看看这两者的最小值
+				res = min(res, dp[cur][nextRemain]+1)
+			}
+			dp[cur][remain] = res
+		}
+	}
+
+	return dp[0][aim]
+}
+
+// 动态规划方法
+func minCoinsNoLimit2(coins []int, aim int) int {
 	if coins == nil || len(coins) == 0 || aim <= 0 {
 		return math.MaxInt
 	}

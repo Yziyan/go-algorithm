@@ -140,6 +140,9 @@ func TestMinCoinsNoLimit(t *testing.T) {
 
 			got1 := minCoinsNoLimit1(tc.coins, tc.aim)
 			assert.Equal(t, tc.want, got1)
+
+			got2 := minCoinsNoLimit2(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 }
