@@ -146,3 +146,24 @@ func TestMinCoinsNoLimit(t *testing.T) {
 		})
 	}
 }
+
+func TestSplitNumber(t *testing.T) {
+	testCases := []struct {
+		name string
+		n    int
+
+		want int
+	}{
+		{"Case1", 1, 1},
+		{"Case2", 2, 2},
+		{"Case3", 3, 3},
+		{"Case4", 4, 5},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := splitNumber(tc.n)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
