@@ -110,3 +110,25 @@ func TestKillMonster(t *testing.T) {
 		})
 	}
 }
+
+func TestMinCoinsNoLimit(t *testing.T) {
+	testCases := []struct {
+		name  string
+		coins []int
+		aim   int
+		want  int
+	}{
+		{"Test1", []int{1, 2, 5}, 11, 3},
+		{"Test2", []int{2, 3, 5}, 10, 2},
+		{"Test3", []int{2, 3, 7}, 14, 2},
+		{"Test4", []int{3, 5, 7}, 17, 3},
+		{"Test5", []int{1, 3, 4}, 6, 2},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := minCoinsNoLimit(tc.coins, tc.aim)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
