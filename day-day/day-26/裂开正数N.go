@@ -18,6 +18,52 @@ func splitNumber(n int) int {
 		return 1
 	}
 
+	// 根据递归参数，有两个可变参数：pre ∈ [1, n]，remain ∈ [1, n]
+	// 所以准备缓存，dp[pre][remain] 代表：
+	// 前一个裂开的数是 pre，裂开 remain 有多少种方法数
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+
+	// 根据递归基：
+	// 当 pre > remain 时都是 0，不用初始化
+	for pre := 1; pre <= n; pre++ {
+		// remain == 0 时，说明没有要裂开的数了，前面的选择是一种方法数
+		dp[pre][0] = 1
+	}
+
+	// 根据依赖情况：可以发现两个参数都在变。first 往下走，remain 往左走，
+	// 所以，dp[pre][remain] 依赖左下方某些位置的值，那么我们应该从下往上求解
+	for pre := n; pre >= 1; pre-- {
+		// remain 至少是从 pre 起
+		for remain := pre; remain <= n; remain++ {
+			ways := 0
+			// 根据一般情况，有多少种方法呢？挨个尝试
+			// first 从 pre 开始，但是不能比 remain 还大
+			for first := pre; first <= remain; first++ {
+				// 代表着，当前选择了 first，那么对于下一次尝试，first 就是前一个数，去裂开 remain-first 有的方法数
+				ways += dp[first][remain-first]
+			}
+
+			dp[pre][remain] = ways
+		}
+	}
+
+	// 根据递归主函数调用，
+	// 前一个裂开的数是 1，裂开 n 有多少种方法数
+	return dp[1][n]
+}
+
+// 暴力递归方法
+func splitNumber1(n int) int {
+	if n <= 0 {
+		return 0
+	}
+	if n == 1 {
+		return 1
+	}
+
 	// 憋一个暴力递归，含义是：
 	// 裂开的前一个数是 pre，还剩下 remain 要裂开，能得到多少种裂开的方法数
 	var process func(pre int, remain int) int

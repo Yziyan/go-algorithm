@@ -158,12 +158,21 @@ func TestSplitNumber(t *testing.T) {
 		{"Case2", 2, 2},
 		{"Case3", 3, 3},
 		{"Case4", 4, 5},
+		{"Case5", 5, 7},
+		{"Case6", 6, 11},
+		{"Case7", 7, 15},
+		{"Case8", 8, 22},
+		{"Case9", 9, 30},
+		{"Case10", 10, 42},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			got := splitNumber(tc.n)
 			assert.Equal(t, tc.want, got)
+
+			got1 := splitNumber1(tc.n)
+			assert.Equal(t, tc.want, got1)
 		})
 	}
 }
