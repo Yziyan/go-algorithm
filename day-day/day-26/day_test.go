@@ -171,6 +171,9 @@ func TestSplitNumber(t *testing.T) {
 			got := splitNumber(tc.n)
 			assert.Equal(t, tc.want, got)
 
+			got2 := splitNumber2(tc.n)
+			assert.Equal(t, tc.want, got2)
+
 			got1 := splitNumber1(tc.n)
 			assert.Equal(t, tc.want, got1)
 		})

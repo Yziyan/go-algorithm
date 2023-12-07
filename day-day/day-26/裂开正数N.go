@@ -10,7 +10,45 @@ package day_26
 5 种，所以返回 5
 */
 
+// 动态规划，优化版本
 func splitNumber(n int) int {
+	if n <= 0 {
+		return 0
+	}
+	if n == 1 {
+		return 1
+	}
+
+	// 其余的都一样，根据参数及其范围准备缓存
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+
+	// 根据递归基
+	for pre := 1; pre <= n; pre++ {
+		dp[pre][0] = 1
+	}
+
+	// 由于下面需要用到 pre+1 的值，防止越界，我们能否将 dp[n][n] 先求出来呢？
+	// 因为观察出来的结果是：dp[pre][remain] = dp[pre+1][remain] + dp[pre][remain-pre]
+	// 所以下面有下面的关系，当 pre = n 时，pre+1 会越界，既然没有那个格子，就当做它是 dp[pre+1][remain] = 0 即可
+	dp[n][n] = dp[n][n-n]
+
+	// 根据依赖情况，
+	for pre := n - 1; pre >= 0; pre-- {
+		for remain := pre; remain <= n; remain++ {
+			// 根据观察所得的斜率优化
+			dp[pre][remain] = dp[pre+1][remain] + dp[pre][remain-pre]
+		}
+	}
+
+	// 根据递归主函数调用
+	return dp[1][n]
+}
+
+// 动态规划
+func splitNumber2(n int) int {
 	if n <= 0 {
 		return 0
 	}
