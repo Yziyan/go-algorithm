@@ -8,7 +8,53 @@ package day_26
 返回最接近的情况下，较小集合的累加和
 */
 
+// 动态规划方法
 func splitSumClosed(arr []int) int {
+	if arr == nil || len(arr) < 2 {
+		return 0
+	}
+	n := len(arr)
+	sum := 0
+	for _, v := range arr {
+		sum += v
+	}
+
+	half := sum >> 1 // 除2
+	// 根据可变参数及其范围：cur ∈ [0, n]，remain ∈ [0, sum/2]
+	// 建立缓存 dp，dp[cur][remain] 的含义是：对 arr[cur...] 进行分割，求出最接近 remain 的最大累加和
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, half+1)
+	}
+
+	// 根据递归基：arr 没有元素的时候，分隔不了，只能返回 0
+	// dp[n][remain] = 0
+
+	// 根据依赖关系：因为 cur 依赖 cur+1，所以得从下往上求解
+	for cur := n - 1; cur >= 0; cur-- {
+		// 最大不能超过 half
+		for remain := 0; remain <= half; remain++ {
+			// 有两种可能
+			// 1.不使用当前值
+			p1 := dp[cur+1][remain]
+			// 2.使用当前值，但是不能超过 remain
+			p2 := 0
+			if arr[cur] <= remain {
+				// 那么最大累加和就是：当前 + 剩余 [cur+1 ...] 个数，找最接近 remain-arr[cur] 的值
+				p2 = arr[cur] + dp[cur+1][remain-arr[cur]]
+			}
+			// 两种可能中，较大的那个就是最接近的
+			dp[cur][remain] = max(p1, p2)
+		}
+	}
+
+	// 根据递归主函数调用
+	// 对 arr[0 ...] 进行分割，求出最接近 sum/2 的较大累加和
+	return dp[0][half]
+}
+
+// 暴力递归方法
+func splitSumClosed1(arr []int) int {
 	if arr == nil || len(arr) < 2 {
 		return 0
 	}
