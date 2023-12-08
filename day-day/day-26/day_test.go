@@ -179,3 +179,30 @@ func TestSplitNumber(t *testing.T) {
 		})
 	}
 }
+
+func TestSplitSumClosed(t *testing.T) {
+	var tests = []struct {
+		name string
+		arr  []int
+		want int
+	}{
+		{name: "Large Consecutive", arr: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, want: 27},
+		{name: "Odd Numbers", arr: []int{1, 3, 5, 7, 9, 11, 13, 15, 17, 19}, want: 50},
+		{name: "Mixed Positives and Negatives", arr: []int{-5, -4, -3, -2, -1, 1, 2, 3, 4, 5}, want: 0},
+		{name: "Uniform Large", arr: []int{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, want: 50},
+		{name: "Very High Values", arr: []int{100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000}, want: 10500},
+		{name: "Small Consecutive", arr: []int{1, 2, 3, 4}, want: 5},
+		{name: "Uniform Small", arr: []int{2, 2, 2, 2}, want: 4},
+		{name: "Three Tens", arr: []int{10, 10, 10}, want: 10},
+		{name: "Mixed Values", arr: []int{1, 6, 5, 11}, want: 11},
+		{name: "Empty Array", arr: []int{}, want: 0},
+		{name: "Nil Array", arr: nil, want: 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := splitSumClosed(tt.arr)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
