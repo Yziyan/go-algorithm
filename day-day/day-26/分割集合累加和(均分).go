@@ -10,7 +10,86 @@ package day_26
 返回最接近的情况下，较小集合的累加和
 */
 
+// 动态规划方法
 func splitSumClosedSizeHalf(arr []int) int {
+	if arr == nil || len(arr) < 2 {
+		return -1
+	}
+
+	n := len(arr)
+	sum := 0
+	for _, v := range arr {
+		sum += v
+	}
+	// 除 2
+	half := sum >> 1
+	halfSize := n >> 1
+
+	// 根据可变参数及其范围
+	// cur ∈ [0, n]，size ∈ [0, (n+1)/2]，remain ∈ [0, sum/2]
+	// 建立缓存 dp，dp[cur][size][remain] 的含义是：
+	// 对 arr[cur ...] 进行分割，得到最接近 remain 的较小累加和，但是对应的集合元素必须是 size 个
+	dp := make([][][]int, n+1)
+	for cur := range dp {
+		// 如果是奇数个，需要保证向上取整
+		dp[cur] = make([][]int, (n+1)>>1+1)
+		for size := range dp[cur] {
+			dp[cur][size] = make([]int, half+1)
+		}
+	}
+	// 先初始化一下，因为递归函数的无效值，使用的是 -1
+	for cur := 0; cur <= n; cur++ {
+		for size := 0; size <= halfSize; size++ {
+			for remain := 0; remain <= half; remain++ {
+				dp[cur][size][remain] = -1
+			}
+		}
+	}
+
+	// 根据递归基：
+	for remain := 0; remain <= half; remain++ {
+		// 说明没有元素可分割了，并且 size 也达标了，再分结果也只能是 0 了
+		dp[n][0][remain] = 0
+	}
+
+	// 根据依赖情况，size 依赖 size-1，cur 依赖 cur+1，
+	// 又因为已经填完了 o-cur-remain 平面，所以从 size 轴开始推
+	for size := 1; size <= halfSize; size++ {
+		for cur := n - 1; cur >= 0; cur-- {
+			for remain := 0; remain <= half; remain++ {
+				// 根据一般情况：有两种可能
+				// 1.不选 cur
+				p1 := dp[cur+1][size][remain]
+				// 2.选 cur
+				p2 := -1
+				next := -1
+				if arr[cur] <= remain {
+					// 说明 remain-arr[cur] 不会小于  0
+					next = dp[cur+1][size-1][remain-arr[cur]]
+				}
+				if next != -1 {
+					// 说明得到一种有效解，可以加上当前值
+					p2 = arr[cur] + next
+				}
+
+				// 那么答案就是两种情况的最大值，因为求出来的都是 size 个较小的累加和，大的就更接近 remain
+				dp[cur][size][remain] = max(p1, p2)
+			}
+		}
+	}
+
+	// 根据递归主函数调用
+	if (n & 1) == 0 {
+		// 说明是偶数个
+		return dp[0][halfSize][half]
+	} else {
+		// 说明是奇数个
+		return max(dp[0][halfSize][half], dp[0][halfSize+1][half])
+	}
+}
+
+// 暴力递归方法
+func splitSumClosedSizeHalf1(arr []int) int {
 	if arr == nil || len(arr) < 2 {
 		return 0
 	}

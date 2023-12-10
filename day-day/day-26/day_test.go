@@ -224,6 +224,9 @@ func TestSplitSumClosedSizeHalf(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := splitSumClosedSizeHalf(tt.arr)
 			assert.Equal(t, tt.want, got)
+
+			got1 := splitSumClosedSizeHalf1(tt.arr)
+			assert.Equal(t, tt.want, got1)
 		})
 	}
 }
