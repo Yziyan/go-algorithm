@@ -208,3 +208,22 @@ func TestSplitSumClosed(t *testing.T) {
 		})
 	}
 }
+
+func TestSplitSumClosedSizeHalf(t *testing.T) {
+	var tests = []struct {
+		name string
+		arr  []int
+		want int
+	}{
+		{name: "Even Number of Elements", arr: []int{1, 2, 3, 4, 5, 6}, want: 10},
+		{name: "Odd Number of Elements", arr: []int{1, 2, 3, 4, 5}, want: 7},
+		{name: "Large Array", arr: []int{1, 3, 5, 7, 9, 11, 13, 15, 17, 19}, want: 49},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := splitSumClosedSizeHalf(tt.arr)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
