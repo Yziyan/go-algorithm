@@ -38,3 +38,13 @@ func (q *DoubleQueue) PollRight() int {
 	*q = (*q)[:last]
 	return res
 }
+
+// GetLeft 只获取左边的元素
+func (q *DoubleQueue) GetLeft() int {
+	return (*q)[0]
+}
+
+// GetRight 只获取右边的元素
+func (q *DoubleQueue) GetRight() int {
+	return (*q)[len(*q)-1]
+}
