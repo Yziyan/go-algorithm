@@ -58,3 +58,27 @@ func TestSlidingWindowMaxArray(t *testing.T) {
 		})
 	}
 }
+
+func TestAllLessNumSubArray(t *testing.T) {
+	tests := []struct {
+		name string
+		arr  []int
+		num  int
+		want int
+	}{
+		{"Basic case", []int{1, 3, 5, 7, 9}, 2, 9},
+		{"Single element", []int{5}, 0, 1},
+		{"All elements same", []int{2, 2, 2}, 0, 6},
+		{"No valid subarray", []int{10, 20, 30}, 5, 3},
+		{"Mixed values", []int{1, 2, 3, 4, 5}, 3, 14},
+		{"Empty array", []int{}, 3, 0},
+		{"Large range", []int{1, 2, 3, 100, 101}, 100, 15},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := allLessNumSubArray(tt.arr, tt.num)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
