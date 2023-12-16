@@ -82,3 +82,26 @@ func TestAllLessNumSubArray(t *testing.T) {
 		})
 	}
 }
+
+func TestGasStation(t *testing.T) {
+	tests := []struct {
+		name string
+		gas  []int
+		cost []int
+		want []bool
+	}{
+		{"Case 1", []int{1, 2, 3, 4, 5}, []int{3, 4, 5, 1, 2}, []bool{false, false, false, true, false}},
+		{"Case 2", []int{2, 3, 4}, []int{3, 4, 3}, []bool{false, false, false}},
+		{"Case 3", []int{5, 1, 2, 3, 4}, []int{4, 4, 1, 5, 1}, []bool{false, false, false, false, true}},
+		{"Case 4", []int{1, 2, 3}, []int{2, 2, 2}, []bool{false, true, true}},
+		{"Case 5", []int{3, 3, 3}, []int{1, 2, 3}, []bool{true, true, true}},
+		// 更多测试用例可以添加在这里
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := gasStation(tt.gas, tt.cost)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
