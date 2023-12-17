@@ -33,3 +33,40 @@ func TestGetNearLessNoRepeat(t *testing.T) {
 		})
 	}
 }
+
+func TestGetNearLess(t *testing.T) {
+	tests := []struct {
+		name string
+		arr  []int
+		want [][2]int
+	}{
+		{
+			name: "Mixed values with duplicates",
+			arr:  []int{4, 4, 1, 5, 6, 2, 7, 2},
+			want: [][2]int{{-1, 2}, {-1, 2}, {-1, -1}, {2, 5}, {3, 5}, {2, -1}, {5, 7}, {2, -1}},
+		},
+		{
+			name: "All elements same",
+			arr:  []int{1, 1, 1, 1},
+			want: [][2]int{{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}},
+		},
+		{
+			name: "Ascending order",
+			arr:  []int{1, 2, 3, 4, 5},
+			want: [][2]int{{-1, -1}, {0, -1}, {1, -1}, {2, -1}, {3, -1}},
+		},
+		{
+			name: "Descending order",
+			arr:  []int{5, 4, 3, 2, 1},
+			want: [][2]int{{-1, 1}, {-1, 2}, {-1, 3}, {-1, 4}, {-1, -1}},
+		},
+		// 更多测试用例可以添加在这里
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := getNearLess(tt.arr)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}

@@ -28,3 +28,30 @@ func (s *Stack) Peek() int {
 func (s *Stack) Size() int {
 	return len(*s)
 }
+
+// StackList 模拟一个栈
+type StackList [][]int
+
+func NewStackList() StackList {
+	return make(StackList, 0)
+}
+
+func (s *StackList) Push(v []int) {
+	*s = append(*s, v)
+}
+
+func (s *StackList) Pop() []int {
+	last := len(*s) - 1
+	res := (*s)[last]
+	*s = (*s)[0:last]
+	return res
+}
+
+func (s *StackList) Peek() []int {
+	last := len(*s) - 1
+	return (*s)[last]
+}
+
+func (s *StackList) Size() int {
+	return len(*s)
+}
