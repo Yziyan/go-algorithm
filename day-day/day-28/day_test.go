@@ -70,3 +70,40 @@ func TestGetNearLess(t *testing.T) {
 		})
 	}
 }
+
+func TestAllTimesMinToMax(t *testing.T) {
+	tests := []struct {
+		name string
+		arr  []int
+		want int
+	}{
+		{
+			name: "Mixed values",
+			arr:  []int{3, 1, 6, 4, 5, 2},
+			want: 60,
+		},
+		{
+			name: "Ascending order",
+			arr:  []int{1, 2, 3, 4, 5},
+			want: 36,
+		},
+		{
+			name: "Descending order",
+			arr:  []int{5, 4, 3, 2, 1},
+			want: 36,
+		},
+		{
+			name: "Contains duplicates",
+			arr:  []int{1, 3, 2, 2, 1},
+			want: 14,
+		},
+		// 更多测试用例可以添加在这里
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := allTimesMinToMax(tt.arr)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
