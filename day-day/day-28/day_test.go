@@ -107,3 +107,37 @@ func TestAllTimesMinToMax(t *testing.T) {
 		})
 	}
 }
+
+func TestMaximalRectangle(t *testing.T) {
+	testCases := []struct {
+		name string
+		args [][]byte
+
+		want int
+	}{
+		{
+			name: "Case1",
+			args: [][]byte{
+				{'1', '0', '1', '0', '0'},
+				{'1', '0', '1', '1', '1'},
+				{'1', '1', '1', '1', '1'},
+				{'1', '0', '0', '1', '0'},
+			},
+			want: 6,
+		},
+		{
+			name: "Case2",
+			args: [][]byte{
+				{'0'},
+			},
+			want: 0,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := maximalRectangle(tc.args)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
