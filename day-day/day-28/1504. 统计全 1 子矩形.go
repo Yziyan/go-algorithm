@@ -4,6 +4,76 @@ package day_28
 
 // https://leetcode.cn/problems/count-submatrices-with-all-ones/
 
+// 用数组模拟栈
+func getRowHeightsNum(heights []int) int {
+	l := len(heights)
+	res := 0
+	// 准备一个栈（数组模拟）
+	stack := make([]int, l)
+	// 标记栈顶，为 -1 代表栈为空
+	si := -1
+
+	// 挨个将柱子加入单调栈
+	for i := range heights {
+		// 但是要保证加入不能违反单调性
+		for si != -1 && heights[i] <= heights[stack[si]] {
+			// 说明当前元素还要小，栈顶找到了左右能扩张的最大范围，
+			// 可以弹出求解结果了
+			popIdx := stack[si]
+			si--
+			// 但是呢？如果相等，就到后面再算吧
+			if heights[i] == heights[popIdx] {
+				continue
+			}
+
+			leftLessIdx := -1
+			if si != -1 {
+				// 说明弹出后，栈里还有元素
+				leftLessIdx = stack[si]
+			}
+
+			// 说明 popIdx 肯定高于 i 柱子
+			count := heights[popIdx] - heights[i] // 默认左边没有值了，以右边为基准
+			if leftLessIdx != -1 {
+				// 说明左边还有值，要参考左右两边的 max
+				count = heights[popIdx] - max(heights[leftLessIdx], heights[i])
+			}
+
+			// 范围
+			n := i - leftLessIdx - 1
+			res += count * (n * (n + 1) >> 1)
+		}
+		// 说明可以加入栈了
+		si++
+		stack[si] = i
+	}
+
+	// 还需要清算栈
+	for si != -1 {
+		popIdx := stack[si]
+		si--
+
+		leftLessIdx := -1
+		if si != -1 {
+			// 说明还有元素
+			leftLessIdx = stack[si]
+		}
+
+		// 右边没有元素了，默认减0
+		count := heights[popIdx]
+		if leftLessIdx != -1 {
+			// 说明左边要参考
+			count = heights[popIdx] - heights[leftLessIdx]
+		}
+
+		// 范围
+		n := l - leftLessIdx - 1
+		res += count * (n * (n + 1) >> 1)
+	}
+
+	return res
+}
+
 func numSubmat(mat [][]int) int {
 	if mat == nil || len(mat) == 0 || len(mat[0]) == 0 {
 		return 0
@@ -33,7 +103,7 @@ func numSubmat(mat [][]int) int {
 }
 
 // 求解直方图 heights，能够围出多少矩形
-func getRowHeightsNum(heights []int) int {
+func getRowHeightsNum1(heights []int) int {
 
 	// 那么现在得挨列求解了，每一列计算能够贡献多少矩形，那么所有列相加就是答案
 	res := 0
