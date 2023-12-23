@@ -141,3 +141,11 @@ func TestMaximalRectangle(t *testing.T) {
 		})
 	}
 }
+
+func TestMatrixMul(t *testing.T) {
+
+	mul := matrixMul([][]int{{1}, {1}}, [][]int{{1, 1}, {1, 0}})
+	mul2 := matrixMul([][]int{{1, 1}, {1, 0}}, [][]int{{1}, {1}})
+	t.Log(mul)
+	t.Log(mul2)
+}
