@@ -11,17 +11,23 @@ func fibonacciProblem(n int) int {
 		return 1
 	}
 
-	// |F3, F2| = base * |F2, F1| -> |2, 1| = base * |1, 1|
-	// |F4, F3| = base * |F3, F2| -> |3, 2| = base * |2, 1|
+	// |F3, F2| = base * |F2| -> |2, 1| = base * |1|
+	//					 |F1|	                 |1|
+
+	// |F4, F3| = base * |F3| -> |3, 2| = base * |2|
+	//					 |F2|                    |1|
 	// -> base：
 	base := [][]int{
 		{1, 1},
 		{1, 0},
 	}
 
-	// 如果继续递推下去，所有式子相乘，可得：|Fn, Fn-1| = base^(n-2) * |F2, F1|
+	// 如果继续递推下去，所有式子相乘，可得：|Fn, Fn-1| = base^(n-2) * |F2|
+	// 															 |F1|
 	res := matrixPow(base, n-2)
-	// Fn = x + z
+	// base^(n-2) = |x, y|
+	//				|z, w|
+	// Fn = x*F2 + y*F1
 	return res[0][0] + res[0][1]
 }
 

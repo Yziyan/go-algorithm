@@ -144,7 +144,7 @@ func TestMaximalRectangle(t *testing.T) {
 
 func TestMatrixMul(t *testing.T) {
 
-	mul := matrixMul([][]int{{1}, {1}}, [][]int{{1, 1}, {1, 0}})
+	mul := matrixMul([][]int{{1, 1}}, [][]int{{1, 1}, {1, 0}})
 	mul2 := matrixMul([][]int{{1, 1}, {1, 0}}, [][]int{{1}, {1}})
 	t.Log(mul)
 	t.Log(mul2)
@@ -154,12 +154,16 @@ func TestCowProblem(t *testing.T) {
 	for i := 0; i < 20; i++ {
 		got := cowProblem(i)
 		got1 := cowProblem1(i)
+		got2 := cowProblem2(i)
 		assert.Equal(t, got, got1)
+		assert.Equal(t, got, got2)
 	}
 
 	n := 40
 	got := cowProblem(n)
 	got1 := cowProblem1(n)
+	got2 := cowProblem2(n)
 	t.Log(got)
 	t.Log(got1)
+	t.Log(got2)
 }

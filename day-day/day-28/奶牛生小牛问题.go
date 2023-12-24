@@ -11,14 +11,40 @@ package day_28
 返回 N 年后牛的数量
 */
 
+// 因为递推式是：F(n) = F(n-1) + F(n-3)
+// 所以，可以通过三阶递推，使用 O(logN) 的方法求出答案
+// 即：|Fn, Fn-1, Fn-2| = base^(n-3) * |F3|
+//	                                  |F2|
+//	                                  |F1|
+//
+// 其中 base 为三阶矩阵，可以通过前面几项求出来
+// 那么如果求解出 base^(n-3)：|a, b, c|
+//		                   |d, e, f|
+//		                   |g, h, i|
+//
+//
+// 那么 Fn = a*F3 + b*F2 + c*F1
+
 func cowProblem(n int) int {
 	if n <= 3 {
 		// 1 2 3 4 6 9 ...
 		return n
 	}
 
-	// 递推式：F(n) = F(n-1) + F(n-3)
-	return cowProblem(n-1) + cowProblem(n-3)
+	base := [][]int{
+		{1, 0, 1},
+		{1, 0, 0},
+		{0, 1, 0},
+	}
+
+	res := matrixPow(base, n-3)
+	// 如果求解出res base^(n-3)：|a, b, c|
+	//		                   |d, e, f|
+	//		                   |g, h, i|
+	//
+	//
+	// 那么 Fn = a*F3 + b*F2 + c*F1
+	return res[0][0]*3 + res[0][1]*2 + res[0][2]
 }
 
 func cowProblem1(n int) int {
@@ -40,4 +66,14 @@ func cowProblem1(n int) int {
 	}
 
 	return third
+}
+
+func cowProblem2(n int) int {
+	if n <= 3 {
+		// 1 2 3 4 6 9 ...
+		return n
+	}
+
+	// 递推式：F(n) = F(n-1) + F(n-3)
+	return cowProblem(n-1) + cowProblem(n-3)
 }
