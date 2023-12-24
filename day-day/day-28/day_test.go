@@ -149,3 +149,17 @@ func TestMatrixMul(t *testing.T) {
 	t.Log(mul)
 	t.Log(mul2)
 }
+
+func TestCowProblem(t *testing.T) {
+	for i := 0; i < 20; i++ {
+		got := cowProblem(i)
+		got1 := cowProblem1(i)
+		assert.Equal(t, got, got1)
+	}
+
+	n := 40
+	got := cowProblem(n)
+	got1 := cowProblem1(n)
+	t.Log(got)
+	t.Log(got1)
+}
