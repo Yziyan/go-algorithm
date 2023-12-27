@@ -1,6 +1,6 @@
 // @Author: Ciusyan 12/23/23
 
-package day_28
+package day_29
 
 // 斐波那契数列矩阵乘法方式的实现 O(logN)
 func fibonacciProblem(n int) int {

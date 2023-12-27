@@ -1,6 +1,6 @@
 // @Author: Ciusyan 12/24/23
 
-package day_28
+package day_29
 
 /**
 奶牛生小牛问题
