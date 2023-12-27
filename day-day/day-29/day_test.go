@@ -35,14 +35,18 @@ func TestCowProblem(t *testing.T) {
 
 func TestStr01Num(t *testing.T) {
 	for i := 0; i < 20; i++ {
+		got := str01Num(i)
 		got1 := str01Num1(i)
 		got2 := str01Num2(i)
+		assert.Equal(t, got, got1)
 		assert.Equal(t, got1, got2)
 	}
 
 	n := 40
+	got := str01Num(n)
 	got1 := str01Num1(n)
 	got2 := str01Num2(n)
+	t.Log(got)
 	t.Log(got1)
 	t.Log(got2)
 }
