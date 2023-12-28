@@ -50,3 +50,17 @@ func TestStr01Num(t *testing.T) {
 	t.Log(got1)
 	t.Log(got2)
 }
+
+func TestFullBlock(t *testing.T) {
+	for i := 0; i < 20; i++ {
+		got := fullBlock(i)
+		got1 := fullBlock1(i)
+		assert.Equal(t, got, got1)
+	}
+
+	n := 40
+	got := fullBlock(n)
+	got1 := fullBlock1(n)
+	t.Log(got)
+	t.Log(got1)
+}
