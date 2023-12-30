@@ -64,3 +64,63 @@ func TestFullBlock(t *testing.T) {
 	t.Log(got)
 	t.Log(got1)
 }
+
+func TestMinMoney(t *testing.T) {
+	tests := []struct {
+		name      string
+		abilities []int
+		coins     []int
+		want      int
+	}{
+		{
+			name:      "case1",
+			abilities: []int{1, 2, 3},
+			coins:     []int{10, 20, 30},
+			want:      30,
+		},
+		{
+			name:      "case2",
+			abilities: []int{4, 5, 6},
+			coins:     []int{40, 50, 60},
+			want:      90,
+		},
+		{
+			name:      "case3",
+			abilities: []int{2, 3, 5, 8},
+			coins:     []int{5, 10, 20, 40},
+			want:      35,
+		},
+		{
+			name:      "case4",
+			abilities: []int{10, 20, 30},
+			coins:     []int{15, 25, 35},
+			want:      40,
+		},
+		{
+			name:      "case5",
+			abilities: []int{1, 3, 4, 6},
+			coins:     []int{5, 15, 20, 30},
+			want:      40,
+		},
+		{
+			name:      "case6",
+			abilities: []int{5, 10, 15, 20},
+			coins:     []int{10, 20, 30, 40},
+			want:      60,
+		},
+		{
+			name:      "case7",
+			abilities: []int{3, 6, 9, 12, 15},
+			coins:     []int{10, 20, 30, 40, 50},
+			want:      60,
+		},
+		// Add more complex cases if needed
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := minMoney(tc.abilities, tc.coins)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+}
