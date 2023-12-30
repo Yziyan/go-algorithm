@@ -120,7 +120,9 @@ func TestMinMoney(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			got := minMoney(tc.abilities, tc.coins)
+			got2 := minMoneyDp(tc.abilities, tc.coins)
 			assert.Equal(t, tc.want, got)
+			assert.Equal(t, tc.want, got2)
 		})
 	}
 }

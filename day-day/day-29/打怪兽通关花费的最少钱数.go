@@ -2,6 +2,8 @@
 
 package day_29
 
+import "math"
+
 /**
 int[] d，d[i]：i号怪兽的能力
 int[] p，p[i]：i号怪兽要求的钱
@@ -45,4 +47,50 @@ func minMoney(abilities, coins []int) int {
 
 	// 代表：目前拥有 0 的能力，打 [0 ... n-1] 的怪兽，通过所需要花费的最少钱数
 	return process(abilities, coins, 0, 0)
+}
+
+func minMoneyDp(abilities, coins []int) int {
+	// 有两个可变参数，他们的范围分别是：
+	// cur: [0, n]
+	// ability：[0, sum(abilities)]
+	n := len(abilities)
+	sumAbility := 0
+	for _, v := range abilities {
+		sumAbility += v
+	}
+
+	// 建立 dp 缓存，dp[cur][ability] 含义是：
+	// 当前拥有 ability 能力，打 [cur, n-1] 的怪兽所需的最小花费
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, sumAbility+1)
+	}
+
+	// 根据依赖关系可知，cur 依赖 cur+1，所以从后往前求
+	for cur := n - 1; cur >= 0; cur-- {
+		for ability := 0; ability <= sumAbility; ability++ {
+
+			// 两种选择：
+			// 1.贿赂当前怪兽
+			if ability < abilities[cur] {
+				// 说明必须贿赂，因为打不过
+				dp[cur][ability] = coins[cur] + dp[cur+1][ability+abilities[cur]]
+			} else {
+				// 说明可以贿赂，也可以不贿赂
+				// 不贿赂，直接通过
+				p1 := dp[cur+1][ability]
+				// 贿赂，增长能力，但是得控制能力不能操过最大能力，要不然干嘛买它
+				p2 := math.MaxInt
+				if ability+abilities[cur] <= sumAbility {
+					p2 = coins[cur] + dp[cur+1][ability+abilities[cur]]
+				}
+
+				// 两种方式种，花费最少的一种方式
+				dp[cur][ability] = min(p1, p2)
+			}
+		}
+	}
+
+	// 根据递归的主函数调用可得
+	return dp[0][0]
 }
