@@ -121,8 +121,10 @@ func TestMinMoney(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got := minMoney(tc.abilities, tc.coins)
 			got2 := minMoneyDp(tc.abilities, tc.coins)
+			got3 := minMoney1(tc.abilities, tc.coins)
 			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.want, got2)
+			assert.Equal(t, tc.want, got3)
 		})
 	}
 }

@@ -94,3 +94,71 @@ func minMoneyDp(abilities, coins []int) int {
 	// 根据递归的主函数调用可得
 	return dp[0][0]
 }
+
+// 方法2：使用花费作为突破口
+func minMoney1(abilities, coins []int) int {
+
+	// 憋一个暴力递归，含义是：
+	// 使用 coin 的花费，能够在 [cur ... n-1] 上能否通关，
+	// 能就返回获得的最大能力，不能就返回 -1
+	var process func(abilities, coins []int, cur int, coin int) int
+	process = func(abilities, coins []int, cur int, coin int) int {
+		if cur == -1 {
+			// 说明没有怪兽可打，
+			if coin == 0 {
+				return 0
+			}
+			// 没有怪兽可打了，还需要花费，那么有问题
+			return -1
+		}
+
+		// 也是两种选择:
+		// 1.不贿赂当前怪兽，
+		p1 := -1
+		// 那么 coin 的花费，就全是打 0 ... cur-1 怪兽的
+		ability := process(abilities, coins, cur-1, coin)
+		if ability != -1 && ability >= abilities[cur] {
+			// 说明后 cur+1 只怪兽能通关，并且获得的能力也支持打这只怪兽
+			p1 = ability
+		}
+
+		// 2.贿赂当前怪兽，但是在贿赂之前，还需要看有没有钱贿赂
+		if coin < coins[cur] {
+			// 说明没钱贿赂当前怪兽，直接返回第一种情况的
+			return p1
+		}
+
+		p2 := -1
+		// 打当前的怪兽花费了 coins[cur]，那么去打前 cur-1 只怪兽，
+		// 就只能有 coin - coins[cur] 的预算了
+		ability2 := process(abilities, coins, cur-1, coin-coins[cur])
+		if ability2 != -1 {
+			// 只要能通关，那么就可以花钱贿赂，
+			// 那么得到的能力，就是打后面的怪兽获得的 + 贿赂当前怪兽得到的
+			p2 = ability2 + abilities[cur]
+		}
+
+		// 两种情况获取的能力多，就返回哪种
+		return max(p1, p2)
+	}
+
+	// 先累加出最多需要多少花费
+	sumCoin := 0
+	for _, v := range coins {
+		sumCoin += v
+	}
+
+	n := len(coins)
+	// 再挨个硬币尝试
+	for coin := 0; coin < sumCoin; coin++ {
+		// 使用 coin 的钱，看看打 [0 .... n-1] 的怪兽能否通关，
+		ability := process(abilities, coins, n-1, coin)
+		if ability != -1 {
+			// 说明使用 coin 的硬币能通关，当前的硬币就是最少的花费
+			return coin
+		}
+	}
+
+	// 到这里，说明前面的钱都打不通关，那就使用钞能力打过
+	return sumCoin
+}
