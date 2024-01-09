@@ -1,6 +1,6 @@
 // @Author: Ciusyan 1/2/24
 
-package day_30
+package day_29
 
 /**
 给定一个非负数组 arr，和一个正数 m，返回 arr 的所有子序列中累加和 %m 之后的最大值
