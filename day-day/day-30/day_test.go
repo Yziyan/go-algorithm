@@ -17,3 +17,9 @@ func TestMyAtoi(t *testing.T) {
 		t.Log('0' - c)
 	}
 }
+
+func TestIsValid(t *testing.T) {
+
+	valid := isValid("()")
+	t.Log(valid)
+}
