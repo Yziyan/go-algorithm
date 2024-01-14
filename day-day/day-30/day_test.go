@@ -23,3 +23,8 @@ func TestIsValid(t *testing.T) {
 	valid := isValid("()")
 	t.Log(valid)
 }
+
+func TestSearchRange(t *testing.T) {
+	ints := searchRange([]int{2, 2}, 2)
+	t.Log(ints)
+}
