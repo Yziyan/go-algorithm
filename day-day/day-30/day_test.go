@@ -43,3 +43,8 @@ func TestSolveSudoku(t *testing.T) {
 	}
 	solveSudoku(board)
 }
+
+func TestCountAndSay(t *testing.T) {
+	say := countAndSay(4)
+	t.Log(say)
+}
