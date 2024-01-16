@@ -3,6 +3,7 @@
 package day_30
 
 import (
+	"sort"
 	"testing"
 )
 
@@ -47,4 +48,12 @@ func TestSolveSudoku(t *testing.T) {
 func TestCountAndSay(t *testing.T) {
 	say := countAndSay(4)
 	t.Log(say)
+
+	str := "cbaeq"
+	chars := []rune(str)
+	sort.Slice(chars, func(i, j int) bool {
+		return chars[i] < chars[j]
+	})
+
+	t.Log(string(chars))
 }
