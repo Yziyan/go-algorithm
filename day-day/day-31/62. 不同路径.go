@@ -4,7 +4,57 @@ package day_31
 
 // https://leetcode.cn/problems/unique-paths/
 
+// 动态规划方法
 func uniquePaths(m int, n int) int {
+
+	// 准备一个 dp 缓存，dp[row][col] 代表：
+	// 当前处于 (row, col) 位置，走到 (m-1, n-1) 位置，拥有的方法数
+	dp := make([][]int, m)
+	for i := range dp {
+		dp[i] = make([]int, n)
+	}
+	// 当位于最后一行或者最后一列时，只能有一种方式行走
+	for col := 0; col < n; col++ {
+		// 说明位于最后一行
+		dp[m-1][col] = 1
+	}
+	for row := 0; row < m; row++ {
+		// 说明位于最后一列
+		dp[row][n-1] = 1
+	}
+
+	// 因为 (row, col) 依赖下和右，所以得：从下往上、从右往左求解
+	for row := m - 2; row >= 0; row-- {
+		for col := n - 2; col >= 0; col-- {
+			// (row, col) 是右边和下边格子的值相加
+			dp[row][col] = dp[row+1][col] + dp[row][col+1]
+		}
+	}
+
+	// 代表从 (0, 0) 位置开始，走到 (m-1, n-1) 得到的方法数
+	return dp[0][0]
+}
+
+// 暴力递归的方法
+func uniquePaths2(m int, n int) int {
+
+	// 递归含义是：当前处于 (row, col) 位置，走到 (m-1, n-1) 位置，拥有的方法数
+	var process func(row, col int, m, n int) int
+	process = func(row, col int, m, n int) int {
+		if row == m-1 || col == n-1 {
+			// 当位于最后一行或者最后一列时，智能有一种方式行走
+			return 1
+		}
+
+		// 来到这里，要么往下走、要么往左走，得到的结果相加返回即可
+		return process(row+1, col, m, n) + process(row, col+1, m, n)
+	}
+
+	return process(0, 0, m, n)
+}
+
+// 数学排列组合的方法
+func uniquePaths1(m int, n int) int {
 	// 机器人总共要往右走 n-1 步，往下走 m-1 步。总共要走 m+n-2 步
 	// 对于任意一步，都可以选择往左 or 往右，所以可以使用排列组合做
 	// 即  C all right or C all button，其中 all 是下标，right、button 是上标
