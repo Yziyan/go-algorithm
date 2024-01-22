@@ -228,3 +228,41 @@ func TestNewBuilder(t *testing.T) {
 	p4 := builder.SetName("志颜").SetPrice(5.20).SetQuantity(100).BuildV2().MustProduct()
 	t.Logf("%+v", p4)
 }
+
+func TestAlternatingOutputParity(t *testing.T) {
+	// 准备一个等待组，等待输出完 1~10 的数
+	wg := sync.WaitGroup{}
+	// 准备一个 Channel，用于在两个协程间传递信号
+	ch := make(chan struct{})
+
+	// 等待两个协程执行完毕
+	wg.Add(2)
+
+	// 这个协程用于输出奇数
+	go func() {
+		defer wg.Done()
+
+		for i := 1; i <= 10; i += 2 {
+			// 打印奇数
+			t.Logf("%d ", i)
+			// 告知偶数协程打印
+			ch <- struct{}{}
+			// 等待偶数协程打印完毕
+			<-ch
+		}
+	}()
+
+	// 这个协程用于输出偶数
+	go func() {
+		defer wg.Done()
+		for i := 2; i <= 10; i += 2 {
+			// 等待奇数协程打印完毕
+			<-ch
+			t.Logf("%d ", i)
+			// 告知奇数协程打印
+			ch <- struct{}{}
+		}
+	}()
+
+	wg.Wait()
+}
