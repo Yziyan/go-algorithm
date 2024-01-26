@@ -13,4 +13,7 @@ func TestName(t *testing.T) {
 	t.Log(len(s))
 	t.Log(string(s[0]))
 	t.Log(math.MaxInt)
+
+	t.Log(!true)
+	t.Log(!false)
 }
