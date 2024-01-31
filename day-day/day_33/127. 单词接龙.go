@@ -34,73 +34,76 @@ func (s *Set) Size() int {
 }
 
 func ladderLength(beginWord string, endWord string, wordList []string) int {
-	// 先将所有 wordList 放入 Set 中，稍后好查找
+	// 先将单词表放在集合中，方便后面查找
 	wordSet := NewSet(wordList)
+
 	if !wordSet.Contains(endWord) {
 		return 0
 	}
 
 	var (
-		// 准备几个用于 BFS 的 Set
-		startSet = NewDefaultSet() // 从头部开始接龙用
-		endSet   = NewDefaultSet() // 从尾部开始接龙用
-		visitSet = NewDefaultSet() // 记录已接过的单词
-
-		// 长度得算上首尾单词，所以从 2 开始
-		resL = 2
+		beginSet   = NewDefaultSet() // 从开始端 BFS 的集合
+		endSet     = NewDefaultSet() // 从结束端 BFS 的集合
+		visitedSet = NewDefaultSet() // 记录哪些单词已经被使用过了
 	)
 
-	// 将起始和结束单词放置在对应的集合中
-	startSet.Put(beginWord)
+	// 将开始单词和结尾单词放在对应的集合中
+	beginSet.Put(beginWord)
 	endSet.Put(endWord)
 
-	// 默认每次都从 startSet 开始（单词少的）
-	for startSet.Size() != 0 {
-		// 每次都从 start 开始
-		nextSet := NewDefaultSet() // 用于过渡下一次从哪边开始遍历
+	// 长度默认包含首尾两个单词
+	resL := 2
 
-		// 从 startSet 开始，挨个单词尝试接龙
-		for word := range startSet {
+	for beginSet.Size() != 0 {
+		nextSet := NewDefaultSet() // 用于过渡下一次从那端开始的集合
 
-			// 将 word 能用的邻居，挨个尝试看看
-			for cur := 0; cur < len(word); cur++ {
-				curWord := []rune(word)
+		// 默认 begin 端单词少，从这开始 BFS 要快一些
+		for curWord := range beginSet {
+
+			// 暴力枚举出能用于当前单词接龙的所有可能
+			for cur := 0; cur < len(curWord); cur++ {
+				// 每次尝试的时候，都置为原始单词
+				chars := []rune(curWord)
+				// 每个字符尝试换一下
 				for c := 'a'; c <= 'z'; c++ {
-					if curWord[cur] == c {
-						// 说明和当前字符相等，就是当前单词
+					if c == chars[cur] {
+						// 和当前单词相同，就别尝试了
 						continue
 					}
 
-					// 来到这里，说明可以作为邻居
-					curWord[cur] = c
-					nextWord := string(curWord)
+					// 说明可以尝试接龙
+					chars[cur] = c
+					nextWord := string(chars)
 
 					if endSet.Contains(nextWord) {
-						// 说明接龙用的单词，已经存在于 endSet 中了，说明找到了一条最短的路径
+						// 说明接龙的单词已经在另一端的集合中了，可以链接成龙了
 						return resL
 					}
-					// 否则将这个单词作为一个备选接龙项。
-					if wordSet.Contains(nextWord) && !visitSet.Contains(nextWord) {
-						// 说明单词表中拥有这个单词，并且这个单词没有使用过
+
+					// 但是用于接龙的单词，必须要保证：1.在可选单词集合里 2.没有使用过
+					if wordSet.Contains(nextWord) && !visitedSet.Contains(nextWord) {
+						// 说明可以接龙，将其放置在 Next 中，去下一层接龙
 						nextSet.Put(nextWord)
-						visitSet.Put(nextWord)
+						visitedSet.Put(nextWord)
 					}
 				}
 			}
-
 		}
 
-		// 让 startSet 变成单词少的
+		// 保持 begin 端单词最少
 		if nextSet.Size() > endSet.Size() {
-			// 说明 endSet 单词少
-			startSet = endSet
+			// 说明 end 端单词要少一点，从这边 BFS 快一点
+			beginSet = endSet
 			endSet = nextSet
 		} else {
-			startSet = nextSet
+			// 说明从开始端要快一点
+			beginSet = nextSet
 		}
 
+		// 到达这里说明选了一个单词，去下一层
 		resL++
 	}
 
+	// 能来到这里，说明全部尝试完了，也么有成功接轨，说明连不成龙
 	return 0
 }
