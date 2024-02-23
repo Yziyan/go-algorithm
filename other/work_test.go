@@ -12,148 +12,7 @@ import (
 	// 导入其他需要的包
 )
 
-// CarModel 结构体假设
-type CarModel struct {
-	ID    string
-	Brand string
-}
-
-// BrandScatterModule 结构体假设
-type BrandScatterModule struct {
-	// ... 可能的其他配置字段 ...
-}
-
-// DoAction 实现
-func (m *BrandScatterModule) DoAction(ctx context.Context, reqList []CarModel) []CarModel {
-	// 最大连续品牌数
-	const maxConsecutive = 2
-
-	// 初始化最终列表
-	finalList := make([]CarModel, len(reqList))
-	copy(finalList, reqList)
-
-	// 遍历 ReqList，寻找超过 maxConsecutive 限制的品牌
-	for i := 0; i < len(finalList); {
-		// 检查当前品牌是否超出连续出现限制
-		start := i
-		end := i
-		for end < len(finalList) && finalList[start].Brand == finalList[end].Brand {
-			end++
-			if end-start > maxConsecutive {
-				// 寻找一个不同品牌的元素来交换
-				swapIndex := findSwapIndex(finalList, end, finalList[start].Brand)
-				if swapIndex != -1 {
-					finalList[end-1], finalList[swapIndex] = finalList[swapIndex], finalList[end-1]
-					break
-				}
-			}
-		}
-		i = end
-	}
-
-	return finalList
-}
-
-// findSwapIndex 查找可用于交换的不同品牌元素的索引
-func findSwapIndex(list []CarModel, start int, brand string) int {
-	for i := start; i < len(list); i++ {
-		if list[i].Brand != brand {
-			return i
-		}
-	}
-	return -1 // 没有找到可交换的元素
-}
-
-// 测试用例结构
-type testCase struct {
-	name    string
-	reqList []CarModel
-	want    []CarModel
-}
-
-// 测试 DoAction 函数
-func TestBrandScatterModule_DoAction(t *testing.T) {
-	tests := []testCase{
-		{
-			name: "No consecutive brands",
-			reqList: []CarModel{
-				{"1", "Toyota"},
-				{"2", "Ford"},
-				{"3", "BMW"},
-			},
-			want: []CarModel{
-				{"1", "Toyota"},
-				{"2", "Ford"},
-				{"3", "BMW"},
-			},
-		},
-		{
-			name: "Consecutive brands, simple case",
-			reqList: []CarModel{
-				{"1", "Volkswagen"},
-				{"2", "Volkswagen"},
-				{"3", "Volkswagen"},
-				{"4", "Toyota"},
-			},
-			want: []CarModel{
-				{"1", "Volkswagen"},
-				{"2", "Volkswagen"},
-				{"4", "Toyota"},
-				{"3", "Volkswagen"},
-			},
-		},
-		{
-			name: "All same brand",
-			reqList: []CarModel{
-				{"1", "Audi"},
-				{"2", "Audi"},
-				{"3", "Audi"},
-			},
-			want: []CarModel{
-				{"1", "Audi"},
-				{"2", "Audi"},
-				{"3", "Audi"},
-			},
-		},
-		{
-			name: "Multiple brands with consecutive cases",
-			reqList: []CarModel{
-				{"1", "BMW"},
-				{"2", "BMW"},
-				{"3", "BMW"},
-				{"4", "Ford"},
-				{"5", "BMW"},
-				{"6", "Toyota"},
-				{"7", "Toyota"},
-				{"8", "Toyota"},
-				{"9", "BMW"},
-			},
-			want: []CarModel{
-				{"1", "BMW"},
-				{"2", "BMW"},
-				{"4", "Ford"},
-				{"3", "BMW"},
-				{"5", "BMW"},
-				{"6", "Toyota"},
-				{"7", "Toyota"},
-				{"9", "BMW"},
-				{"8", "Toyota"},
-			},
-		},
-	}
-
-	// 初始化 BrandScatterModule
-	module := BrandScatterModule{}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := module.DoAction(context.Background(), tt.reqList)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DoAction() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-
+func TestOther(t *testing.T) {
 	t.Run("小写", func(t *testing.T) {
 		t.Log(strings.Replace(strings.ToLower("userId"), "_", "", -1))
 		t.Log(strings.Replace(strings.ToLower("userID"), "_", "", -1))
@@ -190,4 +49,221 @@ func TestBrandScatterModule_DoAction(t *testing.T) {
 			}
 		}
 	})
+}
+
+// 测试用例结构
+type scatterTestCase struct {
+	name    string
+	module  *scatter
+	reqList []string
+	want    []string
+}
+
+const (
+	Separator = "_"
+)
+
+// extractFirstElement 从给定的字符串中切割出第一个元素
+func extractFirstElement(item string, separator string) string {
+	parts := strings.Split(item, separator)
+	if len(parts) > 0 {
+		return parts[0] // 返回第一个元素
+	}
+	return "" // 如果没有元素，返回空字符串
+}
+
+// 测试 DoScatter 函数
+func TestScatter_DoScatter(t *testing.T) {
+
+	cache := make(map[string]string, 10)
+	var brandScatterCompare ScatterCompare = func(item1, item2 string) int {
+		brand1, ok := cache[item1]
+		if !ok {
+			// 说明 item1 还没被切割过
+			brand1 = extractFirstElement(item1, Separator)
+			cache[item1] = brand1
+		}
+
+		brand2, ok := cache[item2]
+		if !ok {
+			// 说明 item2 还没被切割过
+			brand2 = extractFirstElement(item2, Separator)
+			cache[item2] = brand2
+		}
+
+		if brand1 == brand2 {
+			// 说明商标相同
+			return 0
+		}
+		return -1
+	}
+
+	tests := []scatterTestCase{
+		{
+			name: "scatter with limited topScatterNum",
+			module: NewScatter(
+				brandScatterCompare,
+				WithMaxConsecutive(2),
+				WithStepLength(1),
+				WithTopScatterNum(3),
+			),
+			reqList: []string{
+				"Audi_1",
+				"Audi_2",
+				"Audi_3",
+				"BMW_4",
+				"Audi_5",
+			},
+			want: []string{
+				"Audi_1",
+				"Audi_2",
+				"BMW_4",
+				"Audi_3",
+				"Audi_5",
+			},
+		},
+		{
+			name: "scatter with full list",
+			module: NewScatter(
+				brandScatterCompare,
+				WithMaxConsecutive(2),
+				WithStepLength(1),
+				WithTopScatterNum(5),
+			),
+			reqList: []string{
+				"Audi_1",
+				"Audi_2",
+				"Audi_3",
+				"BMW_4",
+				"BMW_5",
+				"Audi_6",
+			},
+			want: []string{
+				"Audi_1",
+				"Audi_2",
+				"BMW_4",
+				"Audi_3",
+				"BMW_5",
+				"Audi_6",
+			},
+		},
+		{
+			name: "scatter with full list",
+			module: NewScatter(
+				brandScatterCompare,
+				WithMaxConsecutive(2),
+				WithStepLength(2),
+				WithTopScatterNum(-1),
+			),
+			reqList: []string{
+				"Audi_1",
+				"Audi_2",
+				"Audi_3",
+				"BMW_4",
+				"BMW_5",
+				"Ciu_6",
+				"BMW_7",
+				"BMW_8",
+				"BMW_9",
+				"Audi_10",
+				"Audi_11",
+				"Ciu_12",
+				"Ciu_13",
+				"Audi_14",
+				"Audi_15",
+				"Ciu_16",
+				"Ciu_17",
+			},
+			want: []string{
+				"Audi_1",
+				"Audi_2",
+				"BMW_4",
+				"BMW_5",
+				"Audi_3",
+				"Ciu_6",
+				"BMW_7",
+				"BMW_8",
+				"Audi_10",
+				"Audi_11",
+				"BMW_9",
+				"Ciu_12",
+				"Ciu_13",
+				"Audi_14",
+				"Audi_15",
+				"Ciu_16",
+				"Ciu_17",
+			},
+		},
+		{
+			name: "scatter with full list",
+			module: NewScatter(
+				brandScatterCompare,
+				WithMaxConsecutive(2),
+				WithStepLength(2),
+				WithTopScatterNum(-1),
+			),
+			reqList: []string{
+				"Audi_1",
+				"Audi_2",
+				"Audi_3",
+				"Audi_4",
+				"Audi_5",
+				"BMW_6",
+				"BMW_7",
+				"Ciu_8",
+				"Ciu_9",
+				"Ciu_10",
+				"BMW_11",
+				"BMW_12",
+				"BMW_13",
+				"BMW_14",
+				"Audi_15",
+				"Audi_16",
+				"Ciu_17",
+				"Ciu_18",
+				"Audi_19",
+				"Audi_20",
+				"Ciu_21",
+				"Ciu_22",
+			},
+			want: []string{
+				"Audi_1",
+				"Audi_2",
+				"BMW_6",
+				"BMW_7",
+				"Audi_5",
+				"Audi_3",
+				"Ciu_8",
+				"Ciu_9",
+				"Audi_4",
+				"Ciu_10",
+				"BMW_11",
+				"BMW_12",
+				"Audi_15",
+				"Audi_16",
+				"BMW_13",
+				"BMW_14",
+				"Ciu_17",
+				"Ciu_18",
+				"Audi_19",
+				"Audi_20",
+				"Ciu_21",
+				"Ciu_22",
+			},
+		},
+		// 添加更多测试用例以覆盖不同的场景
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
+			got := tt.module.DoScatter(ctx, tt.reqList)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DoScatter() got = %v, want %v", got, tt.want)
+			}
+
+			// 还原 Cache 的现场
+			cache = make(map[string]string, 10)
+		})
+	}
 }

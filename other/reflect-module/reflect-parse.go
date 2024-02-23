@@ -215,8 +215,8 @@ func Do(moduleSampleObj interface{}) {
 		log.Fatal(11)
 	}
 
-	// 获取 module 的 DoAction 方法
-	method := reflectValue.MethodByName("DoAction")
+	// 获取 module 的 DoScatter 方法
+	method := reflectValue.MethodByName("DoScatter")
 	//解析输入参数信息
 	err = parseInParam(method, moduleSample)
 	if err != nil {
