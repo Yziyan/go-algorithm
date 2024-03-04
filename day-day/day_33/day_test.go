@@ -18,3 +18,9 @@ func TestLadderLength(t *testing.T) {
 
 	t.Log(length)
 }
+
+func TestWordBreak2(t *testing.T) {
+
+	break2 := wordBreak("catsandog", []string{"cat", "cats", "and", "sand", "dog"})
+	t.Log(break2)
+}

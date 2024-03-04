@@ -37,7 +37,7 @@ func (n *PrefixNode) AddWithList(wordDict []string) {
 	}
 }
 
-func wordBreak(s string, wordDict []string) bool {
+func wordBreak1(s string, wordDict []string) bool {
 	// 先准备一个前缀树的根节点，然后将 wordDict 的单词全部加上去
 	root := NewPrefixNode()
 	root.AddWithList(wordDict)
