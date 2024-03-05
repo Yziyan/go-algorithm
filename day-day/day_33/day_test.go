@@ -24,3 +24,14 @@ func TestWordBreak2(t *testing.T) {
 	break2 := wordBreak("catsandog", []string{"cat", "cats", "and", "sand", "dog"})
 	t.Log(break2)
 }
+
+func TestSortList(t *testing.T) {
+
+	head := &ListNode{Val: 4}
+	head.Next = &ListNode{Val: 2}
+	head.Next.Next = &ListNode{Val: 1}
+	head.Next.Next.Next = &ListNode{Val: 3}
+
+	list := sortList(head)
+	t.Log(list)
+}
