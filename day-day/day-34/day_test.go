@@ -10,3 +10,10 @@ func TestFindMissingRanges(t *testing.T) {
 
 	t.Log(ranges)
 }
+
+func TestRotate(t *testing.T) {
+	nums := []int{1, 2, 3, 4, 5, 6, 7}
+	t.Log(nums)
+	rotate(nums, 3)
+	t.Log(nums)
+}
