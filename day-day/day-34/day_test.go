@@ -2,7 +2,10 @@
 
 package day_34
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestFindMissingRanges(t *testing.T) {
 
@@ -16,4 +19,25 @@ func TestRotate(t *testing.T) {
 	t.Log(nums)
 	rotate(nums, 3)
 	t.Log(nums)
+}
+
+func TestFindLongestOrderedSubstring(t *testing.T) {
+
+	testCases := []struct {
+		name string
+		str  string
+		want string
+	}{
+		{name: "case1", str: "312351", want: "123"},
+		{name: "case1", str: "4312355671", want: "123"},
+		{name: "case1", str: "3136789234561", want: "23456"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := findLongestOrderedSubstring(tc.str)
+			assert.Equal(t, tc.want, got)
+		})
+	}
+
 }
