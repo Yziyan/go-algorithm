@@ -29,3 +29,28 @@ func reverse(nums []int, begin, end int) {
 		end--
 	}
 }
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func reverseList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	var (
+		cur = head
+		pre *ListNode
+	)
+
+	for cur != nil {
+		temp := cur.Next
+		cur.Next = pre
+		pre = cur
+		cur = temp
+	}
+
+	return pre
+}

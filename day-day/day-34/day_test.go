@@ -39,5 +39,15 @@ func TestFindLongestOrderedSubstring(t *testing.T) {
 			assert.Equal(t, tc.want, got)
 		})
 	}
+}
 
+func TestReverseList(t *testing.T) {
+
+	head := &ListNode{Val: 1}
+	head.Next = &ListNode{Val: 2}
+	head.Next.Next = &ListNode{Val: 3}
+	head.Next.Next.Next = &ListNode{Val: 4}
+
+	head = reverseList(head)
+	t.Log(head)
 }
