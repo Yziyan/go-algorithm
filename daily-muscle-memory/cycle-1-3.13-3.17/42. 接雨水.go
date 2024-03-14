@@ -1,6 +1,6 @@
 // @Author: Ciusyan 3/13/24
 
-package cycle_1_3_13_3_17_
+package cycle_1_3_13_3_17
 
 // https://leetcode.cn/problems/trapping-rain-water/
 
