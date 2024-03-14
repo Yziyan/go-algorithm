@@ -46,18 +46,20 @@ func (l *LRG) Remove(val int) {
 		return
 	}
 
-	// 说明存在，需要删除 val 在两个数据源中的数据
-	delete(l.dataMap, val)                   // 在 map 中删除
-	l.dataSlice[idx] = l.dataSlice[l.size-1] // 将待删除元素放在末尾位置
-	l.dataSlice = l.dataSlice[:l.size-1]     // 然后删除最后一个位置
 	l.size--
-	if l.size != 0 {
-		// 如果删除的不是最后一个元素，记得更新索引
-		l.dataMap[l.dataSlice[idx]] = idx
-	}
+	lastVal := l.dataSlice[l.size]
+	// 说明存在，需要删除 val 在两个数据源中的数据
+	l.dataSlice[idx] = lastVal         // 将待删除元素放在末尾位置
+	l.dataSlice = l.dataSlice[:l.size] // 然后删除最后一个位置
+	// 如果删除的不是最后一个元素，记得更新索引
+	l.dataMap[lastVal] = idx
+	delete(l.dataMap, val) // 在 map 中删除
 }
 
 func (l *LRG) GetRandom() int {
+	if l.size <= 0 {
+		return -1
+	}
 	// 防止每次生成的随机数相同，设置随机种子
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	// 先随机从切片中获取一个出来

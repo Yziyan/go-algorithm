@@ -48,4 +48,29 @@ func TestLRG(t *testing.T) {
 	assert.True(t, !lrg.Exist(1))
 	lrg.Insert(1)
 	assert.True(t, lrg.Exist(1))
+
+	t.Run("case", func(t *testing.T) {
+		set := Constructor()
+		assert.True(t, !set.Remove(0))
+		assert.True(t, !set.Remove(0))
+		assert.True(t, set.Insert(0))
+		assert.True(t, set.GetRandom() == 0)
+		assert.True(t, set.Remove(0))
+		assert.True(t, set.Insert(0))
+	})
+
+	t.Run("case2", func(t *testing.T) {
+		set := Constructor()
+		t.Log(set.GetRandom())
+		num := 10000
+		for i := 0; i < num; i++ {
+			assert.True(t, set.Insert(i))
+		}
+
+		for i := 0; i < num; i += 2 {
+			assert.True(t, set.Remove(i))
+		}
+
+	})
+
 }
