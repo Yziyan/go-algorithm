@@ -74,3 +74,48 @@ func TestLRG(t *testing.T) {
 	})
 
 }
+
+func TestIRG(t *testing.T) {
+
+	irg := NewIRG()
+
+	assert.True(t, irg.Insert(1))
+	assert.True(t, !irg.Insert(1))
+	assert.True(t, irg.Insert(2))
+	assert.True(t, !irg.Insert(2))
+	assert.True(t, !irg.Insert(2))
+	assert.True(t, irg.Insert(3))
+	assert.True(t, irg.Insert(4))
+	assert.True(t, irg.Insert(5))
+	assert.True(t, irg.Insert(6))
+	for i := 0; i < 3; i++ {
+		t.Log(irg.GetRandom())
+	}
+
+	assert.True(t, irg.Exist(1))
+	assert.True(t, irg.Exist(2))
+	assert.True(t, irg.Exist(3))
+	assert.True(t, irg.Exist(4))
+	assert.True(t, irg.Exist(5))
+	assert.True(t, irg.Exist(6))
+	assert.True(t, !irg.Exist(8))
+	assert.True(t, !irg.Exist(10))
+
+	assert.True(t, irg.Remove(1))
+	assert.True(t, !irg.Exist(1))
+
+	assert.True(t, !irg.Remove(8))
+	assert.True(t, !irg.Remove(1))
+
+	assert.True(t, irg.Remove(2))
+	assert.True(t, !irg.Exist(2))
+	assert.True(t, !irg.Remove(2))
+	assert.True(t, irg.Insert(2))
+	assert.True(t, irg.Exist(2))
+	assert.True(t, irg.Exist(4))
+	assert.True(t, irg.Exist(5))
+
+	for i := 0; i < 3; i++ {
+		t.Log(irg.GetRandom())
+	}
+}

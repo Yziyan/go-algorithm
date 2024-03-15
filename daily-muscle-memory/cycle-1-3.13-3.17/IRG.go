@@ -73,3 +73,78 @@ func (l *LRG) Exist(val int) bool {
 	_, ok := l.dataMap[val]
 	return ok
 }
+
+func (i *IRG) Exist(val int) bool {
+	_, ok := i.dataMap[val]
+	return ok
+}
+
+type IRG struct {
+	dataMap   map[int]int // <val, idx>
+	dataSlice []int
+	size      int
+}
+
+func NewIRG() *IRG {
+	return &IRG{
+		dataMap:   make(map[int]int, 10),
+		dataSlice: make([]int, 0, 10),
+	}
+}
+
+func (i *IRG) Insert(val int) bool {
+	_, ok := i.dataMap[val]
+	if ok {
+		// 说明已经存在了
+		return false
+	}
+	// 需要维护两个数据源
+	i.dataMap[val] = i.size
+	i.dataSlice = append(i.dataSlice, val)
+	i.size++
+
+	return true
+}
+
+func (i *IRG) Remove(val int) bool {
+	idx, ok := i.dataMap[val]
+	if !ok {
+		// 说明没这个 val
+		return false
+	}
+
+	i.size--
+	lastVal := i.dataSlice[i.size]
+	i.dataSlice[idx] = lastVal
+	// 记得更新索引
+	i.dataMap[lastVal] = idx
+	// 删除对应的 val
+	i.dataSlice = i.dataSlice[:i.size]
+	delete(i.dataMap, val)
+
+	return true
+}
+
+func (i *IRG) GetRandom() int {
+	if i.size == 0 {
+		return -1
+	}
+
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randIdx := r.Intn(i.size) // 生成一个 [0, size) 的索引
+
+	return i.dataSlice[randIdx]
+}
+
+var parents []int
+
+func find(val int) int {
+
+	for val != parents[val] {
+		parent := parents[val]
+		parents[val] = parents[parent]
+		val = parent
+	}
+
+	return val
+}
