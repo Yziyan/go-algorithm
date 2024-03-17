@@ -2,7 +2,7 @@
 
 package phase_1
 
-func sortArray(nums []int) []int {
+func MergeSortArray(nums []int) []int {
 	if len(nums) < 2 {
 		return nums
 	}
