@@ -25,11 +25,11 @@ func mergeKLists(lists []*ListNode) *ListNode {
 	left := mergeKLists(lists[:mid])
 	right := mergeKLists(lists[mid:])
 
-	return merge(left, right)
+	return mergeList(left, right)
 }
 
 // 合并左右两条升序链表
-func merge(left, right *ListNode) *ListNode {
+func mergeList(left, right *ListNode) *ListNode {
 	dummyHead := &ListNode{}
 	tail := dummyHead
 
