@@ -70,3 +70,41 @@ func lowestCommonAncestor2(root, p, q *TreeNode) *TreeNode {
 	}
 	return left
 }
+
+type TreeNode2 struct {
+	Val    int
+	Left   *TreeNode2
+	Right  *TreeNode2
+	Parent *TreeNode2
+}
+
+/*
+*
+核心点其实是：相交链表...
+将思想转变：
+p 和 q 就是两条链表的头结点，Parent 节点其实就是 Next 节点。
+
+那么两条链表求解相交节点...就不用说了吧...
+*/
+func lowestCommonAncestor22(p, q *TreeNode2) *TreeNode2 {
+	if p == nil || q == nil {
+		return nil
+	}
+
+	l1, l2 := p, q
+	for l1 != l2 {
+		if l1 == nil {
+			l1 = l2
+		} else {
+			l1 = l1.Parent
+		}
+
+		if l2 == nil {
+			l2 = l1
+		} else {
+			l2 = l2.Parent
+		}
+	}
+
+	return l1
+}
