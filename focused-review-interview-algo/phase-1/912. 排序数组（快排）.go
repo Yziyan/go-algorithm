@@ -4,7 +4,7 @@ package phase_1
 
 import "math/rand"
 
-func sortArray(nums []int) []int {
+func QuickSortArray(nums []int) []int {
 
 	// 返回轴点元素 nums[begin]，的左右边界
 	getPivot := func(nums []int, begin, end int) (int, int) {
