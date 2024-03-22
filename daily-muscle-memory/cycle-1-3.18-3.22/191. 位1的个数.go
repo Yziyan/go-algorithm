@@ -2,7 +2,7 @@
 
 package cycle_1_3_18_3_22
 
-func hammingWeight(num uint32) int {
+func hammingWeight(num int) int {
 	bits := 0
 
 	for num != 0 {
