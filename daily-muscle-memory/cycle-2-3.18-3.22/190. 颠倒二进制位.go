@@ -1,6 +1,6 @@
 // @Author: Ciusyan 3/19/24
 
-package cycle_1_3_18_3_22
+package cycle_2_3_18_3_22
 
 func reverseBits(num uint32) uint32 {
 	// 采用分治的思想，依次将：num 的 高16和低16 交换，每一组的高八和第八交换，... 每一组的高一和低一交换

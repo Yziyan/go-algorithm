@@ -1,6 +1,6 @@
 // @Author: Ciusyan 3/18/24
 
-package cycle_1_3_18_3_22
+package cycle_2_3_18_3_22
 
 type TreeNode struct {
 	Val   int

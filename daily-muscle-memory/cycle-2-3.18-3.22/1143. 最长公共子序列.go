@@ -1,6 +1,44 @@
 // @Author: Ciusyan 3/22/24
 
-package cycle_1_3_18_3_22
+package cycle_2_3_18_3_22
+
+/**
+思路重复：
+对于两个串的最长公共子序列而言，我们可以看最后一个字符，来进行分治求解，
+比如：chars1[last1] == chars2[last2]，那么代表可以看 chars1[...last1) 和 chars2[...last2） 的 LCS 长度了。
+加一就是结果。还有就是：chars1[last1] != chars2[last2]，那么就得看两种情况了：
+1. chars1[...last1) 和 chars2[...last2] 的 LCS
+2. chars1[...last1] 和 chars2[...last2) 的 LCS
+两者最大，就是结果。
+
+*/
+
+func longestCommonSubsequence22(text1 string, text2 string) int {
+	var (
+		chars1 = []byte(text1)
+		chars2 = []byte(text2)
+
+		l1 = len(chars1)
+		l2 = len(chars2)
+	)
+
+	dp := make([][]int, l1+1)
+	for i := range dp {
+		dp[i] = make([]int, l2+1)
+	}
+
+	for i1 := 1; i1 <= l1; i1++ {
+		for i2 := 1; i2 <= l2; i2++ {
+			if chars1[i1-1] == chars2[i2-1] {
+				dp[i1][i2] = 1 + dp[i1-1][i2-1]
+				continue
+			}
+			dp[i1][i2] = max(dp[i1][i2-1], dp[i1-1][i2])
+		}
+	}
+
+	return dp[l1][l2]
+}
 
 func longestCommonSubsequence(text1 string, text2 string) int {
 
