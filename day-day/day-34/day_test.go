@@ -51,3 +51,11 @@ func TestReverseList(t *testing.T) {
 	head = reverseList(head)
 	t.Log(head)
 }
+
+func TestValidNumber(t *testing.T) {
+
+	number := validNumber("1  ")
+	number = validNumber(".-4")
+
+	t.Log(number)
+}

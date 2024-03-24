@@ -1,6 +1,6 @@
 // @Author: Ciusyan 3/23/24
 
-package cycle_3_3_23_3_28
+package day_34
 
 // https://leetcode.cn/problems/find-the-sum-of-encrypted-integers/
 
