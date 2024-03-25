@@ -1,6 +1,6 @@
 // @Author: Ciusyan 3/24/24
 
-package cycle_3_3_23_3_28
+package cycle_3_3_24_3_29
 
 // https://leetcode.cn/problems/happy-number/description/
 
