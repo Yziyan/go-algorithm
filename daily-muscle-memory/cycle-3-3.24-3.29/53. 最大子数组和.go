@@ -26,6 +26,30 @@ func maxSubArray(nums []int) int {
 	)
 
 	for i := 1; i < len(nums); i++ {
+		p1 := nums[i]
+		if preMax > 0 {
+			p1 += preMax
+		}
+
+		maxRes = max(maxRes, p1)
+		preMax = p1
+	}
+
+	return maxRes
+}
+
+func maxSubArray2(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	var (
+		preMax = nums[0]
+
+		maxRes = nums[0]
+	)
+
+	for i := 1; i < len(nums); i++ {
 		// 第一种情况，就是自己
 		p1 := nums[i]
 		// 第二种情况，包括前面的 preMax

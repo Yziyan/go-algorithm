@@ -2,7 +2,9 @@
 
 package cycle_3_3_24_3_29
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestMaxProduct(t *testing.T) {
 
