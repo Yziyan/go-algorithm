@@ -7,6 +7,22 @@ type ListNode struct {
 	Next *ListNode
 }
 
+/*
+*
+思路重复：
+
+我们对 K 个一组进行翻转的时候，核心其实就是一组一组的翻转。
+先找到要翻转的范围，然后将其翻转的同时，并且要维护整体线条。
+比如可以分为：前K -> 中K -> 后K 三个组。
+在翻转完 前K 后，将它们的尾部节点记录下来 preTail
+然后去翻转 中K 这一组，得到翻转后新的 中头和中尾，然后将 preTail.Next -> 中头。
+然后从中尾的 Next 节点开始，去翻转 后K 这个组。
+
+但是我们在对其中在对某一组进行翻转的时候，需要注意：
+1.只从 head 翻转到 tail
+2.翻转前后，head <-> tail 互换
+3.翻转后的 tail.Next -> oldTail.Next
+*/
 func reverseKGroup(head *ListNode, k int) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
