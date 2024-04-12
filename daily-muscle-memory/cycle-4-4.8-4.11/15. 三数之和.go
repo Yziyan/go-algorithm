@@ -4,6 +4,23 @@ package cycle_4_4_8_4_11
 
 import "sort"
 
+// https://leetcode.cn/problems/3sum/
+
+/**
+思路重复：
+
+我们想要找到所有三个数之和为 0 的组合。
+我们该如何实现呢？
+首先其实可以对这个数组进行一个排序，排序后的结果是：【负数 ... 0 ... 正数】
+那么我们从前往后去计算的时候，就可以有规律可循了，
+三元组是哪三个呢？[cur, left, right]
+我们每次都看，这三个数是否和为 0，如果是的话，说明是一个结果。如果不是，看 left + right 的和，和 -cur 的值比起来是大了还是小了：
+如果小了，就说明 left 得往后移动，因为 left 的前面一定比 left 小。
+如果大了，就说明 right 得往前移动，因为 right 的后面一定比 right 大。
+直到 left 和 right 相遇后，这一个范围就找完了，去下一范原来吗？围找，直至找完所有三元组。
+
+*/
+
 func threeSum(nums []int) [][]int {
 	n := len(nums)
 	res := make([][]int, 0, n)
