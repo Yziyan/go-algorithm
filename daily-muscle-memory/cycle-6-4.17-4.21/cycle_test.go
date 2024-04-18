@@ -6,5 +6,7 @@ import "testing"
 
 func TestReverse(t *testing.T) {
 
-	t.Log(-123 % 10)
+	area := maxArea([]int{1, 1})
+
+	t.Log(area)
 }

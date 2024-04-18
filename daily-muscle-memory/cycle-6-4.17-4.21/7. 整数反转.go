@@ -6,6 +6,18 @@ import "math"
 
 // https://leetcode.cn/problems/reverse-integer/description/
 
+/*
+*
+思路重复：
+一种思路是，将 int -> string，对 string 翻转后，再转回 int，
+这种思路就不写了，我们写另一种思路：
+1.每次取出 x 的最后一位数字 unit，
+2.然后变更增加到结果上，res = res*10 + unit
+
+但是在这个过程中，需要对符号、溢出进行判断。方法很多种，
+1.按正数计算
+2.res 能够转回 preRes，要不然说明越界了
+*/
 func reverse(x int) int {
 
 	res := 0
