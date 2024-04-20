@@ -10,3 +10,10 @@ func TestReverse(t *testing.T) {
 
 	t.Log(area)
 }
+
+func TestLongestCommonPrefix(t *testing.T) {
+
+	prefix := longestCommonPrefix([]string{"cir", "car"})
+
+	t.Log(prefix)
+}
