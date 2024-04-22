@@ -17,3 +17,9 @@ func TestLongestCommonPrefix(t *testing.T) {
 
 	t.Log(prefix)
 }
+
+func TestPermute(t *testing.T) {
+
+	res := permute([]int{1, 2, 3})
+	t.Log(res)
+}
