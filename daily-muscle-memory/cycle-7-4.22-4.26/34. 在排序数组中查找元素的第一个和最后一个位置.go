@@ -4,7 +4,53 @@ package cycle_7_4_22_4_26
 
 // https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/description/
 
+/**
+思路重复：
+既然是有序数组，我们看到这个字眼，应该就得想到：二分搜索。
+那么这个题，应该如何二分呢？
+1.二分去查找这个数组中，target 出现的第一个位置。
+在二分的时候，遇到小于 target 的，往后走；否则往前走，一直走到最后。
+2.然后看看找到的位置是否是合法的 target。是的话就去查找 target+1 在数组中的位置。
+然后 -1，就是最后一个位置。
+
+
+*/
+
 func searchRange(nums []int, target int) []int {
+
+	findFirstIdx := func(nums []int, tgt int) int {
+		l, r := 0, len(nums)
+		for l < r {
+			mid := l + ((r - l) >> 1)
+			if nums[mid] < tgt {
+				l = mid + 1
+			} else {
+				r = mid
+			}
+		}
+
+		return l
+	}
+
+	n := len(nums)
+	l := findFirstIdx(nums, target)
+
+	res := []int{-1, -1}
+	if l == n || nums[l] != target {
+		return res
+	}
+
+	res[0] = l
+	if l+1 == n || nums[l+1] != target {
+		res[1] = l
+	} else {
+		res[1] = findFirstIdx(nums, target+1) - 1
+	}
+
+	return res
+}
+
+func searchRange1(nums []int, target int) []int {
 	res := []int{-1, -1}
 	if len(nums) == 0 {
 		return res

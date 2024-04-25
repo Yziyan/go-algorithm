@@ -80,3 +80,9 @@ func TestGoroutine(t *testing.T) {
 	// 等待生产数据的协程退出
 	wg.Wait()
 }
+
+func TestIsValid(t *testing.T) {
+
+	res := isValid("()")
+	t.Log(res)
+}
