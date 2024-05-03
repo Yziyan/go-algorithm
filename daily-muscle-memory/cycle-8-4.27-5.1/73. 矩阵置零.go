@@ -4,6 +4,17 @@ package cycle_8_4_27_5_1
 
 // https://leetcode.cn/problems/set-matrix-zeroes/
 
+/*
+*
+思路重复：
+若 (row, col) 为 0，我们想将 row 行和 col 列都置为 0。
+一种思路是我们可以使用一个辅助数组，记录哪一行、哪一列都需要置零。
+但是我们还可以复用以前的第一行和第一列，用这两个位置来记录要不要被覆盖为零。
+1.先记录第一行和第一列是否需要被置为 0
+2.然后遍历每一个位置，若为零，将 (row, 0) 和 (0, col) 置为 0，
+3.将需要置零的行和列全部置为 0（被标记了的）
+*/
+
 func setZeroes(matrix [][]int) {
 	if len(matrix) == 0 {
 		return
