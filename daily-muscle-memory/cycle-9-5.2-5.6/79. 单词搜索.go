@@ -4,6 +4,16 @@ package cycle_9_5_2_5_6
 
 // https://leetcode.cn/problems/word-search/
 
+/*
+*
+思路重复：
+尝试从 board 的每一个位置开始搜索，只要有一个位置搜到了 word，就可以返回了
+那么聪 (row, col) 开始，如何搜索呢？进行 dfs 即可，当 (row, col) 每越界、当前 cur 位置的字符是待搜索的字符，
+说明当前字符匹配上了，去下一个位置搜索。下一个位置是哪里呢？即上下左右都可以。
+但是为了防止走回头路，在去进一步搜索前，需要将当前 (row, col) 位置置为无效字符，
+但是为了不影响 board，在搜索完毕后，还需要将其还原回来。
+*/
+
 func exist(board [][]byte, word string) bool {
 
 	// 从 (row, col) 开始搜，若搜索到 word[cur ...] 的字符，则返回 true
