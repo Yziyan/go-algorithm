@@ -9,6 +9,23 @@ type ListNode struct {
 	Next *ListNode
 }
 
+/*
+*
+思路重复：
+要对这个有序的列表排序成 BST，思路还是一样的。
+找到中点，即代表根节点
+中点往前，代表根节点的左子树
+中点往后，代表根节点的右子树
+
+因为这是链表，所以我们可以通过快慢指针寻找到中点。
+中点左侧构建左子树，右侧构建右子树。
+即：head -> ... -> midPrev -> mid -> midNext -> ...
+root: mid.Val
+root.Right = build(midNext, tail)
+
+root.Left = build(head, midPrev)
+*/
+
 func sortedListToBST(head *ListNode) *TreeNode {
 	if head == nil {
 		return nil
