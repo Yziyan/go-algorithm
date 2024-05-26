@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/klauspost/compress v1.13.6
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.13.0
 	golang.org/x/sync v0.4.0
@@ -13,7 +14,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.29.0 // indirect

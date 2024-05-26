@@ -6,6 +6,23 @@ import "math"
 
 // https://leetcode.cn/problems/balanced-binary-tree/
 
+/**
+思路重复：
+使用二叉树的递归套路即可求解，
+如何判断一棵树是不是平衡二叉树呢？满足如下条件即可：
+1.左子树是平衡二叉树
+2.右子树是平衡二叉树
+3.左右子树高度差 <= 1
+
+所以我们的信息需要收集：
+1.是否是平衡二叉树
+2.树的高度
+
+那么这俩属性可以合并到一起，如果树高是正常的，那么就返回正常的树高。
+如果不是平衡的，那么就返回 -1 这样的高度即可。
+ */
+
+
 func isBalanced(root *TreeNode) bool {
 	// 如果平衡，就返回这棵树的高度，不平衡就返回 -1
 	var process func(root *TreeNode) float64
