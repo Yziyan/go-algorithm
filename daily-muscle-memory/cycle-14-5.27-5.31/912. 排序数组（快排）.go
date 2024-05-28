@@ -6,7 +6,19 @@ import "math/rand"
 
 // https://leetcode.cn/problems/sort-an-array/
 
-func sortArray(nums []int) []int {
+/**
+思路重复：
+快排的思路其实很简单：
+1.寻找轴点
+2.轴点左边进行快排
+3.轴点右边进行快排
+
+所以核心其实就是：如何寻找轴点
+，可以利用荷兰国旗问题进行求解，
+即将：比轴点大的都放它右边，比轴点小的都放他左边。
+*/
+
+func quickSortArray(nums []int) []int {
 	pivot := func(nums []int, l, r int) (lp, rp int) {
 		if r-l == 1 {
 			// 说明只有一个元素
