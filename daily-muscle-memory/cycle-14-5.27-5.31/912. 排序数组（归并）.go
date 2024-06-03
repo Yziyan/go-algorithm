@@ -4,7 +4,19 @@ package cycle_14_5_27_5_31
 
 // https://leetcode.cn/problems/sort-an-array/
 
-func sortArray(nums []int) []int {
+/**
+思路重复：
+1.取序列中点
+2.对序列左边进行归并排序
+3.对序列右边进行归并排序
+4.合并左右两个归并排序好的序列
+
+所以其中核心点，就在于如何合并两个序列，对于如何合并两个有序的序列，这个我们已经练过肌肉了。
+其实很简单，就是准备两个指针，分别指向左右，然后挨个比较左右，将其填充到序列的合适位置。
+直至左右两个序列都比较完成。
+*/
+
+func mergeSortArray(nums []int) []int {
 	merge := func(nums []int, l, mid, r int) {
 		// 申请辅助数组，用来装合并后的结果
 		helpArr := make([]int, r-l)
