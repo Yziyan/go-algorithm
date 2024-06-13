@@ -30,9 +30,9 @@ func Control() {
 }
 
 func Busyness(ctx context.Context) {
-	time.Sleep(2 * time.Second)
+	defer ctx.Done()
 
-	ctx.Done()
+	time.Sleep(2 * time.Second)
 
 	fmt.Println("执行业务方法")
 }
