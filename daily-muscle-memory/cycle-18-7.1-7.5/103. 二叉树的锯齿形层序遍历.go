@@ -10,6 +10,15 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+/*
+层序遍历，抓住两个核心点：
+1.一层一层遍历
+2.一层层遍历，每一个节点都要被遍历到。
+
+一层批次遍历还好说，可是如何控制方向呢？
+用一个标记位去记录方向，如果正向遍历，那就从小到大填充结果，如果是需要逆序遍历，就从后往前填充结果即可
+*/
+
 func zigzagLevelOrder(root *TreeNode) [][]int {
 	if root == nil {
 		return nil
