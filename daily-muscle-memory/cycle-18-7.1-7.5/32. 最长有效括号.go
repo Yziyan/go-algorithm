@@ -6,7 +6,7 @@ package cycle_18_7_1_7_5
 
 func longestValidParentheses(s string) int {
 	n := len(s)
-	// dp[i] 代表，s[i] 结尾的字符串的最长有效括号
+	// dp[i] 代表，s[i] 结尾的字符串的最长有效括号长度
 	dp := make([]int, n)
 
 	res := 0
