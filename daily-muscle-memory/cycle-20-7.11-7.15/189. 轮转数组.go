@@ -4,6 +4,15 @@ package cycle_20_7_11_7_15
 
 // https://leetcode.cn/problems/rotate-array/
 
+/*
+*
+三个步骤：
+1.逆转 [0, n-k)
+2.逆转 [n-k, n)
+3.逆转 [0, n)
+即可得到，逆转 k 个数
+*/
+
 func rotate(nums []int, k int) {
 	if len(nums) < 2 || k < 1 {
 		return
