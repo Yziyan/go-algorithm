@@ -36,7 +36,22 @@ func (n *PrefixNode) Add(words []string) {
 	}
 }
 
-func wordBreak(s string, wordDict []string) bool {
+/*
+思路重复：
+可以使用 dp 的方式，来求解，
+dp = make([]bool, n+1)
+dp[cur] 代表 s[cur ...] 能否使用 wordDict 构建出来。
+那么，如果从 s[cur ... end] 是 wordDict 中的一个单词，如果 dp[end+1] 能够呗构建出来，
+那么 dp[cur] 也就能被构建出来。
+那么如何快速的判断，s[cur ... end] 是否是 wordDict 中的单词呢？
+使用前缀树即可，我们先将 wordDict 的每一个单词都加入前缀树中，后续即可快速判断了
+那么前缀树如何实现呢？
+我们直接使用 26 个节点即可，因为都是小写字母。相当于每一层都有 26 个节点。
+对于的索引就是 curC-'a' ，这就是
+然后添加的过程，其实就是从第一层开始往下找，如果没有节点就先创建。如果有了就去下一层。
+当加完一个单词，到达末尾后，就将其标记为是一个单词的末尾了即可
+*/
+func wordBreak1(s string, wordDict []string) bool {
 	// 先将单词的字典全部添加到前缀树上
 	root := NewPrefixNode()
 	root.Add(wordDict)
@@ -68,5 +83,54 @@ func wordBreak(s string, wordDict []string) bool {
 	}
 
 	// 代表：s[0 ...] 这些字符，能否被构建出来
+	return dp[0]
+}
+
+type Node struct {
+	isWord bool
+	nexts  []*Node
+}
+
+func GetRoot() *Node {
+	return &Node{nexts: make([]*Node, 26)}
+}
+
+func (n *Node) Add(words []string) {
+	for _, word := range words {
+		root := n
+		for _, c := range word {
+			curIdx := c - 'a'
+			if root.nexts[curIdx] == nil {
+				root.nexts[curIdx] = GetRoot()
+			}
+			root = root.nexts[curIdx]
+		}
+		root.isWord = true
+	}
+}
+
+func wordBreak(s string, wordDict []string) bool {
+	root := GetRoot()
+	root.Add(wordDict)
+
+	n := len(s)
+	dp := make([]bool, n+1)
+	dp[n] = true
+
+	for cur := n - 1; cur >= 0; cur-- {
+		nd := root
+		for end := cur; end < n; end++ {
+			nd = nd.nexts[s[end]-'a']
+			if nd == nil {
+				break
+			}
+
+			if nd.isWord && dp[end+1] {
+				dp[end] = true
+				break
+			}
+		}
+	}
+
 	return dp[0]
 }
