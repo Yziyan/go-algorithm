@@ -6,6 +6,14 @@ import "sort"
 
 // https://leetcode.cn/problems/group-anagrams/description/
 
+/**
+思路重复：
+要想找出所有的异位词，其实就是给他分桶。
+当然最简单的方式就是直接使用 map，然后挨个 strs 进行分桶。
+将每个单词，排序后，作为 key，异位词排序后肯定相同，那么就能够被放到一个桶中，
+所以也就能够直接分组了。
+*/
+
 func groupAnagrams(strs []string) [][]string {
 	if len(strs) == 0 {
 		return nil
