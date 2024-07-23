@@ -2,6 +2,16 @@
 
 package cycle_21_7_16_7_20
 
+/**
+思路重复：
+有多少种解码方法呢？我们应该可以使用 dp 的方式求。
+准备 dp = []int
+dp[cur] 代表，使用 s[cur ...] 有多少种解码方法。
+对于 cur 位置而言，只要 s[cur] 不是 0，就至少有一种解码方法，
+即使用 dp[cur+1] 即可，但是如果要用两位来解码，那么就得看 s[cur ... cur+1] 不大于 26，
+即可拥有一种方法，使用 dp[cur+2] 即可
+*/
+
 // https://leetcode.cn/problems/decode-ways/description/
 func numDecodings(s string) int {
 	n := len(s)
