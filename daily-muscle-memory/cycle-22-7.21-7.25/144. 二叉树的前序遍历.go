@@ -18,24 +18,3 @@ type TreeNode struct {
 如果 root 有值，就直接收集结果，然后看看有没有右子树，有的话就入栈，然后往坐走
 否则就从 stack 弹出元素，给 root，继续进行上述操作
 */
-
-func preorderTraversal(root *TreeNode) []int {
-	stack := make([]*TreeNode, 0, 10)
-	res := make([]int, 0, 10)
-
-	for root != nil || len(stack) != 0 {
-		if root != nil {
-			res = append(res, root.Val)
-			if root.Right != nil {
-				stack = append(stack, root.Right)
-			}
-			root = root.Left
-		} else {
-			last := len(stack) - 1
-			root = stack[last]
-			stack = stack[:last]
-		}
-	}
-
-	return res
-}
