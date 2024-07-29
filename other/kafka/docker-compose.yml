@@ -1,0 +1,20 @@
+version: '3'  # Docker Compose 文件的版本
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest  # 使用 Confluent 提供的 Zookeeper 镜像
+    ports:
+      - "2181:2181"  # 映射 Zookeeper 的端口
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181  # Zookeeper 客户端连接端口
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest  # 使用 Confluent 提供的 Kafka 镜像
+    ports:
+      - "9092:9092"  # 映射 Kafka 的端口
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Kafka 连接的 Zookeeper 地址
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Kafka 广告的监听地址
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

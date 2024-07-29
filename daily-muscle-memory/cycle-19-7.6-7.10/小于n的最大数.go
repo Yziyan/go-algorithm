@@ -94,7 +94,7 @@ func getMaxNumLTN1(digits []int, n int) int {
 
 */
 
-func getMaxNumLTN(digits []int, n int) int {
+func getMaxNumLTN2(digits []int, n int) int {
 	// 将数字转换成数组，方便按位处理
 	nums := make([]int, 0, 10)
 	for n > 0 {
