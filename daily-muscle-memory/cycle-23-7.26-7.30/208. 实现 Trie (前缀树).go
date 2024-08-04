@@ -17,63 +17,6 @@ Trie 前缀树，是将单词的每一个字母，都加入一颗多叉树中。
 如果单词找完了，还得看看是不是一个完整的单词，如果不是也不行。
 */
 
-type Trie2 struct {
-	root *node2
-}
-
-type node2 struct {
-	nexts  []*node2
-	isWord bool
-}
-
-func getRoot2() *node2 {
-	return &node2{nexts: make([]*node2, 26)}
-}
-
-func NewTrie() *Trie2 {
-	return &Trie2{root: getRoot2()}
-}
-
-func (t *Trie2) Add(word string) {
-
-	nd := t.root
-
-	for _, c := range word {
-		idx := c - 'a'
-		if nd.nexts[idx] == nil {
-			nd.nexts[idx] = getRoot2()
-		}
-		nd = nd.nexts[idx]
-	}
-	nd.isWord = true
-}
-
-func (t *Trie2) Exist(word string) bool {
-	nd := t.root
-
-	for _, c := range word {
-		idx := c - 'a'
-		nd = nd.nexts[idx]
-		if nd == nil {
-			return false
-		}
-	}
-	return nd.isWord
-
-}
-func (t *Trie2) Prefix(word string) bool {
-	nd := t.root
-
-	for _, c := range word {
-		idx := c - 'a'
-		nd = nd.nexts[idx]
-		if nd == nil {
-			return false
-		}
-	}
-	return true
-}
-
 type Trie struct {
 	root *node
 }
