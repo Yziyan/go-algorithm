@@ -29,6 +29,6 @@ func main() {
 
 	// 消费消息
 	for msg := range partitionConsumer.Messages() {
-		fmt.Printf("Consumed message: %s\n", string(msg.Value))
+		fmt.Printf("Consumed message: %s product time: %s\n", string(msg.Value), msg.Timestamp)
 	}
 }

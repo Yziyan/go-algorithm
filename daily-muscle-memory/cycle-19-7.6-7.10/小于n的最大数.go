@@ -18,7 +18,7 @@ func getMaxDigitLtD(digits []int, digit int) int {
 }
 
 // getMaxNumLtN 获取小于 n 的最大数。
-func getMaxNumLTN1(digits []int, n int) int {
+func getMaxNumLTN(digits []int, n int) int {
 
 	var ndigits []int
 	// 获取 n 的每一位数字。
