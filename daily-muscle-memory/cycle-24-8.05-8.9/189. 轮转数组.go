@@ -4,7 +4,35 @@ package cycle_24_8_05_8_9
 
 // https://leetcode.cn/problems/rotate-array/
 
+/**
+思路重复：
+三个步骤：
+1.先对 [0, n-k) 翻转
+2.在对 [n-k, n) 翻转
+3.最后对 [0, n) 翻转
+
+但是 k 必须不能越界，也就是必须要翻转前，对数组长度取一下模
+*/
+
 func rotate(nums []int, k int) {
+	n := len(nums)
+	k %= n
+
+	revers := func(nums []int, l, r int) {
+		r--
+		for l <= r {
+			nums[l], nums[r] = nums[r], nums[l]
+			l++
+			r--
+		}
+	}
+
+	revers(nums, 0, n-k)
+	revers(nums, n-k, n)
+	revers(nums, 0, n)
+}
+
+func rotate2(nums []int, k int) {
 	if len(nums) < 2 && k < 1 {
 		return
 	}
