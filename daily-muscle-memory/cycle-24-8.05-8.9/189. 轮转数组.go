@@ -20,24 +20,6 @@ import (
 */
 
 func rotate(nums []int, k int) {
-	n := len(nums)
-	k %= n
-
-	revers := func(nums []int, l, r int) {
-		r--
-		for l <= r {
-			nums[l], nums[r] = nums[r], nums[l]
-			l++
-			r--
-		}
-	}
-
-	revers(nums, 0, n-k)
-	revers(nums, n-k, n)
-	revers(nums, 0, n)
-}
-
-func rotate2(nums []int, k int) {
 	if len(nums) < 2 && k < 1 {
 		return
 	}
