@@ -6,7 +6,38 @@ import "sort"
 
 // https://leetcode.cn/problems/merge-intervals/description/
 
+/**
+思路重复：
+1.根据每一个区间对开始位置进行排序。
+2.准备两个区间的 l 和 r 代表当前的范围。
+3.如果后面的每一个区间开始，如果当前区间的开始位置能和 r 连接上
+就将其区间合并了。否则就说明没有链接了，记录一个结果。
+*/
+
 func merge(intervals [][]int) [][]int {
+	sort.Slice(intervals, func(i, j int) bool {
+		return intervals[i][0] < intervals[j][0]
+	})
+
+	l, r, idx := intervals[0][0], intervals[0][1], 0
+
+	for cur := 1; cur < len(intervals); cur++ {
+		if intervals[cur][0] > r {
+			intervals[idx][0] = l
+			intervals[idx][1] = r
+			idx++
+
+			l = intervals[cur][0]
+			r = intervals[cur][1]
+		} else {
+			r = max(r, intervals[cur][1])
+		}
+	}
+
+	return intervals[:idx]
+}
+
+func merge2(intervals [][]int) [][]int {
 
 	// 先按照区间的开始位置，对所有区间排序。
 	sort.Slice(intervals, func(i, j int) bool {
