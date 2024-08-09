@@ -4,6 +4,60 @@ package cycle_24_8_05_8_9
 
 // https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/
 
+/**
+思路重复：
+比起旋转数组一，这里多了可能有重复元素这个限制。
+
+那么只要我们在处理的过程中，能过跳过这样的限制，即可按照一一样的方式处理。
+
+如何处理呢？
+也是开始二分搜索，
+先看是否 mid 是值，如果不是，我们先看 l, r, mid  三个位置是否都一样，如果都一样，我们先保证，三个数不都一样。
+
+那么当跳过后，就看断点在前面还是后面了。
+如果 nums[mid] >= nums[l] 说明答案可能在前面，可以在前面就行二分，前面有序。
+反之则是后面有序
+
+*/
+
+func search3(nums []int, target int) bool {
+	l, r, mid := 0, len(nums), 0
+
+	for l <= r {
+		mid = (l + r) / 2
+		if nums[mid] == target {
+			return true
+		}
+
+		if nums[l] == nums[mid] && nums[mid] == nums[r] {
+			for l != mid && nums[l] == nums[r] {
+				l++
+			}
+
+			if l == mid {
+				l = mid + 1
+				continue
+			}
+
+			if nums[mid] >= nums[l] {
+				if target < nums[mid] && target >= nums[l] {
+					r = mid - 1
+				} else {
+					l = mid + 1
+				}
+			} else {
+				if target <= nums[r] && target > nums[mid] {
+					l = mid + 1
+				} else {
+					r = mid - 1
+				}
+			}
+		}
+	}
+
+	return false
+}
+
 func search2(nums []int, target int) bool {
 	l, r, mid := 0, len(nums)-1, 0
 
