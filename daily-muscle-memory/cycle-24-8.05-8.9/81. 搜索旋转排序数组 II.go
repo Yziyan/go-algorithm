@@ -20,44 +20,6 @@ package cycle_24_8_05_8_9
 
 */
 
-func search3(nums []int, target int) bool {
-	l, r, mid := 0, len(nums), 0
-
-	for l <= r {
-		mid = (l + r) / 2
-		if nums[mid] == target {
-			return true
-		}
-
-		if nums[l] == nums[mid] && nums[mid] == nums[r] {
-			for l != mid && nums[l] == nums[r] {
-				l++
-			}
-
-			if l == mid {
-				l = mid + 1
-				continue
-			}
-
-			if nums[mid] >= nums[l] {
-				if target < nums[mid] && target >= nums[l] {
-					r = mid - 1
-				} else {
-					l = mid + 1
-				}
-			} else {
-				if target <= nums[r] && target > nums[mid] {
-					l = mid + 1
-				} else {
-					r = mid - 1
-				}
-			}
-		}
-	}
-
-	return false
-}
-
 func search2(nums []int, target int) bool {
 	l, r, mid := 0, len(nums)-1, 0
 
