@@ -4,7 +4,41 @@ package cycle_25_8_10_8_14
 
 // https://leetcode.cn/problems/valid-sudoku/description/
 
+/**
+思路重复：
+有效的数独就是：行、列、桶 没有相同的数字。
+
+那么我们准备三个东西来标记这个三个方向中都有什么数字。
+比如 rows[2][5] 说明，第三行中已经有 5 这个数字了。
+那么我们在便利数独的时候，如果是数字，就先检查标记中有没有违规的，如果没有就标记后进入下一个字符的检验。
+*/
+
 func isValidSudoku(board [][]byte) bool {
+	rows := [9][10]bool{}
+	cols := [9][10]bool{}
+	buckets := [9][10]bool{}
+
+	for row := 0; row < len(board); row++ {
+		for col := 0; col < len(board[0]); col++ {
+			if board[row][col] == '.' {
+				continue
+			}
+			num := board[row][col] - '0'
+
+			bucket := 3*(row/3) + (col / 3)
+			if rows[row][num] || cols[col][num] || buckets[bucket][num] {
+				return false
+			}
+			rows[row][num] = true
+			cols[col][num] = true
+			buckets[bucket][num] = true
+		}
+	}
+
+	return true
+}
+
+func isValidSudoku2(board [][]byte) bool {
 	// 准备三个数组，分别用来标识：行、列、桶 中已有的元素
 	var (
 		rows    = [9][10]bool{} // rows[3][1] 代表第四行有 1 这个数字了
