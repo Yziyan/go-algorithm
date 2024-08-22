@@ -4,6 +4,17 @@ package cycle_26_8_20_8_24
 
 // https://leetcode.cn/problems/sudoku-solver/
 
+/**
+思路重复：
+我们要解数独，就得先知道数独现在的情况是怎样的。
+所以我们可以便利每一个格子，将其状态保存至 rows、cols、buckets 中。
+然后使用 dfs 的方式，从 (row, col) 位置开始，利用 rows、cols、buckets 来尝试填写当前的格子。
+如果当前格子已经填写过了，直接去到下一个格子。否则从 1～9 开始尝试，挨个尝试填写，但是填写的时候，
+必须要保重三个数组中没有当前数字。
+填写完后，去下一个格子开始搜索，如果能填完，那么直接返回即可。否则说明之前某个选择不合适。
+还原现场后，回到当时的格子，去到下一个数字进行尝试。直至成功。除非全部便利完都没有成功，那么说明无解，直接返回即可
+*/
+
 func solveSudoku(board [][]byte) {
 	rows, cols, buckets := initBoard(board)
 	dfs(board, rows, cols, buckets, 0, 0)
