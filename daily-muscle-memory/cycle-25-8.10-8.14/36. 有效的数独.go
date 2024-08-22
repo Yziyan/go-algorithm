@@ -14,31 +14,6 @@ package cycle_25_8_10_8_14
 */
 
 func isValidSudoku(board [][]byte) bool {
-	rows := [9][10]bool{}
-	cols := [9][10]bool{}
-	buckets := [9][10]bool{}
-
-	for row := 0; row < len(board); row++ {
-		for col := 0; col < len(board[0]); col++ {
-			if board[row][col] == '.' {
-				continue
-			}
-			num := board[row][col] - '0'
-
-			bucket := 3*(row/3) + (col / 3)
-			if rows[row][num] || cols[col][num] || buckets[bucket][num] {
-				return false
-			}
-			rows[row][num] = true
-			cols[col][num] = true
-			buckets[bucket][num] = true
-		}
-	}
-
-	return true
-}
-
-func isValidSudoku2(board [][]byte) bool {
 	// 准备三个数组，分别用来标识：行、列、桶 中已有的元素
 	var (
 		rows    = [9][10]bool{} // rows[3][1] 代表第四行有 1 这个数字了
