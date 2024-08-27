@@ -4,6 +4,14 @@ package cycle_27_8_25_8_29
 
 // https://leetcode.cn/problems/letter-combinations-of-a-phone-number/description/
 
+/**
+思路重复：
+每一个数字，都有能够选择的字符，有多少种组合呢？使用 DFS 即可做了。
+我们只需要将每一个数字对应的字符做一个映射即可，
+那么我们从第一层开始去搜索，知道收到了 digits 这么长的轨迹，
+到达每一层，轨迹都可以使用对应数字的字符。然后选择一个后，去到下一层即可。
+*/
+
 func letterCombinations(digits string) []string {
 	if digits == "" {
 		return nil
